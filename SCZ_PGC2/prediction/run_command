@@ -1,0 +1,426 @@
+######### prepare dosage files #########
+########################################
+# for each of the cohort, compute A1 frequency and INFO
+# criteria: MAF>=0.01, INFO>=0.6, snps present in at least 20 samples
+# note: use qc1 version
+
+for i in $(seq 36)
+do
+	sbatch --array=1-22 --job-name=c${i} filterSnps_dosage_cohort.sh ${i}
+done &
+
+# convert to dosage format and combine chromosomes
+# GTEx
+for i in $(seq 36)
+do
+        sbatch --array=1-22 --job-name=c${i} convertDosage_corrREFALT_matchedGTEx.sh ${i}
+done &
+# move results to archive
+readarray -t cohorts < /home/luciat/eQTL_PROJECT/INPUT_DATA/SCZ_cohort_names
+cd /home/luciat/eQTL_PROJECT/INPUT_DATA_GTEx/SCZ-PGC/Genotype_data/
+for i in $(seq 36)
+do
+	c=$(eval echo "\${cohorts[${i}-1]}")
+	tar zcvf ${c}.tar ${c}
+	cp ${c}.tar /archive/luciat/eQTL_PROJECT/INPUT_DATA_GTEx/SCZ-PGC/Genotype_data/
+	rm ${c}.tar && rm -r ${c}		
+done
+
+
+# CMC
+for i in $(seq 36)
+do
+        sbatch --array=1-22 --job-name=c${i} convertDosage_corrREFALT_matchedCMC.sh ${i}
+done &
+
+# move results to archive
+readarray -t cohorts < /home/luciat/eQTL_PROJECT/INPUT_DATA/SCZ_cohort_names
+cd /home/luciat/eQTL_PROJECT/INPUT_DATA_CMC/SCZ-PGC/Genotype_data/
+for i in $(seq 2 1 36)
+do
+        c=$(eval echo "\${cohorts[${i}-1]}")
+        tar zcvf ${c}.tar ${c}
+        cp ${c}.tar /archive/luciat/eQTL_PROJECT/INPUT_DATA_CMC/SCZ-PGC/Genotype_data/
+        rm ${c}.tar && rm -r ${c}
+done
+
+
+## archive files
+
+tar zcvf /home/luciat/eQTL_PROJECT/INPUT_DATA/Genotyping_data.tar /home/luciat/eQTL_PROJECT/INPUT_DATA/Genotyping_data
+cp /home/luciat/eQTL_PROJECT/INPUT_DATA/Genotyping_data.tar /archive/luciat/eQTL_PROJECT/INPUT_DATA/
+rm /home/luciat/eQTL_PROJECT/INPUT_DATA/Genotyping_data.tar && rm /home/luciat/eQTL_PROJECT/INPUT_DATA/Genotyping_data/*
+
+###########################################
+
+### create cov files
+sbatch --array=1-36 --job-name=cov_pheno create_cov_pheno.sh
+
+# create folder for each tissue
+tissues=$(awk '{print $1}' /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/Tissue_PGCgwas)
+readarray -t cohorts < /home/luciat/eQTL_PROJECT/INPUT_DATA/SCZ_cohort_names
+for t in ${tissues[@]}
+do
+	# for train
+	#mkdir -p /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/train_GTEx/${t}/200kb/PGC_GWAS_bin1e-2/
+		
+	# for pred
+	#mkdir -p /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/
+	#mkdir -p /archive/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/
+	for c in ${cohorts[@]}
+	do
+		#mkdir -p /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/
+		mkdir -p /archive/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/
+	done
+done
+
+for c in ${cohorts[@]}
+do
+	mkdir -p /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/
+done
+
+###############################
+### predict gene expression ###
+###############################
+
+### GTEx ###
+readarray -t cohorts < /home/luciat/eQTL_PROJECT/INPUT_DATA/SCZ_cohort_names
+
+## repeat 1-36
+id_c=36
+c=$(eval echo "\${cohorts[${id_c}-1]}")
+cp /archive/luciat/eQTL_PROJECT/INPUT_DATA_GTEx/SCZ-PGC/Genotype_data/${c}.tar /home/luciat/eQTL_PROJECT/INPUT_DATA_GTEx/SCZ-PGC/Genotype_data/
+tar zxf /home/luciat/eQTL_PROJECT/INPUT_DATA_GTEx/SCZ-PGC/Genotype_data/${c}.tar -C /home/luciat/eQTL_PROJECT/INPUT_DATA_GTEx/SCZ-PGC/Genotype_data/
+rm /home/luciat/eQTL_PROJECT/INPUT_DATA_GTEx/SCZ-PGC/Genotype_data/${c}.tar
+sbatch --array=1-14 --job-name=c${id_c} ElNet_withPrior_predExpr_200kb_GTEx.sh ${id_c}
+rm -r /home/luciat/eQTL_PROJECT/INPUT_DATA_GTEx/SCZ-PGC/Genotype_data/${c}
+
+id_c=9
+c=$(eval echo "\${cohorts[${id_c}-1]}")
+cp /archive/luciat/eQTL_PROJECT/INPUT_DATA_GTEx/SCZ-PGC/Genotype_data/${c}.tar /home/luciat/eQTL_PROJECT/INPUT_DATA_GTEx/SCZ-PGC/Genotype_data/
+tar zxf /home/luciat/eQTL_PROJECT/INPUT_DATA_GTEx/SCZ-PGC/Genotype_data/${c}.tar -C /home/luciat/eQTL_PROJECT/INPUT_DATA_GTEx/SCZ-PGC/Genotype$
+rm /home/luciat/eQTL_PROJECT/INPUT_DATA_GTEx/SCZ-PGC/Genotype_data/${c}.tar
+sbatch --array=1,2,7,10,14 --job-name=c${id_c} ElNet_withPrior_predExpr_200kb_GTEx_nozip.sh ${id_c}
+rm -r /home/luciat/eQTL_PROJECT/INPUT_DATA_GTEx/SCZ-PGC/Genotype_data/${c}
+
+
+# copy on archive and delete
+tissues=$(awk '{print $1}' /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/Tissue_PGCgwas)
+readarray -t cohorts < /home/luciat/eQTL_PROJECT/INPUT_DATA/SCZ_cohort_names
+for t in ${tissues[@]}
+do
+        for c in ${cohorts[@]}
+        do
+                cp /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/predictedExpression.txt.gz /archive/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/
+                rm /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/predictedExpression.txt.gz
+        done
+done
+
+### CMC ###
+readarray -t cohorts < /home/luciat/eQTL_PROJECT/INPUT_DATA/SCZ_cohort_names
+
+## repeat 1-36
+id_c=1-36
+c=$(eval echo "\${cohorts[${id_c}-1]}")
+cp /archive/luciat/eQTL_PROJECT/INPUT_DATA_CMC/SCZ-PGC/Genotype_data/${c}.tar /home/luciat/eQTL_PROJECT/INPUT_DATA_CMC/SCZ-PGC/Genotype_data/
+tar zxf /home/luciat/eQTL_PROJECT/INPUT_DATA_CMC/SCZ-PGC/Genotype_data/${c}.tar -C /home/luciat/eQTL_PROJECT/INPUT_DATA_CMC/SCZ-PGC/Genotype_data/
+rm /home/luciat/eQTL_PROJECT/INPUT_DATA_CMC/SCZ-PGC/Genotype_data/${c}.tar
+sbatch --array=${id_c} --job-name=c${id_c} ElNet_withPrior_predExpr_200kb_CMC.sh
+rm -r /home/luciat/eQTL_PROJECT/INPUT_DATA_CMC/SCZ-PGC/Genotype_data/${c}
+
+id_c=9
+c=$(eval echo "\${cohorts[${id_c}-1]}")
+cp /archive/luciat/eQTL_PROJECT/INPUT_DATA_CMC/SCZ-PGC/Genotype_data/${c}.tar /home/luciat/eQTL_PROJECT/INPUT_DATA_CMC/SCZ-PGC/Genotype_data/
+tar zxf /home/luciat/eQTL_PROJECT/INPUT_DATA_CMC/SCZ-PGC/Genotype_data/${c}.tar -C /home/luciat/eQTL_PROJECT/INPUT_DATA_CMC/SCZ-PGC/Genotype_data/
+rm /home/luciat/eQTL_PROJECT/INPUT_DATA_CMC/SCZ-PGC/Genotype_data/${c}.tar
+sbatch --array=${id_c} --job-name=c${id_c} ElNet_withPrior_predExpr_200kb_CMC_nozip.sh
+rm -r /home/luciat/eQTL_PROJECT/INPUT_DATA_CMC/SCZ-PGC/Genotype_data/${c}
+
+# copy on archive and delete
+readarray -t cohorts < /home/luciat/eQTL_PROJECT/INPUT_DATA/SCZ_cohort_names
+
+for c in ${cohorts[@]}
+do
+	mkdir -p /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/
+	cp /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/predictedExpression.txt.gz /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/
+        rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/predictedExpression.txt.gz
+done
+
+
+###################################
+### tscore and path computation ###
+###################################
+
+### GTEx ###
+readarray -t cohorts < /home/luciat/eQTL_PROJECT/INPUT_DATA/SCZ_cohort_names
+readarray -t tissues < /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/Tissue_PGCgwas
+
+## repeat 1-14
+id_t=1
+t=$(eval echo "\${tissues[${id_t}-1]}")
+
+for id_c in $(seq 36)
+do
+        c=$(eval echo "\${cohorts[${id_c}-1]}")
+	cp /archive/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/predictedExpression.txt.gz /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/
+done
+sbatch --array=1-36 --job-name=t${id_t} ElNet_withPrior_path_200kb_GTEx.sh ${id_t}
+for id_c in $(seq 36)    
+do
+        c=$(eval echo "\${cohorts[${id_c}-1]}")
+	rm -r /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/predictedExpression.txt.gz
+done
+
+# copy on archive and delete
+for t in ${tissues[@]}
+do
+for c in ${cohorts[@]}
+do
+        mkdir -p /archive/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/
+	cp /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/* /archive/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/
+	rm /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/*
+done
+done
+
+
+### CMC ###
+readarray -t cohorts < /home/luciat/eQTL_PROJECT/INPUT_DATA/SCZ_cohort_names
+
+for id_c in $(seq 36)
+do
+        c=$(eval echo "\${cohorts[${id_c}-1]}")
+	cp /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/predictedExpression.txt.gz /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/
+done
+sbatch --array=1-36 --job-name=CMC ElNet_withPrior_path_200kb_CMC.sh
+for id_c in $(seq 36)    
+do
+        c=$(eval echo "\${cohorts[${id_c}-1]}")
+	rm -r /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/predictedExpression.txt.gz
+done
+
+# copy on archive and delete
+for c in ${cohorts[@]}
+do
+        mkdir -p /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/
+	cp /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/* /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/
+	rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/*
+done
+
+
+#############################
+### phenotype association ###
+#############################
+
+### GTEx ###
+readarray -t cohorts < /home/luciat/eQTL_PROJECT/INPUT_DATA/SCZ_cohort_names
+readarray -t tissues < /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/Tissue_PGCgwas
+
+## repeat 1-14
+id_t=1
+t=$(eval echo "\${tissues[${id_t}-1]}")
+
+for c in ${cohorts[@]}
+do	
+	cp /archive/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/predictedTscores.txt /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/
+	cp /archive/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/Pathway_Reactome_scores.txt /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/
+	cp /archive/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/Pathway_GO_scores.txt	/home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/
+done
+
+sbatch --array=1-36 --job-name=t${id_t} ElNet_withPrior_phenoAssociation_200kb_GTEx.sh ${id_t}
+
+for c in ${cohorts[@]}
+do
+        rm /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/predictedTscores.txt
+        rm /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/Pathway_Reactome_scores.txt
+        rm /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/Pathway_GO_scores.txt
+done
+
+
+
+### CMC ###
+readarray -t cohorts < /home/luciat/eQTL_PROJECT/INPUT_DATA/SCZ_cohort_names
+for c in ${cohorts[@]}
+do
+        cp /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/predictedTscores.txt /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/
+	cp /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/Pathway_Reactome_scores.txt /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/
+	cp /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/Pathway_GO_scores.txt /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/
+done
+
+sbatch --array=1-36 --job-name=CMC ElNet_withPrior_phenoAssociation_200kb_CMC.sh
+
+for c in ${cohorts[@]}
+do
+        rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/predictedTscores.txt
+	rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/Pathway_Reactome_scores.txt
+	rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/Pathway_GO_scores.txt
+done
+
+
+# copy on archive 
+for c in ${cohorts[@]}
+do
+	cp /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/pval*RData /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/
+done
+
+
+#####################
+### meta analysis ###
+#####################
+
+### GTEx ###
+sbatch --array=1-14 --job-name=GTEx ElNet_withPrior_metaAnalysis_phenoAssociation_200kb_GTEx.sh
+
+### CMC ###
+mkdir -p /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/Meta_Analysis_SCZ/devgeno0.01_testdevgeno0/
+sbatch --job-name=CMC ElNet_withPrior_metaAnalysis_phenoAssociation_200kb_CMC.sh
+
+sbatch --job-name=combine combine_all_res.sh
+
+
+##################################
+### custom pathway association ###
+##################################
+
+sbatch preproc_custom_path.sh
+
+readarray -t cohorts < /home/luciat/eQTL_PROJECT/INPUT_DATA/SCZ_cohort_names
+for c in ${cohorts[@]}
+do
+        cp /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/predictedTscores.txt /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/
+done
+
+sbatch --array=1-36 --job-name=CMC ElNet_withPrior_customPath_200kb_CMC.sh
+
+sbatch --array=1-36 --job-name=CMC ElNet_withPrior_phenoAssociation_customPath_200kb_CMC.sh
+
+for c in ${cohorts[@]}
+do
+        rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/predictedTscores.txt
+done
+
+sbatch --job-name=CMC ElNet_withPrior_metaAnalysis_phenoAssociation_customPath_200kb_CMC.sh
+
+# copy on archive 
+mkdir -p /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/Meta_Analysis_SCZ/
+cp /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/Meta_Analysis_SCZ/devgeno0.01_testdevgeno0/pval*RData /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/Meta_Analysis_SCZ/
+rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/Meta_Analysis_SCZ/devgeno0.01_testdevgeno0/pval*RData
+
+# copy and delete
+for c in ${cohorts[@]}
+do
+        cp /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/*CMC_GeneSets* /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/
+	rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/*CMC_GeneSets* 
+done
+
+
+#######################################
+### custom pathway association wiki ###
+#######################################
+
+sbatch preproc_custom_path_wiki2019.sh
+
+##### CMC ######
+readarray -t cohorts < /home/luciat/eQTL_PROJECT/INPUT_DATA/SCZ_cohort_names
+for c in ${cohorts[@]}
+do
+        cp /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/predictedTscores.txt /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno$
+done
+
+sbatch --array=1-36 --job-name=wiki2019 PathScore_customPath_CMC.sh WikiPathways_2019_Human.RData WikiPath2019Human
+sbatch --array=1-36 --job-name=wiki2019 PriLer_phenoAssociation_customPath_CMC.sh WikiPathways_2019_Human.RData WikiPath2019Human
+
+for c in ${cohorts[@]}
+do
+        rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/predictedTscores.txt
+done
+
+sbatch --job-name=wiki2019 PriLer_metaAnalysis_phenoAssociation_customPath_CMC.sh WikiPathways_2019_Human.RData WikiPath2019Human
+
+# copy on archive 
+cp /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/Meta_Analysis_SCZ/devgeno0.01_testdevgeno0/pval*WikiPath2019Human*RData /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/Meta_Analysis_SCZ/
+rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/Meta_Analysis_SCZ/devgeno0.01_testdevgeno0/pval*WikiPath2019Human*RData
+
+# copy and delete
+for c in ${cohorts[@]}
+do
+        cp /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/*WikiPath2019Human* /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/
+        rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/*WikiPath2019Human*
+done
+
+
+##### GTEx #####
+readarray -t cohorts < /home/luciat/eQTL_PROJECT/INPUT_DATA/SCZ_cohort_names
+readarray -t tissues < /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/Tissue_PGCgwas
+
+id_t=1
+t=$(eval echo "\${tissues[${id_t}-1]}")
+
+for c in ${cohorts[@]}
+do
+        cp /archive/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/predictedTscores.txt /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/
+done
+
+sbatch --array=1-36 --job-name=wiki2019_${t} PathScore_customPath_GTEx.sh WikiPathways_2019_Human.RData WikiPath2019Human ${t}
+sbatch --array=1-36 --job-name=wiki2019_${t} PriLer_phenoAssociation_customPath_GTEx.sh WikiPathways_2019_Human.RData WikiPath2019Human ${t}
+
+for c in ${cohorts[@]}
+do
+        rm /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/predictedTscores.txt
+done
+
+sbatch --job-name=wiki2019_${t} PriLer_metaAnalysis_phenoAssociation_customPath_GTEx.sh WikiPathways_2019_Human.RData WikiPath2019Human ${t}
+
+# copy on archive 
+cp /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/Meta_Analysis_SCZ/devgeno0.01_testdevgeno0/pval*WikiPath2019Human* /archive/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/Meta_Analysis_SCZ/devgeno0.01_testdevgeno0/
+rm /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/Meta_Analysis_SCZ/devgeno0.01_testdevgeno0/pval*WikiPath2019Human*
+
+# copy and delete
+for c in ${cohorts[@]}
+do
+        cp /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/*WikiPath2019Human* /archive/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/
+        rm /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/*WikiPath2019Human*
+done
+
+########################################
+### test LOF increment for each gene ###
+########################################
+
+readarray -t cohorts < /home/luciat/eQTL_PROJECT/INPUT_DATA/SCZ_cohort_names
+for c in ${cohorts[@]}
+do
+        cp /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/predictedTscores.txt /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/
+done
+
+# ordered according p-value
+sbatch --array=1-36 --job-name=CMC ElNet_withPrior_customPath_200kb_CMC_LoF.sh
+sbatch --array=1-36 --job-name=CMC ElNet_withPrior_phenoAssociation_customPath_200kb_CMC_LoF.sh
+# ordered according Zstat
+sbatch --array=1-36 --job-name=CMC ElNet_withPrior_customPath_200kb_CMC_LoFsigned.sh
+sbatch --array=1-36 --job-name=CMC ElNet_withPrior_phenoAssociation_customPath_200kb_CMC_LoFsigned.sh
+
+
+for c in ${cohorts[@]}
+do
+        rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/predictedTscores.txt
+done
+
+# ordered according p-value
+sbatch --job-name=CMC ElNet_withPrior_metaAnalysis_phenoAssociation_customPath_200kb_CMC_LoF.sh
+# ordered according Zstat
+sbatch --job-name=CMC ElNet_withPrior_metaAnalysis_phenoAssociation_customPath_200kb_CMC_LoFsigned.sh
+
+# copy on archive 
+cp /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/Meta_Analysis_SCZ/devgeno0.01_testdevgeno0/pval*RData /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/Meta_Analysis_SCZ/
+rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/Meta_Analysis_SCZ/devgeno0.01_testdevgeno0/pval*RData
+
+# copy and delete
+for c in ${cohorts[@]}
+do
+        cp /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/*SCZ_LoF_GeneSets* /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/
+	rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/*SCZ_LoF_GeneSets* 
+done
+
+##### create correlation for gene ####
+sbatch --array=1-36 --job-name=CMC corr_customGeneList_SCZLoF.sh
+sbatch --job-name=CMC corr_customGeneList_combine_SCZLoF.sh
+
