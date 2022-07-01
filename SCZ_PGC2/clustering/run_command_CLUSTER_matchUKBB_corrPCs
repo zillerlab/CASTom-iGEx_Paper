@@ -180,3 +180,6 @@ sbatch --job-name=CL_Cases PriLer_cluster_PCs_matchUKBB.sh
 
 # find geneRS differences built on CMC
 sbatch --job-name=CMC risk_score_tscore_corrPCs_clusterSCZ_PCs_endophenotypeUKBB_CMC_matchUKBB.sh
+
+## plot DLPC clustering and PCs and cohort actual distribution
+plot_PCs_cohort_cluster.R
