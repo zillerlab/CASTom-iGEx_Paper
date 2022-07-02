@@ -183,3 +183,16 @@ sbatch --job-name=CMC risk_score_tscore_corrPCs_clusterSCZ_PCs_endophenotypeUKBB
 
 ## plot DLPC clustering and PCs and cohort actual distribution
 plot_PCs_cohort_cluster.R
+
+################################################################################
+##################### moved to garching cluster ################################
+### from cluster clustering_res_matchUKBB_corrPCs/ ###
+
+### combine CRM:
+create_geneRS_clusterReliableMeasure.R
+
+### find drug response based on pathways
+sbatch --job-name=CL_Cases PriLer_cluster_tscore_corrPCs_pathSEA_CMC.sh
+sbatch --job-name=CL_Cases PriLer_cluster_tscore_corrPCs_filt_pathSEA_CMC.sh
+
+
