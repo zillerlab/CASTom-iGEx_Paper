@@ -183,3 +183,7 @@ sbatch --job-name=CMC risk_score_tscore_corrPCs_clusterSCZ_PCs_endophenotypeUKBB
 
 ## plot DLPC clustering and PCs and cohort actual distribution
 plot_PCs_cohort_cluster.R
+
+## plot MHC clustering genes diff (heatmap) and spider plots
+## can only be run on LISA cluster as data cannot be moved!
+plot_SCZclustering_DLPC_LISA.R
