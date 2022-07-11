@@ -122,6 +122,9 @@ cor_mat <- cor(tscore_input[, match(geneInfo_keep$external_gene_name, colnames(t
 diag(cor_mat) <- 0
 new_name <- colnames(cor_mat)
 rownames(cor_mat) <- new_name
+# save
+save(cor_mat, file = sprintf('%sMHC_tscoreOriginal_%sCluster%s_corrGenes.RData',fold_out,type_cluster_data,type_cluster))
+
 
 col <- rev(colorRampPalette(brewer.pal(9, 'PuOr'))(101))
 # col[51] <- 'black'
