@@ -113,6 +113,7 @@ geneInfo_keep <- geneInfo_keep[order(as.numeric(
 print(paste('plot Fig. 3A n.genes =', nrow(geneInfo_keep)))
 # "plot Fig. 3A n.genes = 58"
 pheat_pl_tscore(mat_tscore = tscore_input, cl = cl, info_feat_tscore = geneInfo_keep, 
+                pval_thr_est = pval_feat, 
                 test_feat_tscore = test_feat_tscore, width_pl = 8 + round(length(unique(cl$gr))*0.25), 
                 height_pl = round(3 + nrow(geneInfo_keep)*0.1), outFile = sprintf('%sMHC_tscoreOriginal_%sCluster%s', fold_out,type_cluster_data,type_cluster), 
                 cap = 3, res_pl = 250)
@@ -169,7 +170,7 @@ keep_cogn <- c('FI1 : numeric addition test','FI2 : identify largest number',
 # load risk scores on all samples, (combine all cohorts)
 common_path <- '/home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/Meta_Analysis_SCZ/devgeno0.01_testdevgeno0/update_corrPCs/'
 rs_tot <- read.table(gzfile(sprintf('%s/matchUKBB_allSamples_tscore_corr2Thr0.1_risk_score_relatedPhenotypes.txt.gz', common_path)), 
-                h=T, stringsAsFactors = F, sep = '\t', check.names = F)
+                     h=T, stringsAsFactors = F, sep = '\t', check.names = F)
 rs_MetS <- rs_tot[, phenoInfo$pheno_id[phenoInfo$Field %in% keep_mets]]
 rs_cognFun <- rs_tot[, phenoInfo$pheno_id[match(keep_cogn, phenoInfo$Field)]]
 rownames(rs_MetS) <- rownames(rs_cognFun) <- rs_tot$Individual_ID
