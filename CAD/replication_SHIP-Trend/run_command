@@ -1,0 +1,24 @@
+### run from A. Teumer ###
+# find_correct_REF_ALT_SHIP.sh
+# MatchGenotype_CADall-UKBB_GTEx_run.R
+# convertDosage_corrREFALT_matchedGTEx_CAD.sh
+# ${castom-igex_fold}PriLer_predictGeneExp_smallerVariantSet_run.R
+
+# compute T-scores
+sbatch --job-name=SHIP --array=1-2 PriLer_tscore_pathscore.sh
+
+# predict clustering 
+sbatch --job-name=SHIP --array=1-2 PriLer_cluster_tscore_corrPCs_predict.sh
+# get associated genes
+sbatch --job-name=SHIP --array=1-2 PriLer_predict_cluster_tscore_corrPCs_featureRelTscore.sh
+# get associated pathway (copy filtered pathways)
+sbatch --job-name=SHIP --array=1-2 PriLer_predict_cluster_tscore_corrPCs_featureRelPath.sh
+# evaluate prediction, compared with UKBB
+sbatch --job-name=SHIP --array=1-2 PriLer_cluster_predictEval_tscore_corrPCs.sh
+
+# evaluate differences in endophenotype
+### run by A. Teumer ###
+PriLer_cluster_predict_tscore_corrPCs_phenotype.sh
+# also correction of original gene expression values
+
+
