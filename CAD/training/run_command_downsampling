@@ -1,0 +1,28 @@
+#######################################################
+# downsampling analysis for AA and HLV (50%, 70%, 90%)
+# run on garching cluster
+#######################################################
+
+# downsampling
+Rscript downsample_AA_HLV.R
+
+perc_all=(50 70 90)
+
+####################
+### Artery Aorta ###
+####################
+
+for perc in ${perc_all[@]}
+do
+sbatch --job-name=AA_${perc} PriLer_training_All_downsampl.sh Artery_Aorta ${perc}
+done
+
+############################
+### Heart Left Ventricle ### 
+############################
+
+for perc in ${perc_all[@]}
+do
+sbatch --job-name=HLV_${perc} PriLer_training_All_downsampl.sh Heart_Left_Ventricle ${perc}
+done
+
