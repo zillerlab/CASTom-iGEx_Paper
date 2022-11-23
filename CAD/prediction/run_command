@@ -108,3 +108,17 @@ sbatch --job-name=t13 Combine_filteredGeneExpr_GTEx.sh 13
 sbatch --job-name=t14 Combine_filteredGeneExpr_GTEx.sh 14
 sbatch --job-name=t15 Combine_filteredGeneExpr_GTEx.sh 15
 
+# create CAD related ICD10 files
+sbatch --job-name=pheno create_CADrel_ICD10.sh
+sbatch --job-name=pheno filter_CADrel_pheno.sh
+sbatch --job-name=pheno extract_CAD_pheno.sh
+
+#### UKBB #####
+index_tissues=(1 2 3 4 5 7 8 9 10 11 15)
+
+for i in ${index_tissues[@]}
+do
+sbatch --job-name=t${i}_UKBB --array=1-100%10  Tscore_GTEx_splitGenes_UKBB.sh ${i}
+done
+
+
