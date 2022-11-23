@@ -92,3 +92,19 @@ sbatch --job-name=UKBB_t13 --array=1-100 --exclude psycl[02,05-15] ElNet_withPri
 sbatch --job-name=UKBB_t14 --array=1-100 --exclude psycl[02,05-15] ElNet_withPrior_predExpr_200kb_UKBB.sh 14
 sbatch --job-name=UKBB_t15 --array=1-100 --exclude psycl[02,05-15] ElNet_withPrior_predExpr_200kb_UKBB.sh 15
 
+sbatch --job-name=t1 Combine_filteredGeneExpr_GTEx.sh 1
+sbatch --job-name=t2 Combine_filteredGeneExpr_GTEx.sh 2
+sbatch --job-name=t3 Combine_filteredGeneExpr_GTEx.sh 3
+sbatch --job-name=t4 Combine_filteredGeneExpr_GTEx.sh 4
+sbatch --job-name=t5 Combine_filteredGeneExpr_GTEx.sh 5
+sbatch --job-name=t6 Combine_filteredGeneExpr_GTEx.sh 6
+sbatch --job-name=t7 Combine_filteredGeneExpr_GTEx.sh 7
+sbatch --job-name=t8 Combine_filteredGeneExpr_GTEx.sh 8
+sbatch --job-name=t9 Combine_filteredGeneExpr_GTEx.sh 9
+sbatch --job-name=t10 Combine_filteredGeneExpr_GTEx.sh 10
+sbatch --job-name=t11 Combine_filteredGeneExpr_GTEx.sh 11
+sbatch --job-name=t12 Combine_filteredGeneExpr_GTEx.sh 12
+sbatch --job-name=t13 Combine_filteredGeneExpr_GTEx.sh 13
+sbatch --job-name=t14 Combine_filteredGeneExpr_GTEx.sh 14
+sbatch --job-name=t15 Combine_filteredGeneExpr_GTEx.sh 15
+
