@@ -121,4 +121,58 @@ do
 sbatch --job-name=t${i}_UKBB --array=1-100%10  Tscore_GTEx_splitGenes_UKBB.sh ${i}
 done
 
+sbatch --job-name=t1 PathScore_GTEx.sh 1
+sbatch --job-name=t2 PathScore_GTEx.sh 2
+sbatch --job-name=t3 PathScore_GTEx.sh 3
+sbatch --job-name=t4 PathScore_GTEx.sh 4 
+sbatch --job-name=t5 PathScore_GTEx.sh 5
+sbatch --job-name=t7 PathScore_GTEx.sh 7
+sbatch --job-name=t8 PathScore_GTEx.sh 8
+sbatch --job-name=t9 PathScore_GTEx.sh 9
+sbatch --job-name=t10 PathScore_GTEx.sh 10
+sbatch --job-name=t11 PathScore_GTEx.sh	11
+sbatch --job-name=t15 PathScore_GTEx.sh 15
+
+#####################
+### wiki pathways ###
+#####################
+
+index_tissues=(1 2 3 4 5 7 8 9 10 11 15)
+for i in ${index_tissues[@]}
+do
+sbatch --job-name=t${i} PathScore_wikiPath_GTEx.sh ${i}
+done
+
+#####################
+### path analysis ###
+#####################
+
+sbatch --job-name=G1p --array=1-14 --exclude psycl[10,13,14,15] ElNet_withPrior_path_200kb.sh German1
+sbatch --job-name=G2p --array=1-14 --exclude psycl[10,13,14,15] ElNet_withPrior_path_200kb.sh German2
+sbatch --job-name=G3p --array=1-14 --exclude psycl[10,13,14,15] ElNet_withPrior_path_200kb.sh German3
+sbatch --job-name=G4p --array=1-14 --exclude psycl[10,13,14,15] ElNet_withPrior_path_200kb.sh German4
+sbatch --job-name=G5p --array=1-14 --exclude psycl[10,13,14,15] ElNet_withPrior_path_200kb.sh German5 
+sbatch --job-name=CGp --array=1-14 --exclude psycl[10,13,14,15] ElNet_withPrior_path_200kb.sh CG
+sbatch --job-name=LUp --array=1-14 --exclude psycl[10,13,14,15] ElNet_withPrior_path_200kb.sh LURIC
+sbatch --job-name=MGp --array=1-14 --exclude psycl[10,13,14,15] ElNet_withPrior_path_200kb.sh MG
+sbatch --job-name=WTCp --array=1-14 --exclude psycl[10,13,14,15] ElNet_withPrior_path_200kb.sh WTCCC
+
+
+##################################
+### association with phenotype ###
+##################################
+# correct for covariates: PC1-PC10 + Gender
+
+sbatch --job-name=G1a --array=1-15 --exclude psycl[13-15] ElNet_withPrior_phenoAssociation_200kb_CAD.sh German1
+sbatch --job-name=G2a --array=1-15 --exclude psycl[13-15] ElNet_withPrior_phenoAssociation_200kb_CAD.sh German2
+sbatch --job-name=G3a --array=1-15 --exclude psycl[13-15] ElNet_withPrior_phenoAssociation_200kb_CAD.sh German3
+sbatch --job-name=G4a --array=1-15 --exclude psycl[13-15] ElNet_withPrior_phenoAssociation_200kb_CAD.sh German4
+sbatch --job-name=G5a --array=1-15 --exclude psycl[13-15] ElNet_withPrior_phenoAssociation_200kb_CAD.sh German5
+sbatch --job-name=CGa --array=1-15 --exclude psycl[13-15] ElNet_withPrior_phenoAssociation_200kb_CAD.sh CG
+sbatch --job-name=LUa --array=1-15 --exclude psycl[13-15] ElNet_withPrior_phenoAssociation_200kb_CAD.sh LURIC
+sbatch --job-name=MGa --array=1-15 --exclude psycl[13-15] ElNet_withPrior_phenoAssociation_200kb_CAD.sh MG 
+sbatch --job-name=WTCa --array=1-15 --exclude psycl[13-15] ElNet_withPrior_phenoAssociation_200kb_CAD.sh WTCCC
+
+### meta analysis CAD cohorts
+sbatch --job-name=meta_CAD --array=1-15 ElNet_withPrior_metaAnalysis_phenoAssociation_200kb.sh
 
