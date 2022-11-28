@@ -21,5 +21,10 @@ else
 	name_fold=${cohort}
 fi
 
-Rscript /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/RSCRIPTS/create_cov_pheno_run.R --mdsFile ${path_mds}/${name_fold}/01_qc/covariates.txt --sampleFile ${path_sample}/${cohort}/oxford/ReplaceDots/${short_name}_filtered_SampleInfos --removeSampleFile /psycl/g/mpsukb/CAD/geno_qced_bf_imputation/mergedG1toWTC/mergedG1toWTC_filtBadSamples_AllSamplesToRemove_0125.txt --cohort_name ${cohort} --outFold ${path_out}/${cohort}/ 
+Rscript create_cov_pheno_run.R \
+	--mdsFile ${path_mds}/${name_fold}/01_qc/covariates.txt \
+	--sampleFile ${path_sample}/${cohort}/oxford/ReplaceDots/${short_name}_filtered_SampleInfos \
+	--removeSampleFile /psycl/g/mpsukb/CAD/geno_qced_bf_imputation/mergedG1toWTC/mergedG1toWTC_filtBadSamples_AllSamplesToRemove_0125.txt \
+	--cohort_name ${cohort} \
+	--outFold ${path_out}/${cohort}/ 
 

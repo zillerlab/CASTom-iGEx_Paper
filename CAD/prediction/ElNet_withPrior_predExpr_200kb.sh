@@ -14,8 +14,13 @@ id_t=${SLURM_ARRAY_TASK_ID}
 
 readarray -t tissues < OUTPUT_GTEx/Tissue_CADgwas
 t=$(eval echo "\${tissues[${id_t}-1]}")
-git_fold=/psycl/g/mpsziller/lucia/priler_project/Software/model_prediction/
+git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_prediction/
 
-Rscript ${git_fold}ElNet_withPrior_predictGeneExp_run.R --genoDat_file INPUT_DATA_GTEx/CAD/Genotyping_data/${cohort}/Genotype_dosage_ --covDat_file INPUT_DATA_GTEx/CAD/Covariates/${cohort}/covariateMatrix.txt --outFold OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/${cohort}/ --outTrain_fold OUTPUT_GTEx/train_GTEx/${t}/200kb/CAD_GWAS_bin5e-2/ --InfoFold OUTPUT_GTEx/train_GTEx/${t}/ 
+${git_fold}PriLer_predictGeneExp_run.R \
+	--genoDat_file INPUT_DATA_GTEx/CAD/Genotyping_data/${cohort}/Genotype_dosage_ \
+	--covDat_file INPUT_DATA_GTEx/CAD/Covariates/${cohort}/covariateMatrix.txt \
+	--outFold OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/${cohort}/ \
+	--outTrain_fold OUTPUT_GTEx/train_GTEx/${t}/200kb/CAD_GWAS_bin5e-2/ \
+	--InfoFold OUTPUT_GTEx/train_GTEx/${t}/ 
 
 

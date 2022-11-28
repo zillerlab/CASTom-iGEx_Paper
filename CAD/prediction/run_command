@@ -29,150 +29,86 @@ sbatch --job-name=UKBB phenotypePreproc_UKBB.sh
 
 # create folder for each tissue
 tissues=$(awk '{print $1}' /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/Tissue_CADgwas)
+cohort_name=(German1 German2 German3 German4 German5 CG LURIC MG WTCCC UKBB)
 for t in ${tissues[@]}
 do
+for c in ${cohort_name[@]}
+do
 	# for train
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/train_GTEx/${t}/
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/train_GTEx/${t}/200kb/
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/train_GTEx/${t}/200kb/CAD_GWAS_bin5e-2/
+	mkdir -p /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/train_GTEx/${t}/200kb/CAD_GWAS_bin5e-2/
 	
 	# for pred
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/German1/
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/German2/
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/German3/
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/German4/
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/German5/
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/CG/
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/LURIC/
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/MG/
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/WTCCC/
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/UKBB/ 
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/German1/devgeno0.01_testdevgeno0/
-        mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/German2/devgeno0.01_testdevgeno0/
-        mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/German3/devgeno0.01_testdevgeno0/
-        mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/German4/devgeno0.01_testdevgeno0/
-        mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/German5/devgeno0.01_testdevgeno0/
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/CG/devgeno0.01_testdevgeno0/
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/LURIC/devgeno0.01_testdevgeno0/
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/MG/devgeno0.01_testdevgeno0/
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/WTCCC/devgeno0.01_testdevgeno0/
-	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/
+	mkdir /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/${c}/devgeno0.01_testdevgeno0/
+done
 done
 
+index_tissues=(1 2 3 4 5 7 8 9 10 11 15)
+
 ###############
-### predict ###
+#### UKBB #####
 ###############
-
-sbatch --job-name=G1 --array=1-15 --exclude psycl[10,13,14,15] ElNet_withPrior_predExpr_200kb.sh German1
-sbatch --job-name=G2 --array=1-15 --exclude psycl[10,13,14,15] ElNet_withPrior_predExpr_200kb.sh German2
-sbatch --job-name=G3 --array=1-15 --exclude psycl[10,13,14,15] ElNet_withPrior_predExpr_200kb.sh German3
-sbatch --job-name=G4 --array=1-15 --exclude psycl[10,13,14,15] ElNet_withPrior_predExpr_200kb.sh German4
-sbatch --job-name=G5 --array=1-15 --exclude psycl[10,13,14,15] ElNet_withPrior_predExpr_200kb.sh German5
-sbatch --job-name=CG --array=1-15 --exclude psycl[10,13,14,15] ElNet_withPrior_predExpr_200kb.sh CG
-sbatch --job-name=LURIC --array=1-15 --exclude psycl[10,13,14,15] ElNet_withPrior_predExpr_200kb.sh LURIC
-sbatch --job-name=MG --array=1-15 --exclude psycl[10,13,14,15] ElNet_withPrior_predExpr_200kb.sh MG
-sbatch --job-name=WTCCC --array=1-15 --exclude psycl[10,13,14,15] ElNet_withPrior_predExpr_200kb.sh WTCCC
-
-sbatch --job-name=UKBB_t1 --array=1-100%50 --exclude psycl[10-15] ElNet_withPrior_predExpr_200kb_UKBB.sh 1
-sbatch --job-name=UKBB_t2 --array=1-100%50 ElNet_withPrior_predExpr_200kb_UKBB.sh 2
-sbatch --job-name=UKBB_t3 --array=1-100%50 ElNet_withPrior_predExpr_200kb_UKBB.sh 3
-sbatch --job-name=UKBB_t4 --array=1-100%50 ElNet_withPrior_predExpr_200kb_UKBB.sh 4
-sbatch --job-name=UKBB_t5 --array=1-100%10 --exclude psycl[10-15] ElNet_withPrior_predExpr_200kb_UKBB.sh 5 
-sbatch --job-name=UKBB_t6 --array=1-100%50 ElNet_withPrior_predExpr_200kb_UKBB.sh 6 
-sbatch --job-name=UKBB_t7 --array=1-100%10 --exclude psycl[10-15] ElNet_withPrior_predExpr_200kb_UKBB.sh 7
-sbatch --job-name=UKBB_t8 --array=1-100 --exclude psycl[02,05-15] ElNet_withPrior_predExpr_200kb_UKBB.sh 8
-sbatch --job-name=UKBB_t9 --array=1-100 --exclude psycl[02,05-15] ElNet_withPrior_predExpr_200kb_UKBB.sh 9
-sbatch --job-name=UKBB_t10 --array=1-100 --exclude psycl[02,05-15] ElNet_withPrior_predExpr_200kb_UKBB.sh 10
-sbatch --job-name=UKBB_t11 --array=1-100 ElNet_withPrior_predExpr_200kb_UKBB.sh 11
-sbatch --job-name=UKBB_t12 --array=1-100 --exclude psycl[02,05-15] ElNet_withPrior_predExpr_200kb_UKBB.sh 12
-sbatch --job-name=UKBB_t13 --array=1-100 --exclude psycl[02,05-15] ElNet_withPrior_predExpr_200kb_UKBB.sh 13
-sbatch --job-name=UKBB_t14 --array=1-100 --exclude psycl[02,05-15] ElNet_withPrior_predExpr_200kb_UKBB.sh 14
-sbatch --job-name=UKBB_t15 --array=1-100 --exclude psycl[02,05-15] ElNet_withPrior_predExpr_200kb_UKBB.sh 15
-
-sbatch --job-name=t1 Combine_filteredGeneExpr_GTEx.sh 1
-sbatch --job-name=t2 Combine_filteredGeneExpr_GTEx.sh 2
-sbatch --job-name=t3 Combine_filteredGeneExpr_GTEx.sh 3
-sbatch --job-name=t4 Combine_filteredGeneExpr_GTEx.sh 4
-sbatch --job-name=t5 Combine_filteredGeneExpr_GTEx.sh 5
-sbatch --job-name=t6 Combine_filteredGeneExpr_GTEx.sh 6
-sbatch --job-name=t7 Combine_filteredGeneExpr_GTEx.sh 7
-sbatch --job-name=t8 Combine_filteredGeneExpr_GTEx.sh 8
-sbatch --job-name=t9 Combine_filteredGeneExpr_GTEx.sh 9
-sbatch --job-name=t10 Combine_filteredGeneExpr_GTEx.sh 10
-sbatch --job-name=t11 Combine_filteredGeneExpr_GTEx.sh 11
-sbatch --job-name=t12 Combine_filteredGeneExpr_GTEx.sh 12
-sbatch --job-name=t13 Combine_filteredGeneExpr_GTEx.sh 13
-sbatch --job-name=t14 Combine_filteredGeneExpr_GTEx.sh 14
-sbatch --job-name=t15 Combine_filteredGeneExpr_GTEx.sh 15
 
 # create CAD related ICD10 files
 sbatch --job-name=pheno create_CADrel_ICD10.sh
-sbatch --job-name=pheno filter_CADrel_pheno.sh
 sbatch --job-name=pheno extract_CAD_pheno.sh
 
-#### UKBB #####
-index_tissues=(1 2 3 4 5 7 8 9 10 11 15)
+for i in ${index_tissues[@]}
+do
+sbatch --job-name=UKBB_t${i} --array=1-100%50 --exclude psycl[10-15] ElNet_withPrior_predExpr_200kb_UKBB.sh ${i}
+sbatch --job-name=t${i} Combine_filteredGeneExpr_GTEx.sh ${i}
+done
 
 for i in ${index_tissues[@]}
 do
 sbatch --job-name=t${i}_UKBB --array=1-100%10  Tscore_GTEx_splitGenes_UKBB.sh ${i}
 done
 
-sbatch --job-name=t1 PathScore_GTEx.sh 1
-sbatch --job-name=t2 PathScore_GTEx.sh 2
-sbatch --job-name=t3 PathScore_GTEx.sh 3
-sbatch --job-name=t4 PathScore_GTEx.sh 4 
-sbatch --job-name=t5 PathScore_GTEx.sh 5
-sbatch --job-name=t7 PathScore_GTEx.sh 7
-sbatch --job-name=t8 PathScore_GTEx.sh 8
-sbatch --job-name=t9 PathScore_GTEx.sh 9
-sbatch --job-name=t10 PathScore_GTEx.sh 10
-sbatch --job-name=t11 PathScore_GTEx.sh	11
-sbatch --job-name=t15 PathScore_GTEx.sh 15
+### pathways ####
+for i in ${index_tissues[@]}
+do
+sbatch --job-name=t${i} PathScore_GTEx.sh ${i}
+done
 
-#####################
 ### wiki pathways ###
-#####################
-
-index_tissues=(1 2 3 4 5 7 8 9 10 11 15)
 for i in ${index_tissues[@]}
 do
 sbatch --job-name=t${i} PathScore_wikiPath_GTEx.sh ${i}
 done
 
-#####################
-### path analysis ###
-#####################
+##################
+### CARDIOGRAM ###
+##################
 
-sbatch --job-name=G1p --array=1-14 --exclude psycl[10,13,14,15] ElNet_withPrior_path_200kb.sh German1
-sbatch --job-name=G2p --array=1-14 --exclude psycl[10,13,14,15] ElNet_withPrior_path_200kb.sh German2
-sbatch --job-name=G3p --array=1-14 --exclude psycl[10,13,14,15] ElNet_withPrior_path_200kb.sh German3
-sbatch --job-name=G4p --array=1-14 --exclude psycl[10,13,14,15] ElNet_withPrior_path_200kb.sh German4
-sbatch --job-name=G5p --array=1-14 --exclude psycl[10,13,14,15] ElNet_withPrior_path_200kb.sh German5 
-sbatch --job-name=CGp --array=1-14 --exclude psycl[10,13,14,15] ElNet_withPrior_path_200kb.sh CG
-sbatch --job-name=LUp --array=1-14 --exclude psycl[10,13,14,15] ElNet_withPrior_path_200kb.sh LURIC
-sbatch --job-name=MGp --array=1-14 --exclude psycl[10,13,14,15] ElNet_withPrior_path_200kb.sh MG
-sbatch --job-name=WTCp --array=1-14 --exclude psycl[10,13,14,15] ElNet_withPrior_path_200kb.sh WTCCC
+for c in ${cohort_name[@]}
+do
+sbatch --job-name=${c} --array=1-5,7-11,15 --exclude psycl[10,13,14,15] ElNet_withPrior_predExpr_200kb.sh ${c}
+done
 
+for c in ${cohort_name[@]}
+do
+sbatch --job-name=${c}p --array=1-5,7-11,15 --exclude psycl[10,13,14,15] ElNet_withPrior_path_200kb.sh ${c}
+done
 
-##################################
-### association with phenotype ###
-##################################
-# correct for covariates: PC1-PC10 + Gender
+for c in ${cohort_name[@]}
+do
+sbatch --job-name=${c}wikip --array=1-5,7-11,15 --exclude psycl[10,13,14,15] PathScore_wikiPath_CardioGram_GTEx.sh ${c}   
+done
 
-sbatch --job-name=G1a --array=1-15 --exclude psycl[13-15] ElNet_withPrior_phenoAssociation_200kb_CAD.sh German1
-sbatch --job-name=G2a --array=1-15 --exclude psycl[13-15] ElNet_withPrior_phenoAssociation_200kb_CAD.sh German2
-sbatch --job-name=G3a --array=1-15 --exclude psycl[13-15] ElNet_withPrior_phenoAssociation_200kb_CAD.sh German3
-sbatch --job-name=G4a --array=1-15 --exclude psycl[13-15] ElNet_withPrior_phenoAssociation_200kb_CAD.sh German4
-sbatch --job-name=G5a --array=1-15 --exclude psycl[13-15] ElNet_withPrior_phenoAssociation_200kb_CAD.sh German5
-sbatch --job-name=CGa --array=1-15 --exclude psycl[13-15] ElNet_withPrior_phenoAssociation_200kb_CAD.sh CG
-sbatch --job-name=LUa --array=1-15 --exclude psycl[13-15] ElNet_withPrior_phenoAssociation_200kb_CAD.sh LURIC
-sbatch --job-name=MGa --array=1-15 --exclude psycl[13-15] ElNet_withPrior_phenoAssociation_200kb_CAD.sh MG 
-sbatch --job-name=WTCa --array=1-15 --exclude psycl[13-15] ElNet_withPrior_phenoAssociation_200kb_CAD.sh WTCCC
+### association with phenotype 
+for c in ${cohort_name[@]}
+do
+sbatch --job-name=${c}a --array=1-5,7-11,15 --exclude psycl[13-15] ElNet_withPrior_phenoAssociation_200kb_CAD.sh ${c}
+done
+
+for c in ${cohort_name[@]}
+do
+sbatch --job-name=${c} --array=1-5,7-11,15  PriLer_phenoAssociation_wikiPath_CardioGram_GTEx.sh ${c}
+done
 
 ### meta analysis CAD cohorts
-sbatch --job-name=meta_CAD --array=1-15 ElNet_withPrior_metaAnalysis_phenoAssociation_200kb.sh
+sbatch --job-name=meta_CAD --array=1-5,7-11,15 ElNet_withPrior_metaAnalysis_phenoAssociation_200kb.sh
+sbatch --job-name=meta_CAD --array=1-5,7-11,15 PriLer_phenoAssociation_wikiPath_CardioGram_meta_GTEx.sh
+
+
+
 
