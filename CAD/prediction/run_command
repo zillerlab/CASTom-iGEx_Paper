@@ -75,6 +75,22 @@ do
 sbatch --job-name=t${i} PathScore_wikiPath_GTEx.sh ${i}
 done
 
+### association with phenotype
+# prepare
+sbatch --job-name=prepare --array=1-5,7-11,15 PriLer_phenoAssociation_GTEx_prepare_CAD.sh 
+sbatch --job-name=prepare --array=1-5,7-11,15 PriLer_phenoAssociation_GTEx_prepare_wikiPath_CAD.sh
+
+for i in ${index_tissues[@]}
+do
+# compute
+sbatch --job-name=t${i} --array=1-100%30 PriLer_phenoAssociation_GTEx_tscore_CAD.sh ${i}
+sbatch --job-name=t${i} --array=1-100%30 PriLer_phenoAssociation_GTEx_pathR_CAD.sh ${i}
+sbatch --job-name=t${i} --array=1-100%30 PriLer_phenoAssociation_GTEx_pathGO_CAD.sh ${i}
+sbatch --job-name=t${i}_wiki PriLer_phenoAssociation_GTEx_wikiPath_CAD.sh ${i}
+# combine
+sbatch --job-name=comb --array=${i} PriLer_phenoAssociation_GTEx_combine_CAD.sh
+done
+
 ##################
 ### CARDIOGRAM ###
 ##################
