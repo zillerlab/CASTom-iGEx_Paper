@@ -92,6 +92,9 @@ sbatch --job-name=comb --array=${i} PriLer_phenoAssociation_GTEx_combine_CAD.sh
 sbatch --job-name=comb_wiki --array=${i} PriLer_phenoAssociation_GTEx_combine_wikiPath_CAD.sh
 done
 
+### combine all results
+Rscript ./create_txt_allTissues_CAD_UKBB.R
+
 ##################
 ### CARDIOGRAM ###
 ##################
@@ -126,6 +129,7 @@ done
 sbatch --job-name=meta_CAD --array=1-5,7-11,15 ElNet_withPrior_metaAnalysis_phenoAssociation_200kb.sh
 sbatch --job-name=meta_CAD --array=1-5,7-11,15 PriLer_phenoAssociation_wikiPath_CardioGram_meta_GTEx.sh
 
-
+### combine all results
+Rscript ./create_txt_allTissues_CAD_CardioGram.R
 
 

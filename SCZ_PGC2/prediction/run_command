@@ -424,3 +424,6 @@ done
 sbatch --array=1-36 --job-name=CMC corr_customGeneList_SCZLoF.sh
 sbatch --job-name=CMC corr_customGeneList_combine_SCZLoF.sh
 
+###################################
+### combine all results 
+Rscript ./create_txt_allTissues_SCZ_PGC.R
