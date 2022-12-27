@@ -48,9 +48,17 @@ index_tissues=(1 2 3 4 5 7 8 9 10 11 15)
 #### UKBB #####
 ###############
 
+# process UKBB phenotypes
+sbatch phenotypePreproc_UKBB_phenoCADrelated.sh
+# copy already processed ICD9-ICD10 OPSC4
+cp /psycl/g/mpsziller/lucia/UKBB/eQTL_PROJECT/INPUT_DATA/Covariates/phenotypeMatrix_ICD9-10_OPCS4.txt /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/INPUT_DATA_GTEx/CAD/Covariates/UKBB/
+cp /psycl/g/mpsziller/lucia/UKBB/eQTL_PROJECT/INPUT_DATA/Covariates/phenotypeDescription_manualproc_ICD9-10_OPCS4.txt /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/INPUT_DATA_GTEx/CAD/Covariates/UKBB/
+sbatch annotate_phenoCADrelated.sh
+
 # create CAD related ICD10 files
 sbatch --job-name=pheno create_CADrel_ICD10.sh
 sbatch --job-name=pheno extract_CAD_pheno.sh
+
 
 for i in ${index_tissues[@]}
 do
@@ -94,6 +102,33 @@ done
 
 ### combine all results
 Rscript ./create_txt_allTissues_CAD_UKBB.R
+
+### associate with endophenotype
+sbatch create_cov_med.sh
+
+for i in ${index_tissues[@]}
+do
+sbatch --job-name=t${i}_E --array=1-100%10 --exclude psycl15 PriLer_phenoAssociation_GTEx_tscore_CADrelated.sh ${i}
+sbatch --job-name=t${i}_E --array=1-100%10 --exclude psycl15 PriLer_phenoAssociation_GTEx_pathR_CADrelated.sh ${i}
+sbatch --job-name=t${i}_E --array=1-100%10 --exclude psycl15 PriLer_phenoAssociation_GTEx_pathGO_CADrelated.sh ${i}
+# additional ICD10 diagnosis
+sbatch --job-name=t${i}_D --array=1-100%30 PriLer_phenoAssociation_GTEx_tscore_CADdiagn.sh ${i}
+sbatch --job-name=t${i}_D --array=1-100%30 PriLer_phenoAssociation_GTEx_pathR_CADdiagn.sh ${i}
+sbatch --job-name=t${i}_D --array=1-100%30 PriLer_phenoAssociation_GTEx_pathGO_CADdiagn.sh ${i}
+# blood biochemestry
+sbatch --job-name=t${i}_bb --array=1-100 PriLer_phenoAssociation_GTEx_tscore_BBTreat.sh ${i}
+sbatch --job-name=t${i}_bb --array=1-100 PriLer_phenoAssociation_GTEx_pathR_BBTreat.sh ${i}
+sbatch --job-name=t${i}_bb --array=1-100 PriLer_phenoAssociation_GTEx_pathGO_BBTreat.sh ${i}
+# blood count ratio
+sbatch --job-name=t${i}_bcr --array=1-100%20 PriLer_phenoAssociation_GTEx_tscore_BCratio.sh ${i}
+sbatch --job-name=t${i}_bcr --array=1-100%20 PriLer_phenoAssociation_GTEx_pathR_BCratio.sh ${i}
+sbatch --job-name=t${i}_bcr --array=1-100%20 PriLer_phenoAssociation_GTEx_pathGO_BCratio.sh ${i}
+# combine
+sbatch --job-name=combE --array=${i} PriLer_phenoAssociation_GTEx_combine_CADrelated.sh
+sbatch --job-name=combD --array=${i} PriLer_phenoAssociation_GTEx_combine_CADdiagn.sh
+sbatch --job-name=combBB --array=${i} PriLer_phenoAssociation_GTEx_combine_BBTreat.sh
+sbatch --job-name=combBC --array=${i} PriLer_phenoAssociation_GTEx_combine_BCratio.sh
+done
 
 ##################
 ### CARDIOGRAM ###
