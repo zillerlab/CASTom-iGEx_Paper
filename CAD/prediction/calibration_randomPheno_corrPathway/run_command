@@ -1,0 +1,21 @@
+# generate random phenotype and test associations
+sbatch create_random_pheno_CADbased.sh
+
+# test only for Whole Blood
+sbatch --job-name=t15 --array=1-100%20 PriLer_phenoAssociation_GTEx_tscore_random.sh 15
+sbatch --job-name=t15 --array=1-100%20 PriLer_phenoAssociation_GTEx_pathR_random.sh 15
+sbatch --job-name=t15 --array=1-100%20 PriLer_phenoAssociation_GTEx_pathGO_random.sh 15
+# combine
+sbatch --job-name=comb --array=15 PriLer_phenoAssociation_GTEx_combine_random.sh
+
+# generate pathway from genes in the same locus for whole blood
+sbatch create_genesets_loci_WB.sh
+sbatch --job-name=path PathScore_geneSets_sameLocus_WB.sh
+sbatch --job-name=prepare PriLer_phenoAssociation_prepare_geneSets_sameLocus_WB.sh
+sbatch --job-name=associate PriLer_phenoAssociation_GTEx_geneSets_sameLocus_WB.sh
+sbatch --job-name=combine PriLer_phenoAssociation_GTEx_combine_geneSets_sameLocus_WB_CAD.sh
+
+# generate random tscores with variable correlation
+# phenotype assumed polygenic
+sbatch --job-name=sim simulate_tscores_variable_corr.sh
+
