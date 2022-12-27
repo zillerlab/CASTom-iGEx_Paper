@@ -7,7 +7,5 @@
 
 module load R/3.5.3
 
-cd /psycl/g/mpsziller/lucia/castom_cad_scz/CAD/matched_GWAS/
-
 Rscript combine_gwas_output.R
 
