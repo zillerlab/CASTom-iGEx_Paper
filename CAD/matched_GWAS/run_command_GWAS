@@ -1,0 +1,16 @@
+### run GWAS for CAD on the same SNP set ###
+# done for laura to get plink format for PRS, plink1.9
+sbatch --array=1-22 --job-name=conv convert_dosage_plink.sh
+sbatch --array=1-20 --job-name=conv convert_dosage_plink_merge.sh # optional if merge didn't work
+
+# prepare covariate file 
+sbatch prepare_covariates_GWAS.sh
+
+# run glm with plink2
+sbatch --array=1-22 gwas_from_plink2_glm.sh
+
+# combine output
+sbatch --job-name=comb combine_GWAS_output.sh
+
+# annotate regSNPs with GWAS results (table)
+sbatch --job-name=ann annotate_regSNPs_with_gwas.sh
