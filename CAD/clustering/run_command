@@ -29,23 +29,10 @@ sbatch --job-name=CL_Cases --array=11,15 PriLer_cluster_tscore_corrPCs_pathSEA_G
 Rscript get_common_treatments_pathSEA_liverCL.R
 sbatch --job-name=CL_Cases --array=1-19 PriLer_cluster_treatmentResponse_pathSEAhits_tscore_corrPCs_GTEx_CAD.sh
 
-
-
-
 ########################
 ## compare benchmarks ##
 ########################
 RSCRIPTS/compare_cl_corrPCs.R
-
-#######################
-## random clustering ##
-#######################
-RSCRIPTS/SCRIPTS_v2/randomCluster_Liver/create_random_cluster.R
-sbatch --job-name=CL_random --array=1-50 PriLer_random_cluster_endophenotype_tscore_corrPCs_GTEx_CAD.sh
-sbatch --job-name=CL_random --array=1-50 PriLer_random_cluster_endophenotype_nominal_tscore_corrPCs_GTEx_CAD.sh
-sbatch --job-name=CL_random --array=1-50 PriLer_random_cluster_treatmentResponse_tscore_corrPCs_GTEx_CAD.sh
-sbatch --job-name=CL_random --array=1-10 PriLer_random_cluster_tscore_corrPCs_featureRelTscore_GTEx_CAD.sh
-sbatch --job-name=CL_random --array=1-10 PriLer_random_cluster_tscore_corrPCs_featureRelPath_GTEx_CAD.sh
 
 #############################################
 ## predict on external cohort (only Liver) ##
