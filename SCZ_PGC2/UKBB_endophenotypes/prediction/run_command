@@ -1,0 +1,13 @@
+
+
+### predict risk score on UKBB ###
+sbatch --job-name=CMC_rs risk_score_SCZrelPheno_tscore_corrPCs_CMC.sh
+sbatch --job-name=GTEx_rs --array=8-11,13-15 risk_score_SCZrelPheno_tscore_corrPCs_GTEx.sh 100
+sbatch --job-name=GTEx_rs --array=7 risk_score_SCZrelPheno_tscore_corrPCs_GTEx.sh 99
+sbatch --job-name=GTEx_rs --array=12 risk_score_SCZrelPheno_tscore_corrPCs_GTEx.sh 98
+
+# evaluate R2
+sbatch --job-name=CMC_rs_e evaluate_risk_score_SCZrelPheno_tscore_corrPCs_CMC.sh
+sbatch --job-name=GTEx_rs_e --array=7-15 evaluate_risk_score_SCZrelPheno_tscore_corrPCs_GTEx.sh
+sbatch --job-name=plot_rs plot_evaluate_risk_score_corrPCs.sh
+

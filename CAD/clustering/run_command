@@ -1,0 +1,86 @@
+sbatch --job-name=def define_subset_CADHARD.sh
+
+### cluster based on PCs (benchmark)###
+sbatch --job-name=CL_Cases cluster_PCs_CAD.sh Cases
+sbatch --job-name=CL_Cases cluster_PCs_endophenotype_CAD.sh Cases
+
+### cluster zscaled tscores (benchmark) ###
+sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_tscore_GTEx_CAD.sh
+sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_tscore_GTEx_CAD.sh
+
+### cluster Cases without zscaling, corr for PCs (benchmark) ###
+sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_tscore_corrPCs_original_GTEx_CAD.sh
+sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_tscore_corrPCs_original_GTEx_CAD.sh 
+
+#########################################
+### cluster removing PCs from tscores ###
+sbatch --job-name=filt --array=1-5,7-11,15 filter_pathway_JS.sh # filter pathway to associate with clustering structure
+sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_tscore_corrPCs_GTEx_CAD.sh
+sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_tscore_corrPCs_GTEx_CAD.sh # hypothesis free: UKBB phenotypes
+sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_nominal_tscore_corrPCs_GTEx_CAD.sh # hypothesis-driven
+sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_treatmentResponse_tscore_corrPCs_GTEx_CAD.sh # treatment response
+
+## focus on Liver cluster ##
+sbatch --job-name=CL_Cases --array=11,15 PriLer_cluster_tscore_corrPCs_featureRelTscore_GTEx_CAD.sh
+# sbatch --job-name=CL_Cases --array=11 PriLer_cluster_tscore_corrPCs_dpGSEA_GTEx_CAD.sh
+sbatch --job-name=CL_Cases --array=11,15 PriLer_cluster_tscore_corrPCs_featureRelPath_GTEx_CAD.sh
+sbatch --job-name=CL_Cases --array=11,15 PriLer_cluster_tscore_corrPCs_pathSEA_GTEx_CAD.sh
+# check treatment response
+Rscript get_common_treatments_pathSEA_liverCL.R
+sbatch --job-name=CL_Cases --array=1-19 PriLer_cluster_treatmentResponse_pathSEAhits_tscore_corrPCs_GTEx_CAD.sh
+
+
+
+
+########################
+## compare benchmarks ##
+########################
+RSCRIPTS/compare_cl_corrPCs.R
+
+#######################
+## random clustering ##
+#######################
+RSCRIPTS/SCRIPTS_v2/randomCluster_Liver/create_random_cluster.R
+sbatch --job-name=CL_random --array=1-50 PriLer_random_cluster_endophenotype_tscore_corrPCs_GTEx_CAD.sh
+sbatch --job-name=CL_random --array=1-50 PriLer_random_cluster_endophenotype_nominal_tscore_corrPCs_GTEx_CAD.sh
+sbatch --job-name=CL_random --array=1-50 PriLer_random_cluster_treatmentResponse_tscore_corrPCs_GTEx_CAD.sh
+sbatch --job-name=CL_random --array=1-10 PriLer_random_cluster_tscore_corrPCs_featureRelTscore_GTEx_CAD.sh
+sbatch --job-name=CL_random --array=1-10 PriLer_random_cluster_tscore_corrPCs_featureRelPath_GTEx_CAD.sh
+
+#############################################
+## predict on external cohort (only Liver) ##
+#############################################
+name_c=(German1 German2 German3 German4 German5 CG WTCCC LURIC MG)
+for c in ${name_c[@]}
+do
+sbatch --job-name=CL_Cases_${c} --array=1-5,7-11,15 PriLer_cluster_tscore_corrPCs_predict_GTEx_CAD.sh ${c} # predict clustering (needed all cluster to evaluate risk score)
+sbatch --job-name=CL_Cases_${c} --array=11 PriLer_predict_cluster_tscore_corrPCs_featureRelTscore_GTEx_CAD.sh ${c} # find associated genes
+done
+# evaluate (phenotype, percentage, corrlation, loci)
+sbatch --job-name=CL_Cases --array=11 PriLer_cluster_predictEval_tscore_corrPCs_GTEx_CAD.sh
+
+#######################
+## gene-RS benchmark ##
+#######################
+
+sbatch --job-name=rs_CAD --array=1,3-4,7,9-11,15 risk_score_clusterCAD_tscore_corrPCs.sh 100
+sbatch --job-name=rs_CAD --array=2,5,8 risk_score_clusterCAD_tscore_corrPCs.sh 99
+sbatch --job-name=rs_ev_CAD --array=1-5,7-11,15 evaluate_risk_score_CADrel_tscore_corrPCs.sh # r2 for riskscore - phenotype association
+sbatch --job-name=pl_rs_ev plot_evaluate_risk_score_corrPCs.sh
+sbatch --job-name=cl_rs_CAD --array=1-5,7-11,15 risk_score_clusterCAD_tscore_corrPCs_cluster_endophenotype.sh
+sbatch --job-name=compare_gr --array=1-5,7-11,15 compare_endophenotypeAnalysis_clusterRiskScore_CAD.sh
+sbatch --job-name=pl_rs_gr plot_precision_risk_score_clusterCases.sh 
+
+# build RS on Cardiogam
+name_c=(German1 German2 German3 German4 German5 CG WTCCC LURIC MG)
+for c in ${name_c[@]}
+do
+sbatch --job-name=${c} --array=1-5,7-11,15 risk_score_clusterCAD_tscore_corrPCs_externalCohorts.sh ${c}
+done
+
+# meta analysis
+sbatch --job-name=rs_predict --array=1-5,7-11,15 risk_score_clusterCAD_tscore_corrPCs_externalCohorts_endophenotype_metaAnalysis.sh
+sbatch --job-name=rs_predict --array=1-5,7-11,15 compare_endophenotypeAnalysis_clusterRiskScore_externalCohorts_CAD.sh
+sbatch --job-name=plot_rs_predict plot_precision_risk_score_clusterCases_externalCohorts.sh
+
+
