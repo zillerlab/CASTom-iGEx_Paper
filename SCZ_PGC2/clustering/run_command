@@ -164,7 +164,7 @@ sbatch --job-name=CMC risk_score_tscore_corrPCs_allCohorts_allSamples_CMC_matchU
 sbatch --job-name=CMC risk_score_tscore_corrPCs_clusterSCZ_endophenotypeUKBB_CMC_matchUKBB.sh
 sbatch --job-name=CMC_filt risk_score_tscore_corrPCs_clusterSCZ_endophenotypeUKBB_CMC_filt_matchUKBB.sh
 # all samples (CMC only)
-# ../RSCRIPT/addControls_to_clusterCases_corrPCs.R
+Rscript addControls_to_clusterCases_corrPCs.R
 sbatch --job-name=CMC risk_score_tscore_corrPCs_clusterSCZaddControls_endophenotypeUKBB_CMC_matchUKBB.sh
 
 ## GTEx
@@ -175,25 +175,25 @@ sbatch --job-name=GTEx_filt --array=1-9 risk_score_tscore_corrPCs_clusterSCZ_end
 ### cluster based on PCs:1-20 ###
 #################################
 
-../RSCRIPT/preProcess_PCs_clustering.R
+Rscript preProcess_PCs_clustering.R
 sbatch --job-name=CL_Cases PriLer_cluster_PCs_matchUKBB.sh
 
 # find geneRS differences built on CMC
 sbatch --job-name=CMC risk_score_tscore_corrPCs_clusterSCZ_PCs_endophenotypeUKBB_CMC_matchUKBB.sh
 
 ## plot DLPC clustering and PCs and cohort actual distribution
-plot_PCs_cohort_cluster.R
+Rscript plot_PCs_cohort_cluster.R
 
 ## plot MHC clustering genes diff (heatmap) and spider plots
 ## can only be run on LISA cluster as data cannot be moved!
-plot_SCZclustering_DLPC_LISA.R
+Rscript plot_SCZclustering_DLPC_LISA.R
 
 ################################################################################
 ##################### moved to garching cluster ################################
 ### from cluster clustering_res_matchUKBB_corrPCs/ ###
 
 ### combine CRM:
-create_geneRS_clusterReliableMeasure.R
+Rscript create_geneRS_clusterReliableMeasure.R
 
 ### find drug response based on pathways
 sbatch --job-name=CL_Cases PriLer_cluster_tscore_corrPCs_pathSEA_CMC.sh
