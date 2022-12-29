@@ -1,4 +1,13 @@
+##################
+### initialize ###
+
+# get cases, save endophenotype
 sbatch --job-name=def define_subset_CADHARD.sh
+# get hypothesis-driven endophenotypes
+sbatch --job-name=extr extract_CAD_pheno.sh
+
+#################
+### benchmark ###
 
 ### cluster based on PCs (benchmark)###
 sbatch --job-name=CL_Cases cluster_PCs_CAD.sh Cases
@@ -12,8 +21,10 @@ sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_tsco
 sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_tscore_corrPCs_original_GTEx_CAD.sh
 sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_tscore_corrPCs_original_GTEx_CAD.sh 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FROM HERE
 #########################################
 ### cluster removing PCs from tscores ###
+
 sbatch --job-name=filt --array=1-5,7-11,15 filter_pathway_JS.sh # filter pathway to associate with clustering structure
 sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_tscore_corrPCs_GTEx_CAD.sh
 sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_tscore_corrPCs_GTEx_CAD.sh # hypothesis free: UKBB phenotypes
