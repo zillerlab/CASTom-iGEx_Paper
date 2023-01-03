@@ -34,7 +34,6 @@ ${git_fold}cluster_associatePath_corrPCs_run.R \
 	--sampleAnnFile ${cov_fold}covariateMatrix_CADHARD_All_phenoAssoc.txt \
 	--pvalresFile ${pvalresFile[@]} \
 	--pval_id 1 \
-	--type_data path \
 	--type_cluster Cases \
 	--outFold ${fold_cl} \
 	--functR ${git_fold}clustering_functions.R \
