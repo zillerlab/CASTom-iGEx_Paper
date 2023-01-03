@@ -19,8 +19,8 @@ t=$(eval echo "\${tissues[${id_t}-1]}")
 
 fold=OUTPUT_all/Meta_Analysis_SCZ/${t}/
 
-Rscript ${git_fold}filter_pathway_jaccard_sim_run.R \
-	--pvalOut ${fold}pval_Dx_pheno_covCorr.RData \
+${git_fold}filter_pathway_jaccard_sim_run.R \
+	--pvalresFile ${fold}pval_Dx_pheno_covCorr.RData \
 	--thr_js 0.2 \
 	--outFold ${fold}
 

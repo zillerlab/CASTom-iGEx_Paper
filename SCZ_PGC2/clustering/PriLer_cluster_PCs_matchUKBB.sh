@@ -16,7 +16,7 @@ git_fold=/home/luciat/castom-igex/Software/model_clustering/
 
 mkdir -p ${TMPDIR}/tmp_PCs/
 
-Rscript ${git_fold}cluster_PGmethod_PCs_run.R \
+${git_fold}cluster_PGmethod_PCs_run.R \
 	--PCs_input_file INPUT_DATA/Covariates/PCs_cluster/C1-20_PGC_clustering.RData \
 	--type_cluster Cases \
 	--sampleAnnFile INPUT_DATA/Covariates/PCs_cluster/samples_PCs_clustering.txt \
