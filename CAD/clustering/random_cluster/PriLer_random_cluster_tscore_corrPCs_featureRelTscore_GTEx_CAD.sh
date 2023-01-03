@@ -30,14 +30,13 @@ fold_cl=OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_tes
 cov_fold=INPUT_DATA_GTEx/CAD/Covariates/UKBB/CAD_HARD_clustering/
 git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_clustering/
 
-Rscript ${git_fold}cluster_associateFeat_corrPCs_run.R \
+${git_fold}cluster_associateFeat_corrPCs_run.R \
 	--inputFile ${inputFile[@]} \
 	--sampleAnnFile ${cov_fold}covariateMatrix_CADHARD_All_phenoAssoc.txt \
 	--split_tot 100 \
 	--pvalresFile ${pvalresFile[@]} \
         --geneInfoFile ${geneInfoFile[@]} \
 	--pval_id 1 \
-	--min_genes_path 2 \
 	--type_data tscore \
 	--type_cluster Cases \
 	--outFold ${fold_cl}rep${id}_ \
@@ -48,7 +47,4 @@ Rscript ${git_fold}cluster_associateFeat_corrPCs_run.R \
 	--ncores 11 \
 	--tissues ${tissues_tot[@]}
  
-#Rscript ${git_fold}cluster_associateFeat_run.R --inputFile ${fold}Pathway_Reactome_scores.RData --sampleAnnFile ${cov_fold}covariateMatrix_CADHARD_All_phenoAssoc.txt --pvalresFile ${fold}pval_CAD_pheno_covCorr.RData --pval_id 1 --min_genes_path 2 --type_data path_Reactome --type_cluster $1 --outFold ${fold}CAD_HARD_clustering/ --functR ${git_fold}clustering_functions.R --type_input zscaled --clusterFile ${fold}CAD_HARD_clustering/tscore_zscaled_cluster$1_PGmethod_HKmetric.RData --type_data_cluster tscore 
-
-#Rscript ${git_fold}cluster_associateFeat_run.R --inputFile ${fold}Pathway_GO_scores_splitPath --sampleAnnFile ${cov_fold}covariateMatrix_CADHARD_All_phenoAssoc.txt --split_tot 100 --pvalresFile ${fold}pval_CAD_pheno_covCorr.RData --pval_id 1 --min_genes_path 2 --type_data path_GO --type_cluster $1 --outFold ${fold}CAD_HARD_clustering/ --functR ${git_fold}clustering_functions.R --type_input zscaled --clusterFile ${fold}CAD_HARD_clustering/tscore_zscaled_cluster$1_PGmethod_HKmetric.RData --type_data_cluster tscore 
 

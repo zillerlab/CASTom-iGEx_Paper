@@ -18,7 +18,7 @@ cov_fold=INPUT_DATA_GTEx/CAD/Covariates/UKBB/CAD_HARD_clustering/
 git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_clustering/
 
 
-Rscript ${git_fold}cluster_treatmentResponseAnalysis_run.R \
+${git_fold}cluster_treatmentResponseAnalysis_run.R \
 	--covDatFile ${cov_fold}covariateMatrix_CADHARD_All_phenoAssoc_withMedication.txt \
 	--phenoDatFile ${cov_fold}phenotypeMatrix_CADHARD_All_phenoAssoc_withMedication.txt \
 	--phenoDescFile ${cov_fold}phenotypeDescription_withMedication.txt \

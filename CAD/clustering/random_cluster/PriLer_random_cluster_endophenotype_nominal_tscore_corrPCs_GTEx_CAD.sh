@@ -19,7 +19,7 @@ git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_clustering/
 
 
 #### rescale continuous phenotypes
-Rscript ${git_fold}cluster_associatePhenoGLM_run.R \
+${git_fold}cluster_associatePhenoGLM_run.R \
 	--sampleAnnFile ${cov_fold}covariateMatrix_CADHARD_All_phenoAssoc.txt \
 	--phenoDatFile ${fold_input}phenoMatrix_CADpheno_nominal.txt \
 	--phenoDescFile ${fold_input}phenotypeDescription_manualProc_CADpheno_nominal.txt \

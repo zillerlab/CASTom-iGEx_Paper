@@ -28,13 +28,12 @@ fold_cl=OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_tes
 cov_fold=INPUT_DATA_GTEx/CAD/Covariates/UKBB/CAD_HARD_clustering/
 git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_clustering/
 
-Rscript ${git_fold}cluster_associatePath_corrPCs_run.R \
+${git_fold}cluster_associatePath_corrPCs_run.R \
 	--inputFold ${inputFold[@]} \
 	--sampleAnnFile ${cov_fold}covariateMatrix_CADHARD_All_phenoAssoc.txt \
 	--pvalresFile ${pvalresFile[@]} \
         --geneInfoFile ${geneInfoFile[@]} \
 	--pval_id 1 \
-	--type_data path \
 	--type_cluster Cases \
 	--outFold ${fold_cl}rep${id}_ \
 	--functR ${git_fold}clustering_functions.R \

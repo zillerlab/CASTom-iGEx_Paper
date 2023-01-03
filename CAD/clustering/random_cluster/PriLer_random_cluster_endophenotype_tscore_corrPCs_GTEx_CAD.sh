@@ -16,11 +16,10 @@ fold=OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testde
 cov_fold=INPUT_DATA_GTEx/CAD/Covariates/UKBB/CAD_HARD_clustering/
 fold_input=INPUT_DATA_GTEx/CAD/Covariates/UKBB/
 git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_clustering/
-git_fold_plot=/psycl/g/mpsziller/lucia/castom-igex/Figures/model_clustering/
 
 
 #### rescale continuous phenotypes
-Rscript ${git_fold}cluster_associatePhenoGLM_run.R \
+${git_fold}cluster_associatePhenoGLM_run.R \
 	--sampleAnnFile ${cov_fold}covariateMatrix_CADHARD_All_phenoAssoc_withMedication.txt \
 	--phenoDatFile ${cov_fold}phenotypeMatrix_CADHARD_All_phenoAssoc_withMedication.txt \
 	--phenoDescFile ${cov_fold}phenotypeDescription_withMedication.txt \
@@ -33,7 +32,7 @@ Rscript ${git_fold}cluster_associatePhenoGLM_run.R \
 	--clusterFile ${fold}tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_rep${id}.RData \
 	--rescale_pheno T
 
-Rscript ${git_fold}cluster_associatePhenoGLM_run.R \
+${git_fold}cluster_associatePhenoGLM_run.R \
 	--sampleAnnFile ${cov_fold}covariateMatrix_CADHARD_All_phenoAssoc.txt  \
 	--phenoDatFile ${cov_fold}phenotypeMatrix_CADHARD_All_phenoAssoc_withoutMedication.txt \
 	--phenoDescFile ${cov_fold}phenotypeDescription_withoutMedication.txt \
@@ -47,7 +46,7 @@ Rscript ${git_fold}cluster_associatePhenoGLM_run.R \
 	--rescale_pheno T
 
 # plot and combined 
-Rscript ${git_fold_plot}plot_endophenotype_grVSall_run.R \
+${git_fold}plot_endophenotype_grVSall_run.R \
 	--type_cluster_data tscore \
         --type_cluster Cases \
 	--type_input corrPCs_zscaled \
