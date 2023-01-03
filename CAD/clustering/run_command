@@ -21,7 +21,6 @@ sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_tsco
 sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_tscore_corrPCs_original_GTEx_CAD.sh
 sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_tscore_corrPCs_original_GTEx_CAD.sh 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FROM HERE
 #########################################
 ### cluster removing PCs from tscores ###
 
@@ -33,13 +32,12 @@ sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_treatmentResponse_
 
 ## focus on Liver cluster ##
 sbatch --job-name=CL_Cases --array=11,15 PriLer_cluster_tscore_corrPCs_featureRelTscore_GTEx_CAD.sh
-# sbatch --job-name=CL_Cases --array=11 PriLer_cluster_tscore_corrPCs_dpGSEA_GTEx_CAD.sh
 sbatch --job-name=CL_Cases --array=11,15 PriLer_cluster_tscore_corrPCs_featureRelPath_GTEx_CAD.sh
 sbatch --job-name=CL_Cases --array=11,15 PriLer_cluster_tscore_corrPCs_pathSEA_GTEx_CAD.sh
 # check treatment response
-Rscript get_common_treatments_pathSEA_liverCL.R
 sbatch --job-name=CL_Cases --array=1-19 PriLer_cluster_treatmentResponse_pathSEAhits_tscore_corrPCs_GTEx_CAD.sh
 
+########### %% from HERE %%%
 ########################
 ## compare benchmarks ##
 ########################
