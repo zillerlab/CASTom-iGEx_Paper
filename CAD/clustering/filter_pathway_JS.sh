@@ -17,7 +17,7 @@ fold=OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testde
 git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_clustering/
 
 ${git_fold}filter_pathway_jaccard_sim_run.R \
-	--pvalOut ${fold}pval_CAD_pheno_covCorr.RData \
+	--pvalresFile ${fold}pval_CAD_pheno_covCorr.RData \
 	--thr_js 0.2 \
 	--outFold ${fold}
 
