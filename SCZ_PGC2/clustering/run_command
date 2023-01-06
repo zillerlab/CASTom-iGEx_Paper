@@ -86,6 +86,8 @@ echo $c
 common_part=luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/
 cp /archive/${common_part}/Pathway_Reactome_scores.txt /home/${common_part}/
 cp /archive/${common_part}/Pathway_GO_scores.txt /home/${common_part}/
+cp /archive/${common_part}/Pathway_WikiPath2019Human_scores.txt /home/${common_part}/
+cp /archive/${common_part}/Pathway_CMC_GeneSets_scores.txt /home/${common_part}/
 done
 
 
@@ -99,14 +101,23 @@ echo $c
 common_part=luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/
 cp /archive/${common_part}/Pathway_Reactome_scores.txt /home/${common_part}/
 cp /archive/${common_part}/Pathway_GO_scores.txt /home/${common_part}/
+cp /archive/${common_part}/Pathway_WikiPath2019Human_scores.txt /home/${common_part}/
 done
 done
 
-# get jaccard similarity values
+### CMC ###
+# all pathways in WikiPath2019Human across all tissues
+sbatch --job-name=CL_Cases PriLer_cluster_CMC_tscore_corrPCs_featureRelPath_wiki_matchUKBB.sh
+sbatch --job-name=CL_Cases_filt0.1 PriLer_cluster_CMC_tscore_corrPCs_featureRelPath_wiki_filt_matchUKBB.sh
+
+# all pathways in CMC_GeneSets in DLPC_CMC
+sbatch --job-name=CL_Cases PriLer_cluster_CMC_tscore_corrPCs_featureRelPath_CMCset_matchUKBB.sh
+sbatch --job-name=CL_Cases_filt0.1 PriLer_cluster_CMC_tscore_corrPCs_featureRelPath_CMCset_filt_matchUKBB.sh
+
+# Combined pathways in Reactome and GO (non-redundant, get jaccard similarity values)
 sbatch --job-name=js --array=1-9 filter_pathway_JS_GTEx.sh
 sbatch --job-name=js filter_pathway_JS_CMC.sh
 
-### CMC ###
 sbatch --job-name=CL_Cases PriLer_cluster_CMC_tscore_corrPCs_featureRelPath_matchUKBB.sh
 sbatch --job-name=CL_Cases_filt0.1 PriLer_cluster_CMC_tscore_corrPCs_featureRelPath_filt_matchUKBB.sh
 
@@ -146,7 +157,16 @@ for c in ${name_cohorts[@]}
 do
 rm /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/Pathway_Reactome_scores.txt
 rm /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/Pathway_GO_scores.txt
+rm /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/Pathway_WikiPath2019Human_scores.txt
 done
+done
+
+for c in ${name_cohorts[@]}
+do
+rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/Pathway_Reactome_scores.txt
+rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/Pathway_GO_scores.txt
+rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/Pathway_WikiPath2019Human_scores.txt    
+rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/Pathway_CMC_GeneSets_scores.txt
 done
 
 ###############################################################################################
