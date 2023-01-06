@@ -51,15 +51,20 @@ BHpval_thr <- c(0.05, 0.1, 0.2)
 pval_thr <- c(0.0001, 0.001, 0.01)
 #################################################################################
 
+tissues_in_common <- intersect(unique(tscore$tissue), unique(pathScore$tissue))
+
 tscore_tissue <- tscore %>%
+  dplyr::filter(tissue %in% tissues_in_common) %>%
   dplyr::arrange(tissue) %>%
   dplyr::group_split(tissue)
 
 pathScore_tissue <- pathScore %>%
+  dplyr::filter(tissue %in% tissues_in_common) %>%
   dplyr::arrange(tissue) %>%
   dplyr::group_split(tissue) 
 
 hypgeomtest_output <- list()
+
 for(idx_t in seq_len(length(tscore_tissue))) {
   
   tissue_name <- unique(tscore_tissue[[idx_t]]$tissue)
