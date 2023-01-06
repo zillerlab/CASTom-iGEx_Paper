@@ -164,7 +164,11 @@ done
 sbatch --job-name=meta_CAD --array=1-5,7-11,15 ElNet_withPrior_metaAnalysis_phenoAssociation_200kb.sh
 sbatch --job-name=meta_CAD --array=1-5,7-11,15 PriLer_phenoAssociation_wikiPath_CardioGram_meta_GTEx.sh
 
+###################################################
 ### combine all results
 Rscript ./create_txt_allTissues_CAD_CardioGram.R
+
+### search pathway singificant via hypergeometric test
+sbatch --job-name=hypgeom hypergeometric_test_pathway_TWASgenes.sh
 
 

@@ -427,3 +427,11 @@ sbatch --job-name=CMC corr_customGeneList_combine_SCZLoF.sh
 ###################################
 ### combine all results 
 Rscript ./create_txt_allTissues_SCZ_PGC.R
+
+########################
+### garching cluster ###
+########################
+
+### search pathway singificant via hypergeometric test
+sbatch --job-name=hypgeom hypergeometric_test_pathway_TWASgenes.sh
+
