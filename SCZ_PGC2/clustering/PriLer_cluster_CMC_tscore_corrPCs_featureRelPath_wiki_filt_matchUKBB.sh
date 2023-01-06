@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH -o /home/luciat/eQTL_PROJECT/err_out_fold/cluster_tscore_corrPCs_zscaled_CMC_%x_featRelPath_wiki.out
-#SBATCH -e /home/luciat/eQTL_PROJECT/err_out_fold/cluster_tscore_corrPCs_zscaled_CMC_%x_featRelPath_wiki.err
+#SBATCH -o /home/luciat/eQTL_PROJECT/err_out_fold/cluster_tscore_corrPCs_zscaled_CMC_%x_featRelPath_wiki_filt.out
+#SBATCH -e /home/luciat/eQTL_PROJECT/err_out_fold/cluster_tscore_corrPCs_zscaled_CMC_%x_featRelPath_wiki_filt.err
 #SBATCH -N 1
 #SBATCH --mem=150G
 #SBATCH --tasks-per-node 10
@@ -22,7 +22,7 @@ tissues_tot=(DLPC_CMC)
 pval_file=(OUTPUT_all/customPath_wiki2019/DLPC_CMC/pval_Dx_pheno_covCorr_customPath_WikiPath2019Human.RData)
 
 mkdir -p ${TMPDIR}/tmp_CMC_t
-cp OUTPUT_CMC/predict_PGC/200kb/Meta_Analysis_SCZ/devgeno0.01_testdevgeno0/update_corrPCs/matchUKBB_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_minimal.RData ${TMPDIR}/tmp_CMC_t/
+cp OUTPUT_CMC/predict_PGC/200kb/Meta_Analysis_SCZ/devgeno0.01_testdevgeno0/update_corrPCs/matchUKBB_filt0.1_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_minimal.RData ${TMPDIR}/tmp_CMC_t/
 
 for t in ${tissues_gtex[@]}
 do
@@ -53,12 +53,12 @@ ${git_fold}cluster_associateFeat_corrPCs_multipleCohorts_run.R \
 	--pval_id 1 \
 	--type_data customPath_WikiPath2019Human \
 	--type_input zscaled \
-	--outFold ${TMPDIR}/tmp_CMC_t/matchUKBB_ \
+	--outFold ${TMPDIR}/tmp_CMC_t/matchUKBB_filt0.1_ \
 	--functR ${git_fold}clustering_functions.R \
-	--clusterFile ${TMPDIR}/tmp_CMC_t/matchUKBB_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_minimal.RData \
+	--clusterFile ${TMPDIR}/tmp_CMC_t/matchUKBB_filt0.1_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_minimal.RData \
 	--ncores 10
 
-cp ${TMPDIR}/tmp_CMC_t/matchUKBB_customPath_WikiPath2019HumanOriginal*Cluster* OUTPUT_CMC/predict_PGC/200kb/Meta_Analysis_SCZ/devgeno0.01_testdevgeno0/update_corrPCs/
+cp ${TMPDIR}/tmp_CMC_t/matchUKBB_filt0.1_customPath_WikiPath2019HumanOriginal*Cluster* OUTPUT_CMC/predict_PGC/200kb/Meta_Analysis_SCZ/devgeno0.01_testdevgeno0/update_corrPCs/
 
 rm -r ${TMPDIR}/tmp_CMC_t/
 
