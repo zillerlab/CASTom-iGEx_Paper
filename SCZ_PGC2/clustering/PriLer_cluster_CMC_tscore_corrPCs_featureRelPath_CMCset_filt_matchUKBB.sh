@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH -o /home/luciat/eQTL_PROJECT/err_out_fold/cluster_tscore_corrPCs_zscaled_CMC_%x_featRelPath_CMCset_filt.out
-#SBATCH -e /home/luciat/eQTL_PROJECT/err_out_fold/cluster_tscore_corrPCs_zscaled_CMC_%x_featRelPath_CMCset_filt.err
+#SBATCH -o /home/luciat/eQTL_PROJECT/err_out_fold/cluster_tscore_corrPCs_zscaled_CMC_%x_featRelPath_CMCset.out
+#SBATCH -e /home/luciat/eQTL_PROJECT/err_out_fold/cluster_tscore_corrPCs_zscaled_CMC_%x_featRelPath_CMCset.err
 #SBATCH -N 1
 #SBATCH --mem=20G
 #SBATCH --tasks-per-node 1
