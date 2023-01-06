@@ -2,10 +2,10 @@
 #SBATCH -o /home/luciat/eQTL_PROJECT/err_out_fold/cluster_tscore_corrPCs_zscaled_CMC_%x_featRelPath_wiki.out
 #SBATCH -e /home/luciat/eQTL_PROJECT/err_out_fold/cluster_tscore_corrPCs_zscaled_CMC_%x_featRelPath_wiki.err
 #SBATCH -N 1
-#SBATCH --mem=150G
+#SBATCH --mem=90G
 #SBATCH --tasks-per-node 10
 #SBATCH -t 24:00:00
-#SBATCH -p fat
+#SBATCH -p normal
 
 module load 2020
 module load R/4.0.2-intel-2020a
