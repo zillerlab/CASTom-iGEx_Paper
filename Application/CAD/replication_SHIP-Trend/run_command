@@ -1,11 +1,17 @@
-### run from A. Teumer ###
-# ${castom-igex_fold}PriLer_predictGeneExp_smallerVariantSet_run.R
+# preprocessing
+00_getsnpstats.sh
+01_run_SHIP-T.sh
+02_run_MatchGenotype.sh
+03_run_convertDosage.sh
 
+# predict gene expression
+04_run_PriLer_predict.sh
 # compute T-scores
 sbatch --job-name=SHIP --array=1-2 PriLer_tscore_pathscore.sh
 
 # predict clustering 
 sbatch --job-name=SHIP --array=1-2 PriLer_cluster_tscore_corrPCs_predict.sh
+
 # get associated genes
 sbatch --job-name=SHIP --array=1-2 PriLer_predict_cluster_tscore_corrPCs_featureRelTscore.sh
 # get associated pathway (copy filtered pathways)
@@ -14,7 +20,7 @@ sbatch --job-name=SHIP --array=1-2 PriLer_predict_cluster_tscore_corrPCs_feature
 sbatch --job-name=SHIP --array=1-2 PriLer_cluster_predictEval_tscore_corrPCs.sh
 
 # evaluate differences in endophenotype
-### run by A. Teumer ###
-PriLer_cluster_predict_tscore_corrPCs_phenotype.sh
-
+PriLer_cluster_predict_tscore_corrPCs_phenotype-GX.sh
+# evalute differences in gene expression
+PriLer_cluster_predict_tscore_corrPCs_phenotype-cont_dich.sh
 

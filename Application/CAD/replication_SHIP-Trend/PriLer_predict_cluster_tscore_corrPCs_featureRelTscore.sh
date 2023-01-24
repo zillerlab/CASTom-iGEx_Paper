@@ -33,7 +33,7 @@ fold_cl=Results/PriLer/${t}/
 cov_fold=Results/PriLer/
 git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_clustering/
 
-Rscript ${git_fold}cluster_associateFeat_corrPCs_run.R \
+${git_fold}cluster_associateFeat_corrPCs_run.R \
 	--inputFile ${inputFile[@]} \
 	--sampleAnnFile ${cov_fold}SHIP-TREND_gPC_SHIP_2022_27_withSex.txt \
 	--split_tot 0 \

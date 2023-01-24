@@ -22,7 +22,7 @@ cov_fold_mod=/psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/INPUT_DATA_GTEx/CAD/
 cov_fold=Results/PriLer/
 git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_clustering/
 
-Rscript ${git_fold}cluster_PGmethod_corrPCs_predict_run.R \
+${git_fold}cluster_PGmethod_corrPCs_predict_run.R \
 	--inputFile ${fold}predictedTscores.txt \
 	--sampleAnnNew_file ${cov_fold}SHIP-TREND_gPC_SHIP_2022_27_withSex.txt \
 	--sampleAnn_file ${cov_fold_mod}covariateMatrix_CADHARD_All.txt \

@@ -19,7 +19,7 @@ fold_cl=Results/PriLer/${t}/
 
 git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_clustering/
 
-Rscript ${git_fold}cluster_predict_evaluate_run.R \
+${git_fold}cluster_predict_evaluate_run.R \
 	--cohort_name ${cohort_name} \
 	--functR ${git_fold}clustering_functions.R \
 	--clustFile ${fold_mod}tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric.RData \
