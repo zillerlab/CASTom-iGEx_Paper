@@ -9,6 +9,16 @@ do
 	sbatch --array=1-22 --job-name=c${i} filterSnps_dosage_cohort.sh ${i}
 done &
 
+###########################################
+#### in garching cluster ####
+# match all the cohorts with CMC
+sbatch --array=1-22 Match_CMC_SCZ-PGCall.sh
+
+#### in denbi cluster ####
+# match GTEx and SCZ-PGC, use GTEx as reference
+for i in $(seq 22); do bash Match_GTEx_SCZ-PGCall.sh ${i} 2>../../err_out_fold/match_GTEx_SCZ-PGCall_chr${i}.err 1>../../err_out_fold/match_GTEx_SCZ-PGCall_chr${i}.out & done
+############################################
+
 # convert to dosage format and combine chromosomes
 # GTEx
 for i in $(seq 36)
