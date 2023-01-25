@@ -37,11 +37,10 @@ sbatch --job-name=CL_Cases --array=11,15 PriLer_cluster_tscore_corrPCs_pathSEA_G
 # check treatment response
 sbatch --job-name=CL_Cases --array=1-19 PriLer_cluster_treatmentResponse_pathSEAhits_tscore_corrPCs_GTEx_CAD.sh
 
-########### %% from HERE %%%
 ########################
 ## compare benchmarks ##
 ########################
-RSCRIPTS/compare_cl_corrPCs.R
+Rscripts compare_cl_corrPCs.R
 
 #############################################
 ## predict on external cohort (only Liver) ##
