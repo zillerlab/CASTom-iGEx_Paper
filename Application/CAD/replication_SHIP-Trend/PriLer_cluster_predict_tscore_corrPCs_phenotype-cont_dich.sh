@@ -5,9 +5,8 @@
 #SBATCH --nodes=1
 #SBATCH --mem=30G
 
-#module load R/3.5.3
 
-cd /home/teumera/projects/Expression/CVD_MPI/CAD_shared_SHIP/
+cd CAD_shared_SHIP/
 
 #id_t=${SLURM_ARRAY_TASK_ID}
 #readarray -t tissues < Tissues
@@ -35,7 +34,7 @@ ${git_fold}cluster_predict_associatePhenoGLM_run.R \
 	--type_input zscaled \
 	--outFold ${fold_cl}test_ \
 	--model_name UKBB \
-	--phenoNew_file /home/teumera/projects/Expression/CVD_MPI/CAD_shared_SHIP/SCRIPTS/local/${cohort_name}_pheno.txt \
-	--covNew_file /home/teumera/projects/Expression/CVD_MPI/CAD_shared_SHIP/SCRIPTS/local/${cohort_name}_covar.txt
+	--phenoNew_file CAD_shared_SHIP/SCRIPTS/local/${cohort_name}_pheno.txt \
+	--covNew_file CAD_shared_SHIP/SCRIPTS/local/${cohort_name}_covar.txt
  done
 done

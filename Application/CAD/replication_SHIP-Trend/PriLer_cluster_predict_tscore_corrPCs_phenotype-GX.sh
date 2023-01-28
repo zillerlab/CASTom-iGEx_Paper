@@ -5,13 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --mem=30G
 
-#module load R/3.5.3
-
-cd /home/teumera/projects/Expression/CVD_MPI/CAD_shared_SHIP/
-
-#id_t=${SLURM_ARRAY_TASK_ID}
-#readarray -t tissues < Tissues
-#t=$(eval echo "\${tissues[${id_t}-1]}")
+cd CAD_shared_SHIP/
 
 for cohort_name in SHIP-TREND
 do
@@ -22,7 +16,7 @@ do
 fold_cl=Results/PriLer/${t}/
 fold_input=Results/PriLer/
 
-git_fold=/home/teumera/projects/Expression/CVD_MPI/castom-igex/Software/model_clustering/
+git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_prediction/
 
 echo Running ${t} for ${cohort_name} ...
 
@@ -35,7 +29,7 @@ ${git_fold}cluster_predict_associatePhenoGLM_run.R \
 	--type_input zscaled \
 	--outFold ${fold_cl}test_GX_ \
 	--model_name UKBB \
-	--phenoNew_file /home/teumera/projects/Expression/CVD_MPI/CAD_shared_SHIP/SCRIPTS/local/${cohort_name}_GX_pheno.txt \
-	--covNew_file /home/teumera/projects/Expression/CVD_MPI/CAD_shared_SHIP/SCRIPTS/local/${cohort_name}_GX_covar.txt
+	--phenoNew_file SCRIPTS/local/${cohort_name}_GX_pheno.txt \
+	--covNew_file SCRIPTS/local/${cohort_name}_GX_covar.txt
  done
 done
