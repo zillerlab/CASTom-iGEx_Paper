@@ -32,7 +32,7 @@ gene_loci=OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_t
 
 git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_clustering/
 
-Rscript ${git_fold}cluster_predict_evaluate_run.R \
+${git_fold}cluster_predict_evaluate_run.R \
 	--cohort_name ${name_cohort[@]} \
 	--functR ${git_fold}clustering_functions.R \
 	--clustFile ${fold_mod}tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric.RData \
@@ -40,7 +40,6 @@ Rscript ${git_fold}cluster_predict_evaluate_run.R \
 	--type_data tscore_corrPCs \
 	--type_cluster Cases \
 	--type_input zscaled \
-	--tissues_name ${t} \
 	--phenoNew_file ${pheno_pred[@]} \
 	--outFold OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/Meta_Analysis_CAD/CAD_HARD_clustering/update_corrPCs/ \
 	--model_name UKBB \

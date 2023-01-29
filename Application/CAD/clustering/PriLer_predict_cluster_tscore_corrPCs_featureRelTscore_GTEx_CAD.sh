@@ -33,7 +33,7 @@ fold_cl=OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/${cohort_name}/devge
 cov_fold=INPUT_DATA_GTEx/CAD/Covariates/${cohort_name}/
 git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_clustering/
 
-Rscript ${git_fold}cluster_associateFeat_corrPCs_run.R \
+${git_fold}cluster_associateFeat_corrPCs_run.R \
 	--inputFile ${inputFile[@]} \
 	--sampleAnnFile ${cov_fold}covariateMatrix.txt \
 	--split_tot 0 \
