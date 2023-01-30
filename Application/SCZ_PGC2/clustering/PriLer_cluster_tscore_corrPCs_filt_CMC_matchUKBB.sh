@@ -6,9 +6,8 @@
 #SBATCH -t 120:00:00
 
 
-module load 2019
-module load R/3.5.1-intel-2019b
-
+module load 2020
+module load R/4.0.2-intel-2020a
 
 cd /home/luciat/eQTL_PROJECT/
 
