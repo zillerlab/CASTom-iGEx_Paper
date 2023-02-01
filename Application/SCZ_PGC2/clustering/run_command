@@ -207,6 +207,7 @@ Rscript plot_PCs_cohort_cluster.R
 ## plot MHC clustering genes diff (heatmap) and spider plots
 ## can only be run on LISA cluster as data cannot be moved!
 Rscript plot_SCZclustering_DLPC_LISA.R
+Rscript plot_spider_pathway_extralist.R
 
 ################################################################################
 ##################### moved to garching cluster ################################
