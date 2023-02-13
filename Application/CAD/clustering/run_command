@@ -57,7 +57,6 @@ sbatch --job-name=CL_Cases --array=11 PriLer_cluster_predictEval_tscore_corrPCs_
 #######################
 ## gene-RS benchmark ##
 #######################
-#### FROM HERE #####
 sbatch --job-name=rs_CAD --array=1,3-4,7,9-11,15 risk_score_clusterCAD_tscore_corrPCs.sh 100
 sbatch --job-name=rs_CAD --array=2,5,8 risk_score_clusterCAD_tscore_corrPCs.sh 99
 sbatch --job-name=rs_ev_CAD --array=1-5,7-11,15 evaluate_risk_score_CADrel_tscore_corrPCs.sh # r2 for riskscore - phenotype association
@@ -66,6 +65,7 @@ sbatch --job-name=cl_rs_CAD --array=1-5,7-11,15 risk_score_clusterCAD_tscore_cor
 sbatch --job-name=compare_gr --array=1-5,7-11,15 compare_endophenotypeAnalysis_clusterRiskScore_CAD.sh
 sbatch --job-name=pl_rs_gr plot_precision_risk_score_clusterCases.sh 
 
+#### FROM HERE #####
 # build RS on Cardiogam
 name_c=(German1 German2 German3 German4 German5 CG WTCCC LURIC MG)
 for c in ${name_c[@]}
