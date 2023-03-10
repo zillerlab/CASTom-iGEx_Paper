@@ -11,3 +11,6 @@ In each folder, **run_command** text file explains the sequence of script used. 
 
 ### R:
 Additional scripts necessary to summarise results
+
+### jupyter_notebook:
+- Notebooks containung figure panels for the publication. Sub-folders are divided by thematics.
