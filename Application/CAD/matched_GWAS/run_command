@@ -14,3 +14,7 @@ sbatch --job-name=comb combine_GWAS_output.sh
 
 # annotate regSNPs with GWAS results (table)
 sbatch --job-name=ann annotate_regSNPs_with_gwas.sh
+
+### compute PRS
+sbatch --job-name=PRS compute_PRS_CAD_UKBB.sh
+
