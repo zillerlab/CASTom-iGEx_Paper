@@ -1,0 +1,30 @@
+# POPULATION: INDIAN (largest after white british)
+
+# create sample file including covariates for selected pop ##
+sbatch --job-name=prep_in prepare_sample_file.sh
+
+# filter original bgen file using Indian samples and variants from CAD_UKBB analysis based on EU samples
+sbatch --array=1-22 --job-name=filt filter_gen_samples_and_variants.sh
+
+# correct REF ALT annotation and convert to dosage format
+sbatch --array=1-22 --job-name=conv correctREFALT_convertDosage.sh
+
+# predict gene expression
+sbatch --array=1-5,7-11,15 --job-name=pred PriLer_prediction_expression.sh
+
+# compute T-score and pathway scores
+sbatch --array=1-5,7-11,15 --job-name=score Tscore_PathScore_200kb.sh
+sbatch --array=1-5,7-11,15 --job-name=wiki PathScore_wikiPath.sh
+
+# TWAS and PALAS
+sbatch --array=1-5,7-11,15 --job-name=pheno PriLer_phenoAssociation_CAD.sh
+sbatch --array=1-5,7-11,15 --job-name=pheno_wiki PriLer_phenoAssociation_wiki_CAD.sh
+# summarise tables:
+Rscript ./create_txt_allTissues_CAD_UKBB_Indian.R
+
+# predict clustering on Liver
+sbatch --array=11 --job-name=cl PriLer_cluster_tscore_corrPCs_predict_CAD.sh
+# cluster specific genes
+sbatch --array=11 --job-name=cl_genes PriLer_predict_cluster_tscore_corrPCs_featureRelTscore_CAD.sh
+# eval prediction
+sbatch --array=11 --job-name=cl_eval PriLer_cluster_predictEval_tscore_corrPCs_CAD.sh
