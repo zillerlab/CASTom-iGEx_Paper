@@ -65,7 +65,6 @@ sbatch --job-name=cl_rs_CAD --array=1-5,7-11,15 risk_score_clusterCAD_tscore_cor
 sbatch --job-name=compare_gr --array=1-5,7-11,15 compare_endophenotypeAnalysis_clusterRiskScore_CAD.sh
 sbatch --job-name=pl_rs_gr plot_precision_risk_score_clusterCases.sh 
 
-#### FROM HERE #####
 # build RS on Cardiogam
 name_c=(German1 German2 German3 German4 German5 CG WTCCC LURIC MG)
 for c in ${name_c[@]}
