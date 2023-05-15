@@ -26,4 +26,4 @@ ${git_fold}plot_evaluate_risk_score_run.R \
 	--tissues ${tissues[@]} \
 	--riskScore_eval_file ${in_file[@]} \
 	--outFold ${fold_out} \
-	--color_tissues_file /psycl/g/mpsziller/lucia/castom-igex/Figures/color_tissues.txt \
+	--color_tissues_file /psycl/g/mpsziller/lucia/castom-igex/refData/color_tissues.txt \
