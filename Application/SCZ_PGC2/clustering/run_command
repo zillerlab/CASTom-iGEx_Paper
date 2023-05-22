@@ -1,7 +1,13 @@
 ### cluster all Cases ###
 # use only genes that have same expression in UKBB and SCZ (to be used for comparison)
-# run another version with filtered genes based on expression
+# version with filtered genes based on expression
 # remove boco cohort (German), 
+# all scripts are run in PGC LISA cluster unless mentioned
+
+## filter genes and pathways ##
+#### garching cluster ####
+sbatch --job-name=pred --array=1-10 compare_prediction_UKBB_SCZ-PGC.sh
+# output moved to PGC LISA cluster
 
 ## before detect outliers across all tissues ##
 readarray -t name_cohorts < /home/luciat/eQTL_PROJECT/INPUT_DATA/SCZ_cohort_names_CLUST
