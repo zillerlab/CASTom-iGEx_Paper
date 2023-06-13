@@ -47,8 +47,6 @@ sbatch --job-name=outDect_noMHC --array=1-9 outliersDet_tscore_corrPCs_Cases_fil
 # create a new file with total samples to exclude
 sbatch --job-name=comb combine_outliers_tscore_corrPCs_cluster_matchUKBB.sh
 
-######################## FROM HERE #######################
-
 ######################################
 ### cluster each tissue seperately ###
 ######################################
@@ -79,6 +77,8 @@ done
 #######################################
 ### find relevant features (Tscore) ###
 #######################################
+
+################# FROM HERE #################
 ### CMC ###
 sbatch --job-name=CL_Cases PriLer_cluster_CMC_tscore_corrPCs_featureRelTscore_matchUKBB.sh
 sbatch --job-name=CL_Cases_filt0.1 PriLer_cluster_CMC_tscore_corrPCs_featureRelTscore_filt_matchUKBB.sh
