@@ -42,7 +42,7 @@ done
 
 
 # tscore
-Rscript ${git_fold}cluster_associatePath_corrPCs_multipleCohorts_run.R \
+./${git_fold}cluster_associatePath_corrPCs_multipleCohorts_run.R \
 	--name_cohorts ${name_cohorts[@]} \
 	--type_data_cluster tscore \
 	--tissues ${tissues_tot[@]} \

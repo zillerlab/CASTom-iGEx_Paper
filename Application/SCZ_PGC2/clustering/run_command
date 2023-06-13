@@ -78,7 +78,6 @@ done
 ### find relevant features (Tscore) ###
 #######################################
 
-################# FROM HERE #################
 ### CMC ###
 sbatch --job-name=CL_Cases PriLer_cluster_CMC_tscore_corrPCs_featureRelTscore_matchUKBB.sh
 sbatch --job-name=CL_Cases_filt0.1 PriLer_cluster_CMC_tscore_corrPCs_featureRelTscore_filt_matchUKBB.sh
@@ -128,6 +127,9 @@ sbatch --job-name=js filter_pathway_JS_CMC.sh
 
 sbatch --job-name=CL_Cases PriLer_cluster_CMC_tscore_corrPCs_featureRelPath_matchUKBB.sh
 sbatch --job-name=CL_Cases_filt0.1 PriLer_cluster_CMC_tscore_corrPCs_featureRelPath_filt_matchUKBB.sh
+
+
+################# FROM HERE #################
 
 ###################################
 ### predict on external dataset ###
