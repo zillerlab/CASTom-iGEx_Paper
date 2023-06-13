@@ -42,7 +42,7 @@ do
 done
 
 thr=$1
-Rscript ${git_fold}compute_risk_score_corrPCs_multipleCohorts_run.R \
+./${git_fold}compute_risk_score_corrPCs_multipleCohorts_run.R \
 	--cases_only T \
 	--scale_rs T \
 	--pheno_class_name ${name_file[@]} \

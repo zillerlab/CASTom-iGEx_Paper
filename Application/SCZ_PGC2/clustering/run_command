@@ -181,8 +181,6 @@ done
 ### find differences in clustering structures for risk scores computed from UKBB phenotypes ###
 ###############################################################################################
 
-################# FROM HERE #################
-
 #### compute risk scores ####
 sbatch --job-name=CMC risk_score_tscore_corrPCs_multipleCohorts_CMC_matchUKBB.sh
 sbatch --job-name=GTEx --array=1-9 risk_score_tscore_corrPCs_multipleCohorts_GTEx_matchUKBB.sh
