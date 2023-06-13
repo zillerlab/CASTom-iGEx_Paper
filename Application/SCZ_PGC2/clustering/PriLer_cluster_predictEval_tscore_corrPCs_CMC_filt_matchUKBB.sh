@@ -32,7 +32,7 @@ gene_loci=${fold_mod}matchUKBB_filt0.1_tscore_corrPCs_zscaled_clusterCases_summa
 
 git_fold=/home/luciat/castom-igex/Software/model_clustering/
 
-Rscript ${git_fold}cluster_predict_evaluate_run.R \
+./${git_fold}cluster_predict_evaluate_run.R \
 	--cohort_name ${name_cohort[@]} \
 	--functR ${git_fold}clustering_functions.R \
 	--clustFile ${fold_mod}matchUKBB_filt0.1_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric.RData \

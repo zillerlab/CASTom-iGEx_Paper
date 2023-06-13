@@ -129,8 +129,6 @@ sbatch --job-name=CL_Cases PriLer_cluster_CMC_tscore_corrPCs_featureRelPath_matc
 sbatch --job-name=CL_Cases_filt0.1 PriLer_cluster_CMC_tscore_corrPCs_featureRelPath_filt_matchUKBB.sh
 
 
-################# FROM HERE #################
-
 ###################################
 ### predict on external dataset ###
 ###################################
@@ -182,6 +180,8 @@ done
 ###############################################################################################
 ### find differences in clustering structures for risk scores computed from UKBB phenotypes ###
 ###############################################################################################
+
+################# FROM HERE #################
 
 #### compute risk scores ####
 sbatch --job-name=CMC risk_score_tscore_corrPCs_multipleCohorts_CMC_matchUKBB.sh
