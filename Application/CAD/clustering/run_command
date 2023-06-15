@@ -21,6 +21,11 @@ sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_tsco
 sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_tscore_corrPCs_original_GTEx_CAD.sh
 sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_tscore_corrPCs_original_GTEx_CAD.sh 
 
+##########################
+### varying parameters ###
+# changes in kNN parameter
+sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_tscore_corrPCs_GTEx_kNNpar_CAD.sh
+
 #########################################
 ### cluster removing PCs from tscores ###
 
