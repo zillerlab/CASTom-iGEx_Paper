@@ -29,7 +29,7 @@ do
 done
 fold_comp=/psycl/g/mpsziller/lucia/compare_prediction_UKBB_SCZ-PGC/
 
-Rscript ${git_fold}compute_risk_score_corrPCs_run.R \
+${git_fold}compute_risk_score_corrPCs_run.R \
 	--genes_to_filter ${fold_comp}${t}_filter_genes_matched_datasets.txt \
 	--sampleAnn_file INPUT_DATA/Covariates/covariatesMatrix_red_latestW_202202.txt \
 	--functR ${git_fold}clustering_functions.R \

@@ -10,7 +10,7 @@ module load R/3.5.3
 
 cd /psycl/g/mpsziller/lucia/UKBB/eQTL_PROJECT/
 
-git_fold=/psycl/g/mpsziller/lucia/castom-igex/Figures/model_clustering/
+git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_clustering/
 
 readarray -t tissues < /psycl/g/mpsziller/lucia/SCZ_PGC/eQTL_PROJECT/Meta_Analysis_SCZ/Tissues_PGC_red2
 
@@ -28,9 +28,9 @@ done
 fold_out=OUTPUT_all/update_corrPCs/
 mkdir -p ${fold_out}
 
-Rscript ${git_fold}plot_evaluate_risk_score_run.R \
+${git_fold}plot_evaluate_risk_score_run.R \
 	--tissues ${tissues[@]} \
 	--riskScore_eval_file ${in_file[@]} \
 	--outFold ${fold_out}matchPGC_ \
-	--color_tissues_file /psycl/g/mpsziller/lucia/castom-igex/Figures/color_tissues.txt \
+	--color_tissues_file /psycl/g/mpsziller/lucia/castom-igex/refData/color_tissues.txt \
 

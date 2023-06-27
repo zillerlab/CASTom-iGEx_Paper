@@ -31,7 +31,7 @@ done
 
 
 
-Rscript ${git_fold}evaluate_risk_score_run.R \
+${git_fold}evaluate_risk_score_run.R \
 	--sampleAnn_file INPUT_DATA/Covariates/covariatesMatrix_red_latestW_202202.txt \
 	--outFold ${fold_out}matchPGC_tscore_corr2Thr0.1_relatedPhenotypes_ \
 	--riskScore_file ${fold_out}matchPGC_tscore_corr2Thr0.1_risk_score_relatedPhenotypes.txt \
