@@ -10,7 +10,7 @@ sbatch --job-name=CMC_rs_e evaluate_risk_score_SCZrelPheno_tscore_corrPCs_CMC.sh
 sbatch --job-name=GTEx_rs_e --array=7-15 evaluate_risk_score_SCZrelPheno_tscore_corrPCs_GTEx.sh
 sbatch --job-name=plot_rs plot_evaluate_risk_score_corrPCs.sh
 
-### mv TWAS res to PGC CLUSTER ##
+### mv TWAS res to PGC CLUSTER, final folder becomes UKBB_SCZrelated ##
 sbatch --job-name=compress move_pval_UKBB.sh
 # blood count ratios
 sbatch --job-name=compress move_bcr_pval_UKBB.sh
