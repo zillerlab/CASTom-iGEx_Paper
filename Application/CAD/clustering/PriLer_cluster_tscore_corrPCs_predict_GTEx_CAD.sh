@@ -30,6 +30,5 @@ ${git_fold}cluster_PGmethod_corrPCs_predict_run.R \
 	--outFold ${fold}CAD_HARD_clustering/update_corrPCs/ \
 	--functR ${git_fold}clustering_functions.R \
 	--type_input zscaled \
-	--tissues_name ${t} \
 	--clustFile ${fold_mod}tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric.RData
 
