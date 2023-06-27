@@ -1,0 +1,329 @@
+#### preprocessig data: filter snps and match with PGC and CAD datasets ####
+
+#### computed from ../ ####
+# filter snps and convert to probabilities
+bash Convert_GTEx_VCFtoIMPUTE_filterMAF-INFO-HWE_chr.sh 2>../err_out_fold/convert_GTEx.err 1>../err_out_fold/convert_GTEx.out &
+
+# convert to dosage format (second allele)
+for id in $(seq 22); do bash Convert_GTEx_prob_TO_dosage.sh ${id} 2>../err_out_fold/convert_GTEx_dosage_chr${id}.err 1>../err_out_fold/convert_GTEx_dosage_chr${id}.out & done 
+
+# split CAD gwas into chromosomes
+bash Split_CADgwas.sh 2>../err_out_fold/Split_CAD.err 1>../err_out_fold/Split_CAD.out &
+
+# match with PGC and CAD gwas (position and ref/alt)
+for id in $(seq 22); do bash MatchGenotype_PGC-CADgwas.sh ${id} 2>../err_out_fold/match_GTEx_gwas_chr${id}.err 1>../err_out_fold/match_GTEx_gwas_chr${id}.out & done
+
+###########################################################################
+## preproc RNA
+bash RNAseq_herGenes_preProc.sh 2>../err_out_fold/RNA_preProc.err 1>../err_out_fold/RNA_preProc.out & 
+
+## create covariates
+bash combine_covariates.sh 2>../err_out_fold/combine_cov.err 1>../err_out_fold/combine_cov.out &
+
+## compute distance matrix SNP-GRE
+bash Compute_GRE-SNP_mat.sh 2>../err_out_fold/GRE-SNP_mat.err 1>../err_out_fold/GRE-SNP_mat.out &
+#############################
+
+## compute prior
+# binary: PGC_gwas_bin thr 10^-2, PGC_gwas_bin_v2 thr 10^-5
+# binary: CAD_gwas_bin thr 5*10^-2, CAD_gwas_bin_v2 thr 10^-3
+for id in $(seq 22); do bash ../Compute_PriorMat_final.sh ${id} 2>../../err_out_fold/prior_mat_chr${id}_fin.err 1>../../err_out_fold/prior_mat_chr${id}_fin.out & done
+
+# build random Epi
+for id in $(seq 22); do bash ../CreateRandomEpi_BC_AC_rep.sh ${id} 2>../../err_out_fold/randomEpi_chr${id}.err 1>../../err_out_fold/randomEpi_chr${id}.out & done
+# create random prior/correct
+for id in $(seq 22); do bash ../CreateRandomPrior_BC_AC_rep.sh ${id} 2>../../err_out_fold/randomPrior_chr${id}.err 1>../../err_out_fold/randomPrior_chr${id}.out & done
+
+##### %%%%% COPIED UNTIL HERE %%%%%%% ##########
+
+############################################################################
+# output in ../OUTPUT
+##################
+### preprocess ###
+##################
+
+# already runned, only copy part of the results
+# bash ../preProcessing_data_allTissues.sh 2>../../err_out_fold/preProc_allTissues.err 1>../../err_out_fold/preProc_allTissues.out &
+cp /mnt/lucia/eQTL_PROJECT_GTEx/OUTPUT/hg19_SNPs-Epi_chr*_matched.txt.gz /mnt/lucia/eQTL_PROJECT_GTEx/OUTPUT_SCRIPTS_v2/
+cp /mnt/lucia/eQTL_PROJECT_GTEx/OUTPUT/hg19_SNPs_chr*_matched.txt /mnt/lucia/eQTL_PROJECT_GTEx/OUTPUT_SCRIPTS_v2/
+ 
+# divide per tissue groups
+#############
+### part1 ###
+#############
+# awk  'FNR>1 {print $1}' /mnt/lucia/eQTL_PROJECT_GTEx/INPUT_DATA/GTEx_v6p/Tissues_Names.txt > /mnt/lucia/eQTL_PROJECT_GTEx/INPUT_DATA/GTEx_v6p/Tissues_1col
+# manuallty create /mnt/lucia/eQTL_PROJECT_GTEx/INPUT_DATA/GTEx_v6p/Tissues_1col_red
+#NOTE: tissues excluded from Tissues_1col are
+#	- Breast_Mammary_Tissue, Nerve_Tibial and Cells_Transformed_fibroblasts (no prior info)
+#	- Brain_Anterior_cingulate_cortex_BA24 (sample size too small n.eu = 70, problem with glmnet convergence)
+#	- Brain_Putamen_basal_ganglia (sample size too small n.eu = 69, problem with glmnet convergence)
+#	- Pitutary (Michael)
+
+readarray -t tissues_name < /mnt/lucia/eQTL_PROJECT_GTEx/INPUT_DATA/GTEx_v6p/Tissues_1col_red 
+# already computed, file are copied
+#for t in ${tissues_name[0]}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done &
+#for t in ${tissues_name[@]:1:5}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done &
+#for t in ${tissues_name[@]:7:14}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done &
+#for t in ${tissues_name[@]:22:8}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done & 
+#for t in ${tissues_name[@]:30:9}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done &
+
+for t in ${tissues_name[@]}
+do
+	echo ${t}
+
+	mkdir /mnt/lucia/eQTL_PROJECT_GTEx/OUTPUT_SCRIPTS_v2/${t}
+	mkdir /mnt/lucia/eQTL_PROJECT_GTEx/OUTPUT_SCRIPTS_v2/${t}/200kb
+	cp /mnt/lucia/eQTL_PROJECT_GTEx/OUTPUT/${t}/*ENSEMBL* /mnt/lucia/eQTL_PROJECT_GTEx/OUTPUT_SCRIPTS_v2/${t}/
+	cp /mnt/lucia/eQTL_PROJECT_GTEx/OUTPUT/${t}/200kb/optim_* /mnt/lucia/eQTL_PROJECT_GTEx/OUTPUT_SCRIPTS_v2/${t}/200kb/
+	cp /mnt/lucia/eQTL_PROJECT_GTEx/OUTPUT/${t}/200kb/resNoPrior_NestedCV_HeritableGenes_* /mnt/lucia/eQTL_PROJECT_GTEx/OUTPUT_SCRIPTS_v2/${t}/200kb/
+done
+
+
+#############
+### part2 ###
+############# 
+
+# output in ../OUTPUT_SCRIPTS_v2
+
+# build index files
+bash Build_priorIndex_alltissues_allcombinations_fin.sh 2>../../err_out_fold/priorIndex_build_allc.err 1>../../err_out_fold/priorIndex_build_allc.out &
+
+
+#### noGWAS ####
+readarray -t tissues_name < /mnt/lucia/eQTL_PROJECT_GTEx/INPUT_DATA/Tissue_noGWAS
+# node 90
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_part2_200kb_tissue_nogwas.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_nogwas.err  1>../../err_out_fold/part2_200kb_${t}_nogwas.out ; done &
+# node 95 rerun failed ones
+tissues_rerun=(Adrenal_Gland Brain_Frontal_Cortex_BA9 Cells_EBV-transformed_lymphocytes Colon_Sigmoid)
+for t in ${tissues_rerun[@]}; do bash ElNet_withPrior_part2_200kb_tissue_nogwas.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_nogwas.err  1>../../err_out_fold/part2_200kb_${t}_nogwas.out ; done &
+# node 93, change E interval
+t=Cells_EBV-transformed_lymphocytes
+bash ElNet_withPrior_part2_200kb_tissue_nogwas_smallE.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_nogwas.err  1>../../err_out_fold/part2_200kb_${t}_nogwas.out  &
+# node 93
+for t in ${tissues_name[@]:25:10}; do bash ElNet_withPrior_part2_200kb_tissue_nogwas.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_nogwas.err  1>../../err_out_fold/part2_200kb_${t}_nogwas.out ; done &
+# node 91 
+for t in ${tissues_name[@]:25:3}; do bash ElNet_withPrior_part2_200kb_tissue_nogwas_smallE.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_nogwas.err 1>../../err_out_fold/part2_200kb_${t}_nogwas.out ; done &
+# node 93
+for t in ${tissues_name[@]:23:2}; do bash ElNet_withPrior_part2_200kb_tissue_nogwas_smallE.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_nogwas.err 1>../../err_out_fold/part2_200kb_${t}_nogwas.out ; done &
+# node 90
+for t in ${tissues_name[@]:21:2}; do bash ElNet_withPrior_part2_200kb_tissue_nogwas.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_nogwas.err 1>../../err_out_fold/part2_200kb_${t}_nogwas.out ; done &
+t=Thyroid
+bash ElNet_withPrior_part2_200kb_tissue_nogwas_smallE.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_nogwas.err 1>../../err_out_fold/part2_200kb_${t}_nogwas.out &
+t=Liver
+bash ElNet_withPrior_part2_200kb_tissue_nogwas_verysmallE.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_nogwas.err 1>../../err_out_fold/part2_200kb_${t}_nogwas.out &
+# node 92
+t=Brain_Cerebellum
+bash ElNet_withPrior_part2_200kb_tissue_nogwas_bigE.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_nogwas.err 1>../../err_out_fold/part2_200kb_${t}_nogwas.out &
+# node 
+t=Muscle_Skeletal
+bash ElNet_withPrior_part2_200kb_tissue_nogwas_smallE.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_nogwas.err 1>../../err_out_fold/part2_200kb_${t}_nogwas.out &
+
+#### CADgwas ####
+readarray -t tissues_name < /mnt/lucia/eQTL_PROJECT_GTEx/INPUT_DATA/Tissue_CADgwas
+# node 91
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_part2_200kb_tissue_CADgwas5e-2.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2.err  1>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2.out ; done &
+# node 91 
+t=Liver
+bash ElNet_withPrior_part2_200kb_tissue_CADgwas5e-2_smallE.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2.err 1>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2.out &
+# node 91
+t=Heart_Left_Ventricle
+bash ElNet_withPrior_part2_200kb_tissue_CADgwas5e-2.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2.err 1>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2.out &
+# node 93 
+t=Adrenal_Gland
+bash ElNet_withPrior_part2_200kb_tissue_CADgwas5e-2.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2.err 1>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2.out &
+# node 91
+t=Thyroid
+bash ElNet_withPrior_part2_200kb_tissue_CADgwas5e-2_ty.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2.err 1>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2.out &
+
+#### PGCgwas ####
+readarray -t tissues_name < /mnt/lucia/eQTL_PROJECT_GTEx/INPUT_DATA/Tissue_PGCgwas
+# node 92
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_part2_200kb_tissue_PGCgwas1e-2.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_PGCgwas1e-2.err  1>../../err_out_fold/part2_200kb_${t}_PGCgwas1e-2.out ; done &
+# node93, repeat tissue needing a different range
+t=Adrenal_Gland
+bash ElNet_withPrior_part2_200kb_tissue_PGCgwas1e-2_smallE.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_PGCgwas1e-2.err 1>../../err_out_fold/part2_200kb_${t}_PGCgwas1e-2.out &
+t=Cells_EBV-transformed_lymphocytes
+bash ElNet_withPrior_part2_200kb_tissue_PGCgwas1e-2_smallE.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_PGCgwas1e-2.err 1>../../err_out_fold/part2_200kb_${t}_PGCgwas1e-2.out &
+t=Thyroid
+bash ElNet_withPrior_part2_200kb_tissue_PGCgwas1e-2_smallE.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_PGCgwas1e-2.err 1>../../err_out_fold/part2_200kb_${t}_PGCgwas1e-2.out &
+t=Brain_Cerebellum
+bash ElNet_withPrior_part2_200kb_tissue_PGCgwas1e-2_bigE.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_PGCgwas1e-2.err  1>../../err_out_fold/part2_200kb_${t}_PGCgwas1e-2.out &
+
+
+##
+# node 93 BC PGC gwas1e-2, randomGWAS, randomEpi and randomVar
+t=Brain_Cortex
+bash ElNet_withPrior_part2_200kb_tissue_PGCgwas1e-2_rG.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_PGCgwas1e-2_rG.err 1>../../err_out_fold/part2_200kb_${t}_PGCgwas1e-2_rG.out &
+bash ElNet_withPrior_part2_200kb_tissue_PGCgwas1e-2_rE.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_PGCgwas1e-2_rE.err 1>../../err_out_fold/part2_200kb_${t}_PGCgwas1e-2_rE.out &
+bash ElNet_withPrior_part2_200kb_tissue_PGCgwas1e-2_rV.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_PGCgwas1e-2_rV.err 1>../../err_out_fold/part2_200kb_${t}_PGCgwas1e-2_rV.out &
+
+# node 95 AC CAD gwas5e-2, randomGWAS, randomEpi and randomVar
+t=Artery_Coronary
+bash ElNet_withPrior_part2_200kb_tissue_CADgwas5e-2_rG.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2_rG.err 1>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2_rG.out &
+bash ElNet_withPrior_part2_200kb_tissue_CADgwas5e-2_rE.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2_rE.err 1>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2_rE.out &
+bash ElNet_withPrior_part2_200kb_tissue_CADgwas5e-2_rV.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2_rV.err 1>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2_rV.out &
+
+
+#############
+### part3 ###
+#############
+readarray -t tissues_name < /mnt/lucia/eQTL_PROJECT_GTEx/INPUT_DATA/Tissue_PGCgwas
+# node 96
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_part3_200kb_tissue_PGCgwas1e-2.sh ${t} 2>../../err_out_fold/part3_200kb_${t}_PGCgwas1e-2.err 1>../../err_out_fold/part3_200kb_${t}_PGCgwas1e-2.out ; done &
+
+readarray -t tissues_name < /mnt/lucia/eQTL_PROJECT_GTEx/INPUT_DATA/Tissue_CADgwas
+# node 91
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_part3_200kb_tissue_CADgwas5e-2.sh ${t} 2>../../err_out_fold/part3_200kb_${t}_CADgwas5e-2.err 1>../../err_out_fold/part3_200kb_${t}_CADgwas5e-2.out ; done &
+
+readarray -t tissues_name < /mnt/lucia/eQTL_PROJECT_GTEx/INPUT_DATA/Tissue_noGWAS
+# node 91
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_part3_200kb_tissue_nogwas.sh ${t} 2>../../err_out_fold/part3_200kb_${t}_nogwas.err 1>../../err_out_fold/part3_200kb_${t}_nogwas.out ; done &
+
+
+#############
+### part4 ###
+#############
+readarray -t tissues_name < /mnt/lucia/eQTL_PROJECT_GTEx/INPUT_DATA/Tissue_CADgwas
+# node 92
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_part4_200kb_tissue_CADgwas5e-2.sh ${t} 2>../../err_out_fold/part4_200kb_${t}_CADgwas5e-2.err 1>../../err_out_fold/part4_200kb_${t}_CADgwas5e-2.out ; done &
+
+readarray -t tissues_name < /mnt/lucia/eQTL_PROJECT_GTEx/INPUT_DATA/Tissue_PGCgwas
+# node 96 
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_part4_200kb_tissue_PGCgwas1e-2.sh ${t} 2>../../err_out_fold/part4_200kb_${t}_PGCgwas1e-2.err 1>../../err_out_fold/part4_200kb_${t}_PGCgwas1e-2.out ; done &
+
+readarray -t tissues_name < /mnt/lucia/eQTL_PROJECT_GTEx/INPUT_DATA/Tissue_noGWAS
+# node 90
+for t in ${tissues_name[@]:0:10}; do bash ElNet_withPrior_part4_200kb_tissue_nogwas.sh ${t} 2>../../err_out_fold/part4_200kb_${t}_nogwas.err 1>../../err_out_fold/part4_200kb_${t}_nogwas.out ; done &
+# node 90
+for t in ${tissues_name[@]:10:10}; do bash ElNet_withPrior_part4_200kb_tissue_nogwas.sh ${t} 2>../../err_out_fold/part4_200kb_${t}_nogwas.err 1>../../err_out_fold/part4_200kb_${t}_nogwas.out ; done & 
+# node 90
+for t in ${tissues_name[@]:30:3}; do bash ElNet_withPrior_part4_200kb_tissue_nogwas.sh ${t} 2>../../err_out_fold/part4_200kb_${t}_nogwas.err 1>../../err_out_fold/part4_200kb_${t}_nogwas.out ; done &
+
+####################
+### final output ###
+####################
+readarray -t tissues_name < /mnt/lucia/eQTL_PROJECT_GTEx/INPUT_DATA/Tissue_PGCgwas
+# node 96
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_finalOut_200kb_tissue_PGCgwas1e-2.sh ${t} 2>../../err_out_fold/finOut_200kb_${t}_PGCgwas1e-2.err 1>../../err_out_fold/finOut_200kb_${t}_PGCgwas1e-2.out & done
+
+readarray -t tissues_name < /mnt/lucia/eQTL_PROJECT_GTEx/INPUT_DATA/Tissue_CADgwas
+# node 90
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_finalOut_200kb_tissue_CADgwas5e-2.sh ${t} 2>../../err_out_fold/finOut_200kb_${t}_CADgwas5e-2.err 1>../../err_out_fold/finOut_200kb_${t}_CADgwas5e-2.out & done
+
+readarray -t tissues_name < /mnt/lucia/eQTL_PROJECT_GTEx/INPUT_DATA/Tissue_noGWAS
+for t in ${tissues_name[@]:30:3}; do bash ElNet_withPrior_finalOut_200kb_tissue_nogwas.sh ${t} 2>../../err_out_fold/finOut_200kb_${t}_nogwas.err 1>../../err_out_fold/finOut_200kb_${t}_nogwas.out & done
+
+#################
+#### predict ####
+#################
+
+bash model_alltissues_prediction.sh
+
+#readarray -t tissues_name < <(cut -d, -f1 /mnt/lucia/eQTL_PROJECT_GTEx/INPUT_DATA/final_model_gtex.csv)
+# tissues_name=(Muscle_Skeletal Pancreas Skin_Not_Sun_Exposed_Suprapubic Skin_Sun_Exposed_Lower_leg Small_Intestine_Terminal_Ileum Spleen)
+tissues_name=(Stomach Thyroid Whole_Blood)
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_predExpr_200kb_tissue.sh ${t} 2>../../err_out_fold/predExpr_200kb_${t}.err 1>../../err_out_fold/predExpr_200kb_${t}.out & done
+
+####################
+#### path score ####
+####################
+readarray -t tissues_name < <(cut -d, -f1 /mnt/lucia/eQTL_PROJECT_GTEx/INPUT_DATA/final_model_gtex.csv)
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_pathDiff_200kb_tissue.sh ${t} 2>../../err_out_fold/pathDiff_200kb_${t}.err 1>../../err_out_fold/pathDiff_200kb_${t}.out ; done &
+
+######################
+#### original RNA ####
+######################
+
+bash model_alltissues_originalRNA.sh
+
+readarray -t tissues_name < <(cut -d, -f1 /mnt/lucia/eQTL_PROJECT_GTEx/INPUT_DATA/final_model_gtex.csv)
+for t in ${tissues_name[@]}; do bash RNAseq_covCorr_notrain_tissue.sh ${t} 2>../../err_out_fold/RNAseq_covCorr_notrain_${t}.err 1>../../err_out_fold/RNAseq_covCorr_notrain_${t}.out ; done &
+for t in ${tissues_name[@]}; do bash RNAseq_covCorr_train_tissue.sh ${t} 2>../../err_out_fold/RNAseq_covCorr_train_${t}.err 1>../../err_out_fold/RNAseq_covCorr_train_${t}.out ; done &
+
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_pathDiff_orRNA_notrain_tissue.sh ${t} 2>../../err_out_fold/pathDiff_orRNA_notrain_${t}.err 1>../../err_out_fold/pathDiff_orRNA_notrain_${t}.out ; done &
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_pathDiff_orRNA_train_tissue.sh ${t} 2>../../err_out_fold/pathDiff_orRNA_train_${t}.err 1>../../err_out_fold/pathDiff_orRNA_train_${t}.out ; done &
+
+
+###########################################################################################################
+# random prior
+
+###############
+#### part2 ####
+###############
+
+bash Build_priorIndex_randomP_AC_BC.sh 2>../../err_out_fold/build_priorIndex_random.err 1>../../err_out_fold/build_priorIndex_random.out &
+# node 93
+# rep_gwas=$(seq 10)
+for r in $(seq 6 1 10); do bash ElNet_withPrior_part2_200kb_AC_CADgwas5e-2_rG_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rG_rep${r}.err 1>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rG_rep${r}.out & done
+
+# node 95 
+for r in $(seq 6 1 10); do bash ElNet_withPrior_part2_200kb_BC_PGCgwas1e-2_rG_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rG_rep${r}.err 1>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rG_rep${r}.out & done
+
+# node 93 (put only 5 per time)
+rep=(1 2 3 5 6)
+for r in ${rep[@]}; do bash ElNet_withPrior_part2_200kb_AC_CADgwas5e-2_rV_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rV_rep${r}.err 1>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rV_rep${r}.out & done
+for r in $(seq 48 1 50); do bash ElNet_withPrior_part2_200kb_AC_CADgwas5e-2_rV_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rV_rep${r}.err 1>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rV_rep${r}.out & done
+
+# node 95 (put only 5 per time)
+for r in $(seq 48 1 50); do bash ElNet_withPrior_part2_200kb_BC_PGCgwas1e-2_rV_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rV_rep${r}.err 1>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rV_rep${r}.out & done
+# node 91, rep2,3,4,7 (failed)
+rep=(2 3 4 7)
+for r in ${rep[@]}; do bash ElNet_withPrior_part2_200kb_BC_PGCgwas1e-2_rV_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rV_rep${r}.err 1>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rV_rep${r}.out & done 
+
+# node 90
+for r in $(seq 46 1 50); do bash ElNet_withPrior_part2_200kb_AC_CADgwas5e-2_rE_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rE_rep${r}.err 1>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rE_rep${r}.out & done 
+
+# node 93
+for r in $(seq 41 1 45); do bash ElNet_withPrior_part2_200kb_BC_PGCgwas1e-2_rE_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rE_rep${r}.err 1>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rE_rep${r}.out & done
+# node 95
+for r in $(seq 46 1 50); do bash ElNet_withPrior_part2_200kb_BC_PGCgwas1e-2_rE_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rE_rep${r}.err 1>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rE_rep${r}.out & done 
+
+###############
+#### part3 ####
+###############
+
+# node 91
+for r in $(seq 1 1 10); do bash ElNet_withPrior_part3_200kb_AC_CADgwas5e-2_rG_withRep.sh ${r} 2>../../err_out_fold/part3_200kb_Artery_Coronary_CADgwas5e-2_rG_rep${r}.err 1>../../err_out_fold/part3_200kb_Artery_Coronary_CADgwas5e-2_rG_rep${r}.out ; done &
+for r in $(seq 1 1 10); do bash ElNet_withPrior_part3_200kb_BC_PGCgwas1e-2_rG_withRep.sh ${r} 2>../../err_out_fold/part3_200kb_Brain_Cortex_PGCgwas1e-2_rG_rep${r}.err 1>../../err_out_fold/part3_200kb_Brain_Cortex_PGCgwas1e-2_rG_rep${r}.out ; done &
+
+# node 91
+for r in $(seq 1 1 50); do bash ElNet_withPrior_part3_200kb_AC_CADgwas5e-2_rV_withRep.sh ${r} 2>../../err_out_fold/part3_200kb_Artery_Coronary_CADgwas5e-2_rV_rep${r}.err 1>../../err_out_fold/part3_200kb_Artery_Coronary_CADgwas5e-2_rV_rep${r}.out ; done & 
+for r in $(seq 1 1 50); do bash ElNet_withPrior_part3_200kb_BC_PGCgwas1e-2_rV_withRep.sh ${r} 2>../../err_out_fold/part3_200kb_Brain_Cortex_PGCgwas1e-2_rV_rep${r}.err 1>../../err_out_fold/part3_200kb_Brain_Cortex_PGCgwas1e-2_rV_rep${r}.out ; done &
+
+# node 92 
+for r in $(seq 1 1 25); do bash ElNet_withPrior_part3_200kb_AC_CADgwas5e-2_rE_withRep.sh ${r} 2>../../err_out_fold/part3_200kb_Artery_Coronary_CADgwas5e-2_rE_rep${r}.err 1>../../err_out_fold/part3_200kb_Artery_Coronary_CADgwas5e-2_rE_rep${r}.out ; done &
+for r in $(seq 26 1 50); do bash ElNet_withPrior_part3_200kb_AC_CADgwas5e-2_rE_withRep.sh ${r} 2>../../err_out_fold/part3_200kb_Artery_Coronary_CADgwas5e-2_rE_rep${r}.err 1>../../err_out_fold/part3_200kb_Artery_Coronary_CADgwas5e-2_rE_rep${r}.out ; done & 
+
+# node 92
+for r in $(seq 1 1 25); do bash ElNet_withPrior_part3_200kb_BC_PGCgwas1e-2_rE_withRep.sh ${r} 2>../../err_out_fold/part3_200kb_Brain_Cortex_PGCgwas1e-2_rE_rep${r}.err 1>../../err_out_fold/part3_200kb_Brain_Cortex_PGCgwas1e-2_rE_rep${r}.out ; done &
+for r in $(seq 26 1 50); do bash ElNet_withPrior_part3_200kb_BC_PGCgwas1e-2_rE_withRep.sh ${r} 2>../../err_out_fold/part3_200kb_Brain_Cortex_PGCgwas1e-2_rE_rep${r}.err 1>../../err_out_fold/part3_200kb_Brain_Cortex_PGCgwas1e-2_rE_rep${r}.out ; done &
+
+
+###############################################################################################################
+# compare with prediXcan and TWAS
+bash download_prediXcan_res.sh 2>../../err_out_fold/download_prediXcan.err 1>../../err_out_fold/download_prediXcan.out &
+bash convert_prediXcan_db.sh 2>../../err_out_fold/convert_prediXcan.err 1>../../err_out_fold/convert_prediXcan.out &
+bash download_TWAS_GTEx_v6p.sh 2>../../err_out_fold/download_TWAS_GTExv6p_res.err 1>../../err_out_fold/download_TWAS_GTExv6p_res.out &
+bash prepareTWAS_res.sh 2>../../err_out_fold/prepare_TWAS.err 1>../../err_out_fold/prepare_TWAS.out &
+bash prepareTWAS_GTEx_v6p_res.sh 2>../../err_out_fold/prepare_TWAS_v6p.err 1>../../err_out_fold/prepare_TWAS_v6p.out &
+
+bash compare_TWAS_prediXcan_results.sh 2>../../err_out_fold/compare_TWAS_prediXcan.err 1>../../err_out_fold/compare_TWAS_prediXcan.out &
+bash save_nSamples_methods.sh 2>../../err_out_fold/nSamples_methods.err 1>../../err_out_fold/nSamples_methods.out &
+
+
+# copy results to /mnt/lucia/PriLer/ folder (contains also CMC)
+bash copy_res_comparison.sh 2>../../err_out_fold/copy_res.err 1>../../err_out_fold/copy_res.out &
+
+##############################################################################################################
+# correlation real vs pred gene and pathways
+bash compute_corr_predVSreal.sh 2>../../err_out_fold/corr_pred.err 1>../../err_out_fold/corr_pred.out &
+
+##############################################################################################################
+comapre prediction matching UKBB and SCZ:
+readarray -t tissues_name < /mnt/lucia/PriLer_PROJECT_GTEx/INPUT_DATA_matchSCZ-PGC/Tissue_PGCgwas_v2
+
+for t in ${tissues_name[@]}; do bash compare_geneExp_UKBB_SCZ-PGC.sh ${t} 2>../../err_out_fold/compare_predExp_${t}_UKBB_SCZ.err 1>../../err_out_fold/compare_predExp_${t}_UKBB_SCZ.out & done
+
+for t in ${tissues_name[@]}; do bash compare_pathScore_UKBB_SCZ-PGC.sh ${t} Reactome 2>../../err_out_fold/compare_pathScore_Reactome_${t}_UKBB_SCZ.err 1>../../err_out_fold/compare_pathScore_Reactome_${t}_UKBB_SCZ.out & done
+for t in ${tissues_name[@]}; do bash compare_pathScore_UKBB_SCZ-PGC.sh ${t} GO 2>../../err_out_fold/compare_pathScore_GO_${t}_UKBB_SCZ.err 1>../../err_out_fold/compare_pathScore_GO_${t}_UKBB_SCZ.out & done
+
