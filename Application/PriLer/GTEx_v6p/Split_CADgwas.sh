@@ -1,6 +1,6 @@
 #!/usr/bin/sh
 
-cd /mnt/lucia/datasets/CAD_GWAS/
+cd /psycl/g/mpsziller/lucia/datasets_denbi/CAD_GWAS/
 
 # chr1
 awk  ' index($2,"1") && ! index($2,"10") && ! index($2,"11") && ! index($2,"12") && ! index($2,"13") && ! index($2,"14") && ! index($2,"15") && ! index($2,"16") && ! index($2,"17") && ! index($2,"18") && ! index($2,"19") && ! index($2,"21") ' cad.add.160614.website.txt > cad.add.160614.website_chr1.txt
