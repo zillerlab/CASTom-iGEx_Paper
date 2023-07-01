@@ -24,7 +24,7 @@ fold2 <- args$fold2
 phenoInfo <- fread(sprintf('%sphenotypeDescription_PHESANTproc_CADrelatedpheno_annotated.txt', fold1), h=T, stringsAsFactors=F, data.table=F) 
 phenoICDInfo <- fread(sprintf('%sphenotypeDescription_manualproc_ICD9-10_OPCS4.txt', fold1), h=T, stringsAsFactors=F, data.table=F) 
 
-sampleAnn <- fread(sprintf('%scovariateMatrix_latestW_202202.txt', fold1), h=T, stringsAsFactors=F, data.table=F) # use to match the other files
+sampleAnn <- fread(sprintf('%scovariateMatrix_latestW_202304.txt', fold1), h=T, stringsAsFactors=F, data.table=F) # use to match the other files
 phenoDat <- fread(sprintf('%sphenoMatrix.txt', fold1), h=T, stringsAsFactors=F, data.table = F)
 sampleAnn_tot <- fread(sprintf('%scovariatesMatrix_batchInfo.txt', fold1), h=T, stringsAsFactors=F, data.table=F)
 
