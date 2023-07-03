@@ -8,10 +8,25 @@ sbatch --job-name=extr extract_CAD_pheno.sh
 
 ##########################
 ### varying parameters ###
-# changes in kNN parameter
+# changes in kNN parameter, all samples
 sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_tscore_corrPCs_GTEx_kNNpar_CAD.sh
+# keep kNN = 20, bootstrap samples (50%)
+sbatch --job-name=prepare_bootstrap prepare_bootstrap_Cases_CAD.sh
+for i in {1..10} 
+do 
+sbatch --job-name=CL_Cases_rep${i} --array=1-5,7-11,15 PriLer_cluster_tscore_corrPCs_GTEx_BootstrapSamples50_CAD.sh $i
+done
 
-##### UP TO HERE #####
+##### RUN UP TO HERE #####
+
+# change corr threshold
+corr_thr=(0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1)
+for i in ${corr_thr[@]} 
+do 
+sbatch --job-name=CL_Cases_thr${i} --array=1-5,7-11,15 PriLer_cluster_tscore_corrPCs_GTEx_corrthr_CAD.sh $i
+done
+
+##### CHANGED UP TO HERE #####
 
 #################
 ### benchmark ###
