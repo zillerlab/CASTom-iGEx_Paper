@@ -29,6 +29,14 @@ bash Compute_GRE-SNP_mat.sh 2>../err_out_fold/GRE-SNP_mat.err 1>../err_out_fold/
 # binary: CAD_gwas_bin thr 5*10^-2, CAD_gwas_bin_v2 thr 10^-3
 for id in $(seq 22); do bash Compute_PriorMat_final.sh ${id} 2>../err_out_fold/prior_mat_chr${id}_fin.err 1>../err_out_fold/prior_mat_chr${id}_fin.out & done
 
+# build random prior GWAS
+for id in $(seq 22); do bash filter_1000GP_varInfo.sh ${id} 2>../../err_out_fold/filt1000GP_chr${id}.err 1>../../err_out_fold/filt1000GP_chr${id}.out & done
+for id in $(seq 22); do bash CreateRandomGWAS_PGC-CAD_rep.sh ${id} 2>../../err_out_fold/randomGWAS_chr${id}.err 1>../../err_out_fold/randomGWAS_chr${id}.out & done
+# build random Epigenomic regions
+for id in $(seq 22); do bash CreateRandomEpi_BC_AC_rep.sh ${id} 2>../err_out_fold/randomEpi_chr${id}.err 1>../err_out_fold/randomEpi_chr${id}.out & done
+# create random prior (combine random GWAS and random Epigenomic regions and random SNPs)
+for id in $(seq 22); do bash CreateRandomPrior_BC_AC_rep.sh ${id} 2>../err_out_fold/randomPrior_chr${id}.err 1>../err_out_fold/randomPrior_chr${id}.out & done
+
 ############################################################################
 # output in /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/OUTPUT_SCRIPTS_v2/
 
@@ -57,14 +65,14 @@ for t in ${tissues_name[@]:7:14}; do bash ElNet_withPrior_part1_200kb_tissue.sh 
 for t in ${tissues_name[@]:22:8}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done & 
 for t in ${tissues_name[@]:30:9}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done &
 
-##### %%%%% COMPLETE UNTIL HERE %%%%%%% ##########
-
 #############
 ### part2 ###
 ############# 
 
 # build index files
 bash Build_priorIndex_alltissues_allcombinations_fin.sh 2>../../err_out_fold/priorIndex_build_allc.err 1>../../err_out_fold/priorIndex_build_allc.out &
+
+##### %%%%% COMPLETE UNTIL HERE %%%%%%% ##########
 
 #### noGWAS ####
 readarray -t tissues_name < /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA/Tissue_noGWAS
@@ -223,12 +231,6 @@ for t in ${tissues_name[@]}; do bash ElNet_withPrior_pathDiff_orRNA_train_tissue
 
 ###########################################################################################################
 # random prior
-
-# build random Epi
-for id in $(seq 22); do bash CreateRandomEpi_BC_AC_rep.sh ${id} 2>../err_out_fold/randomEpi_chr${id}.err 1>../err_out_fold/randomEpi_chr${id}.out & done
-# create random prior
-for id in $(seq 22); do bash CreateRandomPrior_BC_AC_rep.sh ${id} 2>../err_out_fold/randomPrior_chr${id}.err 1>../err_out_fold/randomPrior_chr${id}.out & done
-
 ###############
 #### part2 ####
 ###############
@@ -236,10 +238,10 @@ for id in $(seq 22); do bash CreateRandomPrior_BC_AC_rep.sh ${id} 2>../err_out_f
 bash Build_priorIndex_randomP_AC_BC.sh 2>../../err_out_fold/build_priorIndex_random.err 1>../../err_out_fold/build_priorIndex_random.out &
 # node 93
 # rep_gwas=$(seq 10)
-for r in $(seq 6 1 10); do bash ElNet_withPrior_part2_200kb_AC_CADgwas5e-2_rG_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rG_rep${r}.err 1>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rG_rep${r}.out & done
+for r in $(seq 1 1 10); do bash ElNet_withPrior_part2_200kb_AC_CADgwas5e-2_rG_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rG_rep${r}.err 1>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rG_rep${r}.out & done
 
 # node 95 
-for r in $(seq 6 1 10); do bash ElNet_withPrior_part2_200kb_BC_PGCgwas1e-2_rG_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rG_rep${r}.err 1>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rG_rep${r}.out & done
+for r in $(seq 1 1 10); do bash ElNet_withPrior_part2_200kb_BC_PGCgwas1e-2_rG_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rG_rep${r}.err 1>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rG_rep${r}.out & done
 
 # node 93 (put only 5 per time)
 rep=(1 2 3 5 6)
