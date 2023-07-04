@@ -38,8 +38,6 @@ for id in $(seq 22); do bash Compute_PriorMat_final.sh ${id} 2>../err_out_fold/p
 
 bash preProcessing_data_allTissues.sh 2>../err_out_fold/preProc_allTissues.err 1>../err_out_fold/preProc_allTissues.out &
 
-##### %%%%% COMPLETE UNTIL HERE %%%%%%% ##########
-
 # divide per tissue groups
 #############
 ### part1 ###
@@ -53,34 +51,20 @@ bash preProcessing_data_allTissues.sh 2>../err_out_fold/preProc_allTissues.err 1
 #	- Pitutary (Michael)
 
 readarray -t tissues_name < /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA/GTEx_v6p/Tissues_1col_red 
-# already computed, file are copied
-#for t in ${tissues_name[0]}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done &
-#for t in ${tissues_name[@]:1:5}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done &
-#for t in ${tissues_name[@]:7:14}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done &
-#for t in ${tissues_name[@]:22:8}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done & 
-#for t in ${tissues_name[@]:30:9}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done &
+for t in ${tissues_name[0]}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done &
+for t in ${tissues_name[@]:1:5}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done &
+for t in ${tissues_name[@]:7:14}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done &
+for t in ${tissues_name[@]:22:8}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done & 
+for t in ${tissues_name[@]:30:9}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done &
 
-for t in ${tissues_name[@]}
-do
-	echo ${t}
-
-	mkdir /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/OUTPUT_SCRIPTS_v2/${t}
-	mkdir /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/OUTPUT_SCRIPTS_v2/${t}/200kb
-	cp /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/OUTPUT/${t}/*ENSEMBL* /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/OUTPUT_SCRIPTS_v2/${t}/
-	cp /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/OUTPUT/${t}/200kb/optim_* /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/OUTPUT_SCRIPTS_v2/${t}/200kb/
-	cp /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/OUTPUT/${t}/200kb/resNoPrior_NestedCV_HeritableGenes_* /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/OUTPUT_SCRIPTS_v2/${t}/200kb/
-done
-
+##### %%%%% COMPLETE UNTIL HERE %%%%%%% ##########
 
 #############
 ### part2 ###
 ############# 
 
-# output in ../OUTPUT_SCRIPTS_v2
-
 # build index files
 bash Build_priorIndex_alltissues_allcombinations_fin.sh 2>../../err_out_fold/priorIndex_build_allc.err 1>../../err_out_fold/priorIndex_build_allc.out &
-
 
 #### noGWAS ####
 readarray -t tissues_name < /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA/Tissue_noGWAS
