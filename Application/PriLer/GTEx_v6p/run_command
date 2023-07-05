@@ -134,8 +134,6 @@ for t in ${tissues_name[@]}; do bash ElNet_withPrior_part4_200kb_tissue_PGCgwas1
 readarray -t tissues_name < /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA/Tissue_noGWAS
 for t in ${tissues_name[@]}; do bash ElNet_withPrior_part4_200kb_tissue_nogwas.sh ${t} 2>../../err_out_fold/part4_200kb_${t}_nogwas.err 1>../../err_out_fold/part4_200kb_${t}_nogwas.out ; done &
 
-##### %%%%% COMPLETE UNTIL HERE %%%%%%% ##########
-
 ####################
 ### final output ###
 ####################
@@ -147,6 +145,8 @@ for t in ${tissues_name[@]}; do bash ElNet_withPrior_finalOut_200kb_tissue_CADgw
 
 readarray -t tissues_name < /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA/Tissue_noGWAS
 for t in ${tissues_name[@]}; do bash ElNet_withPrior_finalOut_200kb_tissue_nogwas.sh ${t} 2>../../err_out_fold/finOut_200kb_${t}_nogwas.err 1>../../err_out_fold/finOut_200kb_${t}_nogwas.out & done
+
+##### %%%%% COMPLETE UNTIL HERE %%%%%%% ##########
 
 #################
 #### predict ####
