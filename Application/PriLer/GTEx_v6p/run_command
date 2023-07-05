@@ -161,8 +161,6 @@ for t in ${tissues_name[@]}; do bash ElNet_withPrior_predExpr_200kb_tissue.sh ${
 readarray -t tissues_name < <(cut -d, -f1 /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA/final_model_gtex.csv)
 for t in ${tissues_name[@]}; do bash ElNet_withPrior_pathDiff_200kb_tissue.sh ${t} 2>../../err_out_fold/pathDiff_200kb_${t}.err 1>../../err_out_fold/pathDiff_200kb_${t}.out ; done &
 
-##### %%%%% COMPLETE UNTIL HERE %%%%%%% ##########
-
 ######################
 #### original RNA ####
 ######################
@@ -176,8 +174,9 @@ for t in ${tissues_name[@]}; do bash RNAseq_covCorr_train_tissue.sh ${t} 2>../..
 for t in ${tissues_name[@]}; do bash ElNet_withPrior_pathDiff_orRNA_notrain_tissue.sh ${t} 2>../../err_out_fold/pathDiff_orRNA_notrain_${t}.err 1>../../err_out_fold/pathDiff_orRNA_notrain_${t}.out ; done &
 for t in ${tissues_name[@]}; do bash ElNet_withPrior_pathDiff_orRNA_train_tissue.sh ${t} 2>../../err_out_fold/pathDiff_orRNA_train_${t}.err 1>../../err_out_fold/pathDiff_orRNA_train_${t}.out ; done &
 
-
 ###########################################################################################################
+##### %%%%% COMPLETE UNTIL HERE %%%%%%% ##########
+
 # random prior
 ###############
 #### part2 ####
