@@ -213,7 +213,6 @@ for r in $(seq 1 1 50); do bash ElNet_withPrior_part3_200kb_BC_PGCgwas1e-2_rE_wi
 
 
 ###############################################################################################################
-##### %%%%% COMPLETE UNTIL HERE %%%%%%% ##########
 # compare with prediXcan and TWAS
 bash download_prediXcan_res.sh 2>../../err_out_fold/download_prediXcan.err 1>../../err_out_fold/download_prediXcan.out &
 bash convert_prediXcan_db.sh 2>../../err_out_fold/convert_prediXcan.err 1>../../err_out_fold/convert_prediXcan.out &
@@ -224,11 +223,11 @@ bash prepareTWAS_GTEx_v6p_res.sh 2>../../err_out_fold/prepare_TWAS_v6p.err 1>../
 bash compare_TWAS_prediXcan_results.sh 2>../../err_out_fold/compare_TWAS_prediXcan.err 1>../../err_out_fold/compare_TWAS_prediXcan.out &
 bash save_nSamples_methods.sh 2>../../err_out_fold/nSamples_methods.err 1>../../err_out_fold/nSamples_methods.out &
 
-
 # copy results to /mnt/lucia/PriLer/ folder (contains also CMC)
 bash copy_res_comparison.sh 2>../../err_out_fold/copy_res.err 1>../../err_out_fold/copy_res.out &
 
 ##############################################################################################################
+##### %%%%% COMPLETE UNTIL HERE %%%%%%% ##########
 # correlation real vs pred gene and pathways
 bash compute_corr_predVSreal.sh 2>../../err_out_fold/corr_pred.err 1>../../err_out_fold/corr_pred.out &
 
