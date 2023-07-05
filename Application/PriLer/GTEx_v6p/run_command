@@ -146,17 +146,13 @@ for t in ${tissues_name[@]}; do bash ElNet_withPrior_finalOut_200kb_tissue_CADgw
 readarray -t tissues_name < /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA/Tissue_noGWAS
 for t in ${tissues_name[@]}; do bash ElNet_withPrior_finalOut_200kb_tissue_nogwas.sh ${t} 2>../../err_out_fold/finOut_200kb_${t}_nogwas.err 1>../../err_out_fold/finOut_200kb_${t}_nogwas.out & done
 
-##### %%%%% COMPLETE UNTIL HERE %%%%%%% ##########
-
 #################
 #### predict ####
 #################
 
 bash model_alltissues_prediction.sh
 
-#readarray -t tissues_name < <(cut -d, -f1 /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA/final_model_gtex.csv)
-# tissues_name=(Muscle_Skeletal Pancreas Skin_Not_Sun_Exposed_Suprapubic Skin_Sun_Exposed_Lower_leg Small_Intestine_Terminal_Ileum Spleen)
-tissues_name=(Stomach Thyroid Whole_Blood)
+readarray -t tissues_name < <(cut -d, -f1 /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA/final_model_gtex.csv)
 for t in ${tissues_name[@]}; do bash ElNet_withPrior_predExpr_200kb_tissue.sh ${t} 2>../../err_out_fold/predExpr_200kb_${t}.err 1>../../err_out_fold/predExpr_200kb_${t}.out & done
 
 ####################
@@ -164,6 +160,8 @@ for t in ${tissues_name[@]}; do bash ElNet_withPrior_predExpr_200kb_tissue.sh ${
 ####################
 readarray -t tissues_name < <(cut -d, -f1 /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA/final_model_gtex.csv)
 for t in ${tissues_name[@]}; do bash ElNet_withPrior_pathDiff_200kb_tissue.sh ${t} 2>../../err_out_fold/pathDiff_200kb_${t}.err 1>../../err_out_fold/pathDiff_200kb_${t}.out ; done &
+
+##### %%%%% COMPLETE UNTIL HERE %%%%%%% ##########
 
 ######################
 #### original RNA ####
