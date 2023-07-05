@@ -175,8 +175,6 @@ for t in ${tissues_name[@]}; do bash ElNet_withPrior_pathDiff_orRNA_notrain_tiss
 for t in ${tissues_name[@]}; do bash ElNet_withPrior_pathDiff_orRNA_train_tissue.sh ${t} 2>../../err_out_fold/pathDiff_orRNA_train_${t}.err 1>../../err_out_fold/pathDiff_orRNA_train_${t}.out ; done &
 
 ###########################################################################################################
-##### %%%%% COMPLETE UNTIL HERE %%%%%%% ##########
-
 # random prior
 ###############
 #### part2 ####
@@ -186,28 +184,16 @@ bash Build_priorIndex_randomP_AC_BC.sh 2>../../err_out_fold/build_priorIndex_ran
 # node 93
 # rep_gwas=$(seq 10)
 for r in $(seq 1 1 10); do bash ElNet_withPrior_part2_200kb_AC_CADgwas5e-2_rG_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rG_rep${r}.err 1>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rG_rep${r}.out & done
-
 # node 95 
 for r in $(seq 1 1 10); do bash ElNet_withPrior_part2_200kb_BC_PGCgwas1e-2_rG_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rG_rep${r}.err 1>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rG_rep${r}.out & done
 
-# node 93 (put only 5 per time)
-rep=(1 2 3 5 6)
-for r in ${rep[@]}; do bash ElNet_withPrior_part2_200kb_AC_CADgwas5e-2_rV_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rV_rep${r}.err 1>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rV_rep${r}.out & done
-for r in $(seq 48 1 50); do bash ElNet_withPrior_part2_200kb_AC_CADgwas5e-2_rV_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rV_rep${r}.err 1>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rV_rep${r}.out & done
+for r in $(seq 1 1 50); do bash ElNet_withPrior_part2_200kb_AC_CADgwas5e-2_rV_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rV_rep${r}.err 1>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rV_rep${r}.out & done
 
-# node 95 (put only 5 per time)
-for r in $(seq 48 1 50); do bash ElNet_withPrior_part2_200kb_BC_PGCgwas1e-2_rV_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rV_rep${r}.err 1>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rV_rep${r}.out & done
-# node 91, rep2,3,4,7 (failed)
-rep=(2 3 4 7)
-for r in ${rep[@]}; do bash ElNet_withPrior_part2_200kb_BC_PGCgwas1e-2_rV_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rV_rep${r}.err 1>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rV_rep${r}.out & done 
+for r in $(seq 1 1 50); do bash ElNet_withPrior_part2_200kb_BC_PGCgwas1e-2_rV_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rV_rep${r}.err 1>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rV_rep${r}.out & done
 
-# node 90
-for r in $(seq 46 1 50); do bash ElNet_withPrior_part2_200kb_AC_CADgwas5e-2_rE_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rE_rep${r}.err 1>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rE_rep${r}.out & done 
+for r in $(seq 1 1 50); do bash ElNet_withPrior_part2_200kb_AC_CADgwas5e-2_rE_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rE_rep${r}.err 1>../../err_out_fold/part2_200kb_Artery_Coronary_CADgwas5e-2_rE_rep${r}.out & done 
 
-# node 93
-for r in $(seq 41 1 45); do bash ElNet_withPrior_part2_200kb_BC_PGCgwas1e-2_rE_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rE_rep${r}.err 1>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rE_rep${r}.out & done
-# node 95
-for r in $(seq 46 1 50); do bash ElNet_withPrior_part2_200kb_BC_PGCgwas1e-2_rE_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rE_rep${r}.err 1>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rE_rep${r}.out & done 
+for r in $(seq 1 1 50); do bash ElNet_withPrior_part2_200kb_BC_PGCgwas1e-2_rE_withRep.sh ${r} 2>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rE_rep${r}.err 1>../../err_out_fold/part2_200kb_Brain_Cortex_PGCgwas1e-2_rE_rep${r}.out & done
 
 ###############
 #### part3 ####
@@ -222,15 +208,12 @@ for r in $(seq 1 1 50); do bash ElNet_withPrior_part3_200kb_AC_CADgwas5e-2_rV_wi
 for r in $(seq 1 1 50); do bash ElNet_withPrior_part3_200kb_BC_PGCgwas1e-2_rV_withRep.sh ${r} 2>../../err_out_fold/part3_200kb_Brain_Cortex_PGCgwas1e-2_rV_rep${r}.err 1>../../err_out_fold/part3_200kb_Brain_Cortex_PGCgwas1e-2_rV_rep${r}.out ; done &
 
 # node 92 
-for r in $(seq 1 1 25); do bash ElNet_withPrior_part3_200kb_AC_CADgwas5e-2_rE_withRep.sh ${r} 2>../../err_out_fold/part3_200kb_Artery_Coronary_CADgwas5e-2_rE_rep${r}.err 1>../../err_out_fold/part3_200kb_Artery_Coronary_CADgwas5e-2_rE_rep${r}.out ; done &
-for r in $(seq 26 1 50); do bash ElNet_withPrior_part3_200kb_AC_CADgwas5e-2_rE_withRep.sh ${r} 2>../../err_out_fold/part3_200kb_Artery_Coronary_CADgwas5e-2_rE_rep${r}.err 1>../../err_out_fold/part3_200kb_Artery_Coronary_CADgwas5e-2_rE_rep${r}.out ; done & 
-
-# node 92
-for r in $(seq 1 1 25); do bash ElNet_withPrior_part3_200kb_BC_PGCgwas1e-2_rE_withRep.sh ${r} 2>../../err_out_fold/part3_200kb_Brain_Cortex_PGCgwas1e-2_rE_rep${r}.err 1>../../err_out_fold/part3_200kb_Brain_Cortex_PGCgwas1e-2_rE_rep${r}.out ; done &
-for r in $(seq 26 1 50); do bash ElNet_withPrior_part3_200kb_BC_PGCgwas1e-2_rE_withRep.sh ${r} 2>../../err_out_fold/part3_200kb_Brain_Cortex_PGCgwas1e-2_rE_rep${r}.err 1>../../err_out_fold/part3_200kb_Brain_Cortex_PGCgwas1e-2_rE_rep${r}.out ; done &
+for r in $(seq 1 1 50); do bash ElNet_withPrior_part3_200kb_AC_CADgwas5e-2_rE_withRep.sh ${r} 2>../../err_out_fold/part3_200kb_Artery_Coronary_CADgwas5e-2_rE_rep${r}.err 1>../../err_out_fold/part3_200kb_Artery_Coronary_CADgwas5e-2_rE_rep${r}.out ; done &
+for r in $(seq 1 1 50); do bash ElNet_withPrior_part3_200kb_BC_PGCgwas1e-2_rE_withRep.sh ${r} 2>../../err_out_fold/part3_200kb_Brain_Cortex_PGCgwas1e-2_rE_rep${r}.err 1>../../err_out_fold/part3_200kb_Brain_Cortex_PGCgwas1e-2_rE_rep${r}.out ; done &
 
 
 ###############################################################################################################
+##### %%%%% COMPLETE UNTIL HERE %%%%%%% ##########
 # compare with prediXcan and TWAS
 bash download_prediXcan_res.sh 2>../../err_out_fold/download_prediXcan.err 1>../../err_out_fold/download_prediXcan.out &
 bash convert_prediXcan_db.sh 2>../../err_out_fold/convert_prediXcan.err 1>../../err_out_fold/convert_prediXcan.out &
