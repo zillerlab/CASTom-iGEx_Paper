@@ -1,0 +1,52 @@
+#####################################
+####### robusteness analysis ########
+#####################################
+
+# use Whole_Blood without GWAS (with and without priors)
+# do not recompute Covariates
+
+##################
+### preprocess ###
+##################
+
+bash downSample_robustenessAnalysis.sh 2>../../err_out_fold/downSample_WB.err 1>../../err_out_fold/downSample_WB.out &
+
+##############
+### part 1 ###
+##############
+t=Whole_Blood
+id_rep=$(seq 1 1 10)
+
+for id in ${id_rep[@]}; do bash ElNet_withPrior_part1_200kb_tissue_robustness.sh ${t} ${id} 2>../../err_out_fold/part1_200kb_${t}_rep${id}.err 1>../../err_out_fold/part1_200kb_${t}_rep${id}.out ; done &
+
+##############
+### part 2 ###
+##############
+
+for id in ${id_rep[@]}; do bash ElNet_withPrior_part2_200kb_tissue_nogwas_robustness.sh ${t} ${id} 2>../../err_out_fold/part2_200kb_${t}_nogwas_rep${id}.err  1>../../err_out_fold/part2_200kb_${t}_nogwas_rep${id}.out & done 
+
+##############
+### part 3 ###
+##############
+
+for id in ${id_rep[@]}; do bash ElNet_withPrior_part3_200kb_tissue_nogwas_robustness.sh ${t} ${id} 2>../../err_out_fold/part3_200kb_${t}_nogwas_rep${id}.err 1>../../err_out_fold/part3_200kb_${t}_nogwas_rep${id}.out ; done &
+
+##############
+### part 4 ###
+##############
+
+for id in ${id_rep[@]}; do bash ElNet_withPrior_part4_200kb_tissue_nogwas_robustness.sh ${t} ${id} 2>../../err_out_fold/part4_200kb_${t}_nogwas_rep${id}.err 1>../../err_out_fold/part4_200kb_${t}_nogwas_rep${id}.out ; done &
+
+#############
+### final ###
+#############
+
+for id in ${id_rep[@]}; do bash ElNet_withPrior_finalOut_200kb_tissue_nogwas_robustness.sh ${t} ${id} 2>../../err_out_fold/final_200kb_${t}_nogwas_rep${id}.err 1>../../err_out_fold/final_200kb_${t}_nogwas_rep${id}.out ; done &
+
+#####################################
+####### enrichment snps bio #########
+#####################################
+# prepare tables for enrichment analysis of SNPs in DNAse regions
+# additional analysis run by Michael 
+# final plots in jupyter_notebook/PriLer/compare_PriLer_prediXcan_TWAS.ipynb
+bash create_regSNP_noGWAS.sh 2>../../err_out_fold/create_SNP_pos.err 1>../../err_out_fold/create_SNP_pos.out &
