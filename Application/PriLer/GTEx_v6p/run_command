@@ -60,10 +60,6 @@ bash preProcessing_data_allTissues.sh 2>../err_out_fold/preProc_allTissues.err 1
 
 readarray -t tissues_name < /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA/GTEx_v6p/Tissues_1col_red 
 for t in ${tissues_name[0]}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done &
-for t in ${tissues_name[@]:1:5}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done &
-for t in ${tissues_name[@]:7:14}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done &
-for t in ${tissues_name[@]:22:8}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done & 
-for t in ${tissues_name[@]:30:9}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../err_out_fold/part1_200kb_${t}.err 1>../err_out_fold/part1_200kb_${t}.out ; done &
 
 #############
 ### part2 ###
@@ -174,6 +170,9 @@ for t in ${tissues_name[@]}; do bash RNAseq_covCorr_train_tissue.sh ${t} 2>../..
 for t in ${tissues_name[@]}; do bash ElNet_withPrior_pathDiff_orRNA_notrain_tissue.sh ${t} 2>../../err_out_fold/pathDiff_orRNA_notrain_${t}.err 1>../../err_out_fold/pathDiff_orRNA_notrain_${t}.out ; done &
 for t in ${tissues_name[@]}; do bash ElNet_withPrior_pathDiff_orRNA_train_tissue.sh ${t} 2>../../err_out_fold/pathDiff_orRNA_train_${t}.err 1>../../err_out_fold/pathDiff_orRNA_train_${t}.out ; done &
 
+# correlation real vs pred gene and pathways
+bash compute_corr_predVSreal.sh 2>../../err_out_fold/corr_pred.err 1>../../err_out_fold/corr_pred.out &
+
 ###########################################################################################################
 # random prior
 ###############
@@ -227,16 +226,11 @@ bash save_nSamples_methods.sh 2>../../err_out_fold/nSamples_methods.err 1>../../
 bash copy_res_comparison.sh 2>../../err_out_fold/copy_res.err 1>../../err_out_fold/copy_res.out &
 
 ##############################################################################################################
-##### %%%%% COMPLETE UNTIL HERE %%%%%%% ##########
-# correlation real vs pred gene and pathways
-bash compute_corr_predVSreal.sh 2>../../err_out_fold/corr_pred.err 1>../../err_out_fold/corr_pred.out &
-
-##############################################################################################################
-comapre prediction matching UKBB and SCZ:
-readarray -t tissues_name < /mnt/lucia/PriLer_PROJECT_GTEx/INPUT_DATA_matchSCZ-PGC/Tissue_PGCgwas_v2
+# comapre prediction matching UKBB and SCZ:
+# can be run only after Application/SCZ_PGC2/training/run_command and Application/SCZ_PGC/prediction/UK_Biobank/run_command are completed
+readarray -t tissues_name < /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA_matchSCZ-PGC/Tissue_PGCgwas_v2
 
 for t in ${tissues_name[@]}; do bash compare_geneExp_UKBB_SCZ-PGC.sh ${t} 2>../../err_out_fold/compare_predExp_${t}_UKBB_SCZ.err 1>../../err_out_fold/compare_predExp_${t}_UKBB_SCZ.out & done
-
 for t in ${tissues_name[@]}; do bash compare_pathScore_UKBB_SCZ-PGC.sh ${t} Reactome 2>../../err_out_fold/compare_pathScore_Reactome_${t}_UKBB_SCZ.err 1>../../err_out_fold/compare_pathScore_Reactome_${t}_UKBB_SCZ.out & done
 for t in ${tissues_name[@]}; do bash compare_pathScore_UKBB_SCZ-PGC.sh ${t} GO 2>../../err_out_fold/compare_pathScore_GO_${t}_UKBB_SCZ.err 1>../../err_out_fold/compare_pathScore_GO_${t}_UKBB_SCZ.out & done
 
