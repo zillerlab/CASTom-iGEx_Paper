@@ -6,7 +6,7 @@
 #####################################
 f=/psycl/g/mpsziller/lucia/
 
-Rscript ${f}PriLer_PROJECT_GTEx/RSCRIPTS/Compute_priorMat_fin_run.R \
+Rscript Compute_priorMat_fin_run.R \
     --chr $1 \
     --inputDir ${f}PriLer_PROJECT_GTEx/OUTPUT_SCRIPTS_v2_CAD_UKBB/ \
     --outputDir ${f}PriLer_PROJECT_GTEx/OUTPUT_SCRIPTS_v2_CAD_UKBB/  \

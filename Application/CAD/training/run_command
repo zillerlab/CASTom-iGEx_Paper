@@ -20,17 +20,10 @@ bash preProcessing_data_allTissues.sh 2>../../err_out_fold/preProc_allTissues_CA
 #############
 ### part1 ###
 #############
-readarray -t tissues_name < /mnt/lucia/PriLer_PROJECT_GTEx/INPUT_DATA_matchCADall-UKBB/Tissue_CADgwas 
+readarray -t tissues_name < /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA_matchCADall-UKBB/Tissue_CADgwas 
 
 # node 90
-for t in ${tissues_name[@]:0:5}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t} 2>../../err_out_fold/part1_200kb_${t}_matchCAD-UKBB.err 1>../../err_out_fold/part1_200kb_${t}_matchCAD-UKBB.out ; done &
-# node 91
-for t in ${tissues_name[@]:5:4}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t} 2>../../err_out_fold/part1_200kb_${t}_matchCAD-UKBB.err 1>../../err_out_fold/part1_200kb_${t}_matchCAD-UKBB.out ; done &
-# node 92
-for t in ${tissues_name[@]:9:5}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t} 2>../../err_out_fold/part1_200kb_${t}_matchCAD-UKBB.err 1>../../err_out_fold/part1_200kb_${t}_matchCAD-UKBB.out ; done &
-# node 90
-t=Whole_Blood
-bash ElNet_withPrior_part1_200kb_tissue.sh ${t} 2>../../err_out_fold/part1_200kb_${t}_matchCAD-UKBB.err 1>../../err_out_fold/part1_200kb_${t}_matchCAD-UKBB.out &
+for t in ${tissues_name}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t} 2>../../err_out_fold/part1_200kb_${t}_matchCAD-UKBB.err 1>../../err_out_fold/part1_200kb_${t}_matchCAD-UKBB.out ; done &
 
 #############
 ### part2 ###
@@ -41,9 +34,9 @@ bash ElNet_withPrior_part1_200kb_tissue.sh ${t} 2>../../err_out_fold/part1_200kb
 bash Build_priorIndex_alltissuesCADUKBB.sh  2>../../err_out_fold/priorIndex_build_matchCADall-UKBB.err 1>../../err_out_fold/priorIndex_build_matchCADall-UKBB.out &
 
 #### CADgwas ####
-readarray -t tissues_name < /mnt/lucia/PriLer_PROJECT_GTEx/INPUT_DATA_matchCADall-UKBB/Tissue_CADgwas
+readarray -t tissues_name < /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA_matchCADall-UKBB/Tissue_CADgwas
 # node 91
-tissues_name=(Adipose_Subcutaneous Adipose_Visceral_Omentum Adrenal_Gland Thyroid)
+tissues_name=(Adipose_Subcutaneous Adipose_Visceral_Omentum Adrenal_Gland Thyroid Whole_Blood)
 for t in ${tissues_name[@]}; do bash ElNet_withPrior_part2_200kb_tissue_CADgwas5e-2_range2E.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.err  1>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.out ; done &
 
 # node 92 
@@ -70,72 +63,29 @@ for t in ${tissues_name[@]}; do bash ElNet_withPrior_part2_200kb_tissue_CADgwas5
 tissues_name=Heart_Left_Ventricle
 for t in ${tissues_name[@]}; do bash ElNet_withPrior_part2_200kb_tissue_CADgwas5e-2_HLV.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.err 1>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.out ; done &
 
-# node 90
-t=Whole_Blood
-bash ElNet_withPrior_part2_200kb_tissue_CADgwas5e-2_range2E.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.err 1>../../err_out_fold/part2_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.out &
-
 #############
 ### part3 ###
 #############
 
 #### CADgwas ####
-# readarray -t tissues_name < /mnt/lucia/PriLer_PROJECT_GTEx/INPUT_DATA_matchCAD/Tissue_CADgwas
+readarray -t tissues_name < /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA_matchCAD/Tissue_CADgwas
 
-# node 93
-tissues_name=(Liver Heart_Left_Ventricle Colon_Sigmoid Artery_Coronary)
 for t in ${tissues_name[@]}; do bash ElNet_withPrior_part3_200kb_tissue_CADgwas5e-2.sh ${t} 2>../../err_out_fold/part3_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.err  1>../../err_out_fold/part3_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.out ; done &
-
-# node 95
-tissues_name=(Adipose_Subcutaneous Adipose_Visceral_Omentum Adrenal_Gland Artery_Aorta Colon_Transverse Artery_Tibial Small_Intestine_Terminal_Ileum)
-for t in ${tissues_name[@]}; do bash ElNet_withPrior_part3_200kb_tissue_CADgwas5e-2.sh ${t} 2>../../err_out_fold/part3_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.err  1>../../err_out_fold/part3_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.out ; done &
-
-# node 90 
-tissues_name=(Heart_Atrial_Appendage Heart_Left_Ventricle Thyroid Stomach)
-for t in ${tissues_name[@]}; do bash ElNet_withPrior_part3_200kb_tissue_CADgwas5e-2.sh ${t} 2>../../err_out_fold/part3_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.err 1>../../err_out_fold/part3_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.out ; done &
-
-# node 90
-t=Whole_Blood
-bash ElNet_withPrior_part3_200kb_tissue_CADgwas5e-2.sh ${t} 2>../../err_out_fold/part3_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.err 1>../../err_out_fold/part3_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.out &
 
 #############
 ### part4 ###
 #############
 
 #### CADgwas ####
-# readarray -t tissues_name < /mnt/lucia/PriLer_PROJECT_GTEx/INPUT_DATA_matchCAD/Tissue_CADgwas
+readarray -t tissues_name < /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA_matchCAD/Tissue_CADgwas
 
-# node 96
-tissues_name=(Liver Heart_Left_Ventricle Colon_Sigmoid Artery_Coronary)
 for t in ${tissues_name[@]}; do bash ElNet_withPrior_part4_200kb_tissue_CADgwas5e-2.sh ${t} 2>../../err_out_fold/part4_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.err 1>../../err_out_fold/part4_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.out ; done &
-
-# node 91
-tissues_name=(Adipose_Subcutaneous Adipose_Visceral_Omentum Adrenal_Gland)
-for t in ${tissues_name[@]}; do bash ElNet_withPrior_part4_200kb_tissue_CADgwas5e-2.sh ${t} 2>../../err_out_fold/part4_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.err 1>../../err_out_fold/part4_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.out ; done &
-
-# node 92
-tissues_name=(Heart_Atrial_Appendage Heart_Left_Ventricle Thyroid Stomach)
-for t in ${tissues_name[@]}; do bash ElNet_withPrior_part4_200kb_tissue_CADgwas5e-2.sh ${t} 2>../../err_out_fold/part4_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.err 1>../../err_out_fold/part4_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.out ; done &
-
-# node 95
-tissues_name=(Artery_Aorta Colon_Transverse Artery_Tibial Small_Intestine_Terminal_Ileum)
-for t in ${tissues_name[@]}; do bash ElNet_withPrior_part4_200kb_tissue_CADgwas5e-2.sh ${t} 2>../../err_out_fold/part4_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.err 1>../../err_out_fold/part4_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.out ; done &
-
-t=Whole_Blood
-bash ElNet_withPrior_part4_200kb_tissue_CADgwas5e-2.sh ${t} 2>../../err_out_fold/part4_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.err 1>../../err_out_fold/part4_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.out &
 
 ######################
 ### combine output ###
 ######################
 
 #### CADgwas ####
-# node 95
-t=Liver
-bash ElNet_withPrior_finalOut_200kb_tissue_CADgwas5e-2.sh ${t} 2>../../err_out_fold/finOut_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.err 1>../../err_out_fold/finOut_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.out &
-t=Colon_Sigmoid
-bash ElNet_withPrior_finalOut_200kb_tissue_CADgwas5e-2.sh ${t} 2>../../err_out_fold/finOut_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.err 1>../../err_out_fold/finOut_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.out &
+readarray -t tissues_name < /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA_matchCAD/Tissue_CADgwas
 
-tissues_name=(Artery_Aorta Colon_Transverse Artery_Tibial Small_Intestine_Terminal_Ileum Heart_Atrial_Appendage Heart_Left_Ventricle Thyroid Stomach Adipose_Subcutaneous Adipose_Visceral_Omentum Adrenal_Gland Artery_Coronary)
 for t in ${tissues_name[@]}; do bash ElNet_withPrior_finalOut_200kb_tissue_CADgwas5e-2.sh ${t} 2>../../err_out_fold/finOut_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.err 1>../../err_out_fold/finOut_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.out ; done &
-
-t=Whole_Blood
-bash ElNet_withPrior_finalOut_200kb_tissue_CADgwas5e-2.sh ${t} 2>../../err_out_fold/finOut_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.err 1>../../err_out_fold/finOut_200kb_${t}_CADgwas5e-2_matchCAD-UKBB.out &
