@@ -1,0 +1,95 @@
+#########################################################################
+#### pre processing: specific to this data, scripts are not general #####
+#########################################################################
+
+# Correct genotype ref and alt annotation, filter out SNPs based on MAF and INFO 
+sbatch --array=1-22 Correct_RefAlt_SNPs_filterMAF-INFO_gen.sh 
+sbatch --array=1-22 Correct_RefAlt_Indels_filterMAF-INFO_gen.sh 
+
+# transform to dosage fromat
+sbatch --array=1-22 Convert_SNPs_eQTL.sh 
+sbatch --array=1-22 Convert_Indels_eQTL.sh 
+ 
+# compute allele frequency using all the samples
+sbatch --array=1-22 Compute_freq.sh # used to write annotation file 
+
+# split PGC gwas to chr
+sbatch Split_PGC.sh 
+
+# write genotype in che correct format, order variants
+sbatch --array=1-22 Genotype_preproc.sh 
+## NOTE: output copied in the folder /psycl/g/mpsziller/lucia/PriLer_PROJECT_CMC/INPUT_DATA_SCRIPTS_v1
+
+## create annotation file for samples and save covariate file for each sample configuration
+sbatch Covariates_preproc.sh # sampled filtered (european), INPUT_DATA/Covariates/covariateMatrix_eQTL.txt converted into INPUT_DATA_SCRIPTS_v1/Covariates/covariateMatrix.txt
+sbatch Create_sampleAnn_CMC_covMat.sh
+
+### compute prior ###
+# Compute annotation SNP-GRE, binary matrix in snp intersect
+sbatch Compute_SNP-GRE_mat_allChr.sh 
+sbatch --array=1-22 Compute_priors_CMC_fin.sh
+
+#################################
+#### pre processing general #####
+#################################
+
+# match with heritable genes, create snp-gene distance matrix and annotations
+sbatch preProcessing_data_CMC.sh 
+
+#####################
+##### training ######
+#####################
+
+sbatch --job-name=Control50 ElNet_withPrior_training_C50.sh Control50 
+sbatch --job-name=Control100 ElNet_withPrior_training_C100.sh Control100 
+sbatch --job-name=Control150 ElNet_withPrior_training_C150.sh Control150 
+sbatch --job-name=ControlAll ElNet_withPrior_training_CAll.sh ControlAll 
+sbatch --job-name=All ElNet_withPrior_training_All.sh All 
+
+###############################################
+##### predict on new dataset: entire CMC ######
+###############################################
+sbatch --job-name=Control50 ElNet_withPrior_predictAll_C50.sh Control50
+sbatch --job-name=Control100 ElNet_withPrior_predictAll_C100.sh Control100
+sbatch --job-name=Control150 ElNet_withPrior_predictAll_C150.sh Control150  
+sbatch --job-name=ControlAll ElNet_withPrior_predictAll_CAll.sh ControlAll 
+sbatch --job-name=All ElNet_withPrior_predictAll_All.sh All 
+
+########################################################################################################################################
+
+#####################################
+#### original RNA seq comparison ####
+#####################################
+
+# correct for covariates for no train model and different train model
+sbatch --job-name=covCorr_originalRNA RNAseq_covCorr_tot.sh 
+
+#####################################
+#### original RNA: path analysis ####
+#####################################
+
+sbatch --job-name=noTrain ElNet_withPrior_pathOriginalRNA.sh no
+sbatch --job-name=C50Train ElNet_withPrior_pathOriginalRNA.sh Control50
+sbatch --job-name=C100Train ElNet_withPrior_pathOriginalRNA.sh Control100
+sbatch --job-name=C150Train ElNet_withPrior_pathOriginalRNA.sh Control150
+sbatch --job-name=CAllTrain ElNet_withPrior_pathOriginalRNA.sh ControlAll
+sbatch --job-name=AllTrain ElNet_withPrior_pathOriginalRNA.sh All 
+
+############################################################################################################################################
+
+################################
+#### compare TWAS/prediXcan ####
+################################
+sbatch --job-name=compare compare_TWAS_prediXcan_results.sh
+
+################################
+#### correlation realVSpred ####
+################################
+sbatch --job-name=corr compute_corr_predVSreal.sh
+
+########################################################
+# comapre prediction matching UKBB and SCZ:
+# can be run only after Application/SCZ_PGC2/training/run_command and Application/SCZ_PGC/prediction/UK_Biobank/run_command are completed
+sbatch --job-name=comp compare_geneExp_UKBB_SCZ-PGC.sh
+sbatch --job-name=comp compare_pathScore_UKBB_SCZ-PGC.sh
+
