@@ -17,8 +17,6 @@ do
 sbatch --job-name=CL_Cases_rep${i} --array=1-5,7-11,15 PriLer_cluster_tscore_corrPCs_GTEx_BootstrapSamples50_CAD.sh $i
 done
 
-##### RUN UP TO HERE #####
-
 # change corr threshold
 corr_thr=(0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1)
 for i in ${corr_thr[@]} 
@@ -26,33 +24,21 @@ do
 sbatch --job-name=CL_Cases_thr${i} --array=1-5,7-11,15 PriLer_cluster_tscore_corrPCs_GTEx_corrthr_CAD.sh $i
 done
 
-##### CHANGED UP TO HERE #####
-
 #################
 ### benchmark ###
 
 ### cluster based on PCs (benchmark)###
-sbatch --job-name=CL_Cases cluster_PCs_CAD.sh Cases
+sbatch --job-name=CL_Cases cluster_PCs_CAD.sh Cases # <- running
 sbatch --job-name=CL_Cases cluster_PCs_endophenotype_CAD.sh Cases
+##### CHANGED UP TO HERE #####
 
-### cluster zscaled tscores (benchmark) ###
+### cluster zscaled tscores (benchmark) 
 sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_tscore_GTEx_CAD.sh
 sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_tscore_GTEx_CAD.sh
 
 ### cluster Cases without zscaling, corr for PCs (benchmark) ###
 sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_tscore_corrPCs_original_GTEx_CAD.sh
 sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_tscore_corrPCs_original_GTEx_CAD.sh 
-
-##### EXPERIMENTAL! ####
-#sbatch --job-name=CL_Cases_20 --array=11 PriLer_cluster_tscore_corrPCs_GTEx_kNNpar_test_CAD.sh 20
-#sbatch --job-name=CL_Cases_30 --array=11 PriLer_cluster_tscore_corrPCs_GTEx_kNNpar_test_CAD.sh 30
-#sbatch --job-name=CL_Cases_20 --array=11 PriLer_cluster_endophenotype_tscore_corrPCs_GTEx_test_CAD.sh 20
-#sbatch --job-name=CL_Cases_30 --array=11 PriLer_cluster_endophenotype_tscore_corrPCs_GTEx_test_CAD.sh 30
-#sbatch --job-name=CL_Cases_German5_20 --array=11 PriLer_cluster_tscore_corrPCs_predict_GTEx_test_CAD.sh German5 20
-#sbatch --job-name=CL_Cases_German5_30 --array=11 PriLer_cluster_tscore_corrPCs_predict_GTEx_test_CAD.sh German5 30
-#sbatch --job-name=CL_Cases_German5_20 --array=11 PriLer_cluster_predictEval_tscore_corrPCs_GTEx_test_CAD.sh 20
-#sbatch --job-name=CL_Cases_German5_30 --array=11 PriLer_cluster_predictEval_tscore_corrPCs_GTEx_test_CAD.sh 30
-#######################
 
 #########################################
 ### cluster removing PCs from tscores ###
