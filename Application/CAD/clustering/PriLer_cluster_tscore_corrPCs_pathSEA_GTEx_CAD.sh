@@ -17,11 +17,12 @@ t=$(eval echo "\${tissues[${id_t}-1]}")
 
 fold_cl=OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/CAD_HARD_clustering/update_corrPCs/
 git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_clustering/
+ref_fold=/psycl/g/mpsziller/lucia/castom-igex/refData/
 
 ${git_fold}pathSEA_path_group_run.R \
 	--pathCluster_file ${fold_cl}pathOriginal_filtJS0.2_corrPCs_tscoreClusterCases_featAssociation.RData \
 	--outFold ${fold_cl} \
-	--atc_file /psycl/g/mpsziller/lucia/drug_targeting/WHO\ ATC-DDD\ 2021-12-03.csv \
+	--atc_file ${ref_fold}WHO\ ATC-DDD\ 2021-12-03.csv \
 	--cmap_fold /psycl/g/mpsziller/lucia/refData/Cmap_MSigDB_v6.1_PEPs \
 	--type_cluster Cases
 	

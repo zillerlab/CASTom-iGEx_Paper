@@ -11,7 +11,7 @@ R_LIBS_USER=/u/luciat/R/x86_64-pc-linux-gnu-library/4.0/
 cd /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/
 
 git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_clustering/
-
+ref_fold=/psycl/g/mpsziller/lucia/castom-igex/refData/
 fold=INPUT_DATA_GTEx/CAD/Covariates/UKBB/CAD_HARD_clustering/
 
 #### rescale continuous phenotypes
@@ -44,9 +44,10 @@ ${git_fold}cluster_associatePhenoGLM_run.R \
 # plot and combined 
 ${git_fold}plot_endophenotype_grVSall_run.R \
 	--type_cluster_data PCs \
-        --type_cluster $1 \
+    --type_cluster $1 \
 	--type_input original \
-	--forest_plot T \
+	--forest_plot TRUE \
 	--endopFile ${fold}rescaleCont_withMedication_PCs_original_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM.RData ${fold}rescaleCont_withoutMedication_PCs_original_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM.RData \
-	--outFold ${fold} 
+	--outFold ${fold} \
+	--colorFile ${ref_fold}color_pheno_type_UKBB.txt
 

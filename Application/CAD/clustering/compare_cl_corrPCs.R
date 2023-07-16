@@ -8,7 +8,7 @@ options(bitmapType = 'cairo', device = 'png')
 setwd('/psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT')
 tissues <- read.table('OUTPUT_GTEx/Tissue_CADgwas', h=F, stringsAsFactors = F)$V1
 tissues <- tissues[!tissues %in% c('Artery_Tibial', 'Small_Intestine_Terminal_Ileum', 'Stomach', 'Thyroid')]
-color_tissues <- read.table('../../castom-igex/Figures/color_tissues.txt', h=T, stringsAsFactors = F)
+color_tissues <- read.table('../../castom-igex/refData/color_tissues.txt', h=T, stringsAsFactors = F)
 color_tissues <- color_tissues[match(tissues, color_tissues$tissue), ]
 outFold <- 'OUTPUT_GTEx/predict_CAD/AllTissues/200kb/CAD_GWAS_bin5e-2/UKBB/CAD_HARD_clustering/compare_PCs_zcorrPCs_z/'
 

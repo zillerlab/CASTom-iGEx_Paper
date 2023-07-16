@@ -26,35 +26,33 @@ done
 
 #################
 ### benchmark ###
-
 ### cluster based on PCs (benchmark)###
-sbatch --job-name=CL_Cases cluster_PCs_CAD.sh Cases # <- running
-sbatch --job-name=CL_Cases cluster_PCs_endophenotype_CAD.sh Cases
-##### CHANGED UP TO HERE #####
+sbatch --job-name=CL_Cases cluster_PCs_CAD.sh Cases 
+sbatch --job-name=CL_Cases cluster_PCs_endophenotype_CAD.sh Cases 
 
 ### cluster zscaled tscores (benchmark) 
-sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_tscore_GTEx_CAD.sh
-sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_tscore_GTEx_CAD.sh
+sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_tscore_GTEx_CAD.sh 
+sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_tscore_GTEx_CAD.sh # <- running
 
 ### cluster Cases without zscaling, corr for PCs (benchmark) ###
-sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_tscore_corrPCs_original_GTEx_CAD.sh
-sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_tscore_corrPCs_original_GTEx_CAD.sh 
+sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_tscore_corrPCs_original_GTEx_CAD.sh 
+sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_tscore_corrPCs_original_GTEx_CAD.sh # <- running
 
 #########################################
 ### cluster removing PCs from tscores ###
-
 sbatch --job-name=filt --array=1-5,7-11,15 filter_pathway_JS.sh # filter pathway to associate with clustering structure
-sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_tscore_corrPCs_GTEx_CAD.sh
-sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_tscore_corrPCs_GTEx_CAD.sh # hypothesis free: UKBB phenotypes
+sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_tscore_corrPCs_GTEx_CAD.sh 
+sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_tscore_corrPCs_GTEx_CAD.sh # hypothesis free: UKBB phenotypes 
 sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_nominal_tscore_corrPCs_GTEx_CAD.sh # hypothesis-driven
-sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_treatmentResponse_tscore_corrPCs_GTEx_CAD.sh # treatment response
+sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_treatmentResponse_tscore_corrPCs_GTEx_CAD.sh # treatment response 
 
 ## focus on Liver cluster ##
-sbatch --job-name=CL_Cases --array=11,15 PriLer_cluster_tscore_corrPCs_featureRelTscore_GTEx_CAD.sh
-sbatch --job-name=CL_Cases --array=11,15 PriLer_cluster_tscore_corrPCs_featureRelPath_GTEx_CAD.sh
+sbatch --job-name=CL_Cases --array=11,15 PriLer_cluster_tscore_corrPCs_featureRelTscore_GTEx_CAD.sh # <- running
+sbatch --job-name=CL_Cases --array=11,15 PriLer_cluster_tscore_corrPCs_featureRelPath_GTEx_CAD.sh # <- running
 sbatch --job-name=CL_Cases --array=11,15 PriLer_cluster_tscore_corrPCs_pathSEA_GTEx_CAD.sh
 # check treatment response
 sbatch --job-name=CL_Cases --array=1-19 PriLer_cluster_treatmentResponse_pathSEAhits_tscore_corrPCs_GTEx_CAD.sh
+##### CHANGED UP TO HERE #####
 
 ########################
 ## compare benchmarks ##

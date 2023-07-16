@@ -5,7 +5,8 @@
 #SBATCH --nodes=1
 #SBATCH --mem=30G
 
-module load R/3.5.3
+module load r_anaconda/4.0.3
+R_LIBS_USER=/u/luciat/R/x86_64-pc-linux-gnu-library/4.0/
 
 cd /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/
 
@@ -13,7 +14,7 @@ id_t=${SLURM_ARRAY_TASK_ID}
 readarray -t tissues < OUTPUT_GTEx/Tissue_CADgwas
 t=$(eval echo "\${tissues[${id_t}-1]}")
 
-mkdir -p OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/CAD_HARD_clustering/update_corrPCs/
+# mkdir -p OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/CAD_HARD_clustering/update_corrPCs/
 fold=OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/
 cov_fold=INPUT_DATA_GTEx/CAD/Covariates/UKBB/CAD_HARD_clustering/
 git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_clustering/
@@ -31,6 +32,6 @@ ${git_fold}cluster_PGmethod_corrPCs_run.R \
 	--functR ${git_fold}clustering_functions.R \
 	--corr_thr 0.9 \
 	--type_input zscaled \
-	--kNN_par 30 \
+	--kNN_par 20 \
 	--tissues_name ${t}
 
