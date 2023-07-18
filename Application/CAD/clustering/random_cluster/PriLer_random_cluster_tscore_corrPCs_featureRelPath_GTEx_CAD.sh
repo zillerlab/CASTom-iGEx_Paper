@@ -6,7 +6,8 @@
 #SBATCH --mem-per-cpu=20G
 #SBATCH --cpus-per-task=6
 
-module load R/3.5.3
+R_LIBS_USER=/u/luciat/R/x86_64-pc-linux-gnu-library/4.0/
+module load r_anaconda/4.0.3
 
 cd /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/
 
@@ -32,7 +33,7 @@ ${git_fold}cluster_associatePath_corrPCs_run.R \
 	--inputFold ${inputFold[@]} \
 	--sampleAnnFile ${cov_fold}covariateMatrix_CADHARD_All_phenoAssoc.txt \
 	--pvalresFile ${pvalresFile[@]} \
-        --geneInfoFile ${geneInfoFile[@]} \
+    --geneInfoFile ${geneInfoFile[@]} \
 	--pval_id 1 \
 	--type_cluster Cases \
 	--outFold ${fold_cl}rep${id}_ \

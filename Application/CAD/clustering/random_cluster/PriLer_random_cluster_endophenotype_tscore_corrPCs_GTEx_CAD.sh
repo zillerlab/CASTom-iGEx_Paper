@@ -5,7 +5,8 @@
 #SBATCH --nodes=1
 #SBATCH --mem=10G
 
-module load R/3.5.3
+R_LIBS_USER=/u/luciat/R/x86_64-pc-linux-gnu-library/4.0/
+module load r_anaconda/4.0.3
 
 cd /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/
 
@@ -16,7 +17,7 @@ fold=OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testde
 cov_fold=INPUT_DATA_GTEx/CAD/Covariates/UKBB/CAD_HARD_clustering/
 fold_input=INPUT_DATA_GTEx/CAD/Covariates/UKBB/
 git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_clustering/
-
+ref_fold=/psycl/g/mpsziller/lucia/castom-igex/refData/
 
 #### rescale continuous phenotypes
 ${git_fold}cluster_associatePhenoGLM_run.R \
@@ -48,12 +49,11 @@ ${git_fold}cluster_associatePhenoGLM_run.R \
 # plot and combined 
 ${git_fold}plot_endophenotype_grVSall_run.R \
 	--type_cluster_data tscore \
-        --type_cluster Cases \
+    --type_cluster Cases \
 	--type_input corrPCs_zscaled \
 	--endopFile ${fold}rep${id}_rescaleCont_withMedication_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM.RData ${fold}rep${id}_rescaleCont_withoutMedication_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM.RData \
 	--outFold ${fold}rep${id}_ \
 	--pval_pheno 0.001 \
-	--colorFile INPUT_DATA_GTEx/CAD/Covariates/UKBB/color_pheno_type_UKBB.txt
-
+	--colorFile ${ref_fold}color_pheno_type_UKBB.txt
 
 rm ${fold}rep${id}_rescaleCont_withMedication_* ${fold}rep${id}_rescaleCont_withoutMedication_* 
