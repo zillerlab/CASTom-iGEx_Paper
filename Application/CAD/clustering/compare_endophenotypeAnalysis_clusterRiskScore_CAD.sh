@@ -6,11 +6,13 @@
 #SBATCH --mem=30G
 
 
-module load R/3.5.3
+R_LIBS_USER=/u/luciat/R/x86_64-pc-linux-gnu-library/4.0/
+module load r_anaconda/4.0.3
 
 cd /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/
 
 git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_clustering/
+ref_fold=/psycl/g/mpsziller/lucia/castom-igex/refData/
 
 id_t=${SLURM_ARRAY_TASK_ID}
 readarray -t tissues < OUTPUT_GTEx/Tissue_CADgwas
@@ -24,7 +26,7 @@ ${git_fold}compare_endophenotypeAnalysis_clusterRiskScore_run.R \
 	--endopheno_analysis_file ${fold_cl}/tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM_combined.txt \
 	--pheno_name CAD_HARD \
 	--outFold ${fold_cl}cp_ \
-	--color_pheno_file INPUT_DATA_GTEx/CAD/Covariates/UKBB/color_pheno_type_UKBB.txt \
+	--color_pheno_file ${ref_fold}color_pheno_type_UKBB.txt \
 	--thr_plot 1e-100 \
 	--R2_pheno_rs_file ${fold_cl}tscore_corr2Thr0.1_relatedPhenotypes_R2_risk_score_phenotype.txt \
 	--pval_pheno_show 0.005

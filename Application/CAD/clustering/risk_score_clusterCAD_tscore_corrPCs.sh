@@ -6,7 +6,8 @@
 #SBATCH --mem=90G
 
 
-module load R/3.5.3
+R_LIBS_USER=/u/luciat/R/x86_64-pc-linux-gnu-library/4.0/
+module load r_anaconda/4.0.3
 
 cd /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/
 
@@ -29,7 +30,7 @@ done
 
 
 ${git_fold}compute_risk_score_corrPCs_run.R \
-	--sampleAnn_file INPUT_DATA_GTEx/CAD/Covariates/UKBB/covariateMatrix_latestW_202202.txt \
+	--sampleAnn_file INPUT_DATA_GTEx/CAD/Covariates/UKBB/covariateMatrix_latestW_202304.txt \
 	--functR ${git_fold}clustering_functions.R \
 	--outFold ${fold_cl} \
 	--split_tot $1	\

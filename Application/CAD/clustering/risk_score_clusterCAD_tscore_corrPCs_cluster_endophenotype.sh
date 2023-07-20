@@ -6,7 +6,8 @@
 #SBATCH --mem=30G
 
 
-module load R/3.5.3
+R_LIBS_USER=/u/luciat/R/x86_64-pc-linux-gnu-library/4.0/
+module load r_anaconda/4.0.3
 
 cd /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/
 
@@ -47,5 +48,5 @@ ${git_fold}cluster_associatePhenoGLM_run.R \
 	--type_input corrPCs_zscaled \
 	--type_sim HK \
 	--clusterFile ${fold_cl}tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric.RData \
-        --risk_score T \
+    --risk_score T \
 	--rescale_pheno T 

@@ -27,7 +27,7 @@ for(i in 1:length(tissues)){
   tissue <- tissues[i]
   print(tissue)
   
-  file <- sprintf('OUTPUT_GTEx/predict_CAD/%s/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/CAD_HARD_clustering/', tissue)
+  file <- sprintf('OUTPUT_GTEx/predict_CAD/%s/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/CAD_HARD_clustering/update_corrPCs/', tissue)
   out <- get(load(sprintf('%s/tscore_zscaled_clusterCases_PGmethod_HKmetric.RData', file)))
   cl <- out$cl_best
   cov_test <- out$test_cov %>% mutate(type = 'zscaled')
@@ -156,14 +156,14 @@ for(i in 1:length(tissues)){
   tissue <- tissues[i]
   print(tissue)
   
-  endop_res1 <- read_tsv(sprintf('OUTPUT_GTEx/predict_CAD/%s/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/CAD_HARD_clustering/rescaleCont_withMedication_tscore_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM.txt', tissue))
-  endop_res2 <- read_tsv(sprintf('OUTPUT_GTEx/predict_CAD/%s/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/CAD_HARD_clustering/rescaleCont_withoutMedication_tscore_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM.txt', tissue))
+  endop_res1 <- read_tsv(sprintf('OUTPUT_GTEx/predict_CAD/%s/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/CAD_HARD_clustering/update_corrPCs/rescaleCont_withMedication_tscore_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM.txt', tissue))
+  endop_res2 <- read_tsv(sprintf('OUTPUT_GTEx/predict_CAD/%s/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/CAD_HARD_clustering/update_corrPCs/rescaleCont_withoutMedication_tscore_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM.txt', tissue))
   endop_res <- rbind(endop_res1, endop_res2)
   endop_res <- endop_res %>% group_by(comp) %>% 
     mutate(pval_corr = p.adjust(pvalue, method = 'BH'), tissue = tissue) %>% ungroup()
   
-  endop_res1_cPC <- read_tsv(sprintf('OUTPUT_GTEx/predict_CAD/%s/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/CAD_HARD_clustering/rescaleCont_withMedication_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM.txt', tissue))
-  endop_res2_cPC <- read_tsv(sprintf('OUTPUT_GTEx/predict_CAD/%s/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/CAD_HARD_clustering/rescaleCont_withoutMedication_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM.txt', tissue))
+  endop_res1_cPC <- read_tsv(sprintf('OUTPUT_GTEx/predict_CAD/%s/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/CAD_HARD_clustering/update_corrPCs/rescaleCont_withMedication_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM.txt', tissue))
+  endop_res2_cPC <- read_tsv(sprintf('OUTPUT_GTEx/predict_CAD/%s/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/CAD_HARD_clustering/update_corrPCs/rescaleCont_withoutMedication_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM.txt', tissue))
   endop_res_cPC <- rbind(endop_res1_cPC, endop_res2_cPC)
   endop_res_cPC <- endop_res_cPC %>% group_by(comp) %>% 
     mutate(pval_corr = p.adjust(pvalue, method = 'BH')) %>% ungroup()

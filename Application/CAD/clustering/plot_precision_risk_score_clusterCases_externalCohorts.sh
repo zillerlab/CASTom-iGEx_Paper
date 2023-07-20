@@ -5,16 +5,16 @@
 #SBATCH --nodes=1
 #SBATCH --mem=30G
 
-
-module load R/3.5.3
+R_LIBS_USER=/u/luciat/R/x86_64-pc-linux-gnu-library/4.0/
+module load r_anaconda/4.0.3
 
 cd /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/
 
 git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_clustering/
-
+ref_fold=/psycl/g/mpsziller/lucia/castom-igex/refData/
 tissues=(Adipose_Subcutaneous Adipose_Visceral_Omentum Adrenal_Gland Artery_Aorta Artery_Coronary Colon_Sigmoid Colon_Transverse Heart_Atrial_Appendage Heart_Left_Ventricle Liver Whole_Blood)
 
-mkdir -p OUTPUT_GTEx/predict_CAD/AllTissues/200kb/CAD_GWAS_bin5e-2/Meta_Analysis_CAD/CAD_HARD_clustering/update_corrPCs/
+# mkdir -p OUTPUT_GTEx/predict_CAD/AllTissues/200kb/CAD_GWAS_bin5e-2/Meta_Analysis_CAD/CAD_HARD_clustering/update_corrPCs/
 
 in_file=()
 for t in ${tissues[@]}
@@ -27,4 +27,4 @@ ${git_fold}plot_precision_risk_score_groupSpec_run.R \
 	--tissues ${tissues[@]} \
 	--riskScore_comp_file ${in_file[@]} \
 	--outFold ${fold_out}cp_metaAnalysis_ \
-	--color_tissues_file /psycl/g/mpsziller/lucia/castom-igex/refData/color_tissues.txt \
+	--color_tissues_file ${ref_fold}color_tissues.txt \

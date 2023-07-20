@@ -5,7 +5,8 @@
 #SBATCH --nodes=1
 #SBATCH --mem=20G
 
-module load R/3.5.3
+R_LIBS_USER=/u/luciat/R/x86_64-pc-linux-gnu-library/4.0/
+module load r_anaconda/4.0.3
 
 cd /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/
 
@@ -23,7 +24,7 @@ feat_rel=()
 for i in ${name_cohort[@]}
 do
 	clus_pred+=(OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/${i}/devgeno0.01_testdevgeno0/CAD_HARD_clustering/update_corrPCs/tscore_corrPCs_zscaled_predictClusterCases_PGmethod_HKmetric.RData)
-        pheno_pred+=(INPUT_DATA_GTEx/CAD/Covariates/${i}/phenotypeMatrix_CADrel_Cases.txt)
+    pheno_pred+=(INPUT_DATA_GTEx/CAD/Covariates/${i}/phenotypeMatrix_CADrel_Cases.txt)
 	feat_rel+=(OUTPUT_GTEx/predict_CAD/${t}/200kb/CAD_GWAS_bin5e-2/${i}/devgeno0.01_testdevgeno0/CAD_HARD_clustering/update_corrPCs/tscoreOriginal_corrPCs_tscoreClusterCases_featAssociation.RData)
 done
 

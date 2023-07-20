@@ -11,9 +11,6 @@ module load r_anaconda/4.0.3
 
 cd /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/
 
-# prepare input
-Rscript get_common_treatments_pathSEA_liverCL.R
-
 id_treat=${SLURM_ARRAY_TASK_ID}
 readarray -t treatments < INPUT_DATA_GTEx/CAD/Covariates/UKBB/CAD_HARD_clustering/pathSEA/treatment_names
 treat_name=$(eval echo "\${treatments[${id_treat}-1]}")

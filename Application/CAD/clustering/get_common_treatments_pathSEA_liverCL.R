@@ -1,7 +1,8 @@
 library(dplyr)
 library(data.table)
 
-pathSEA_file <- "OUTPUT_GTEx/predict_CAD/Liver/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/CAD_HARD_clustering/update_corrPCs//pathSEA_corrPCs_tscoreClusterCases_featAssociation.txt"
+setwd("/psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/")
+pathSEA_file <- "OUTPUT_GTEx/predict_CAD/Liver/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/CAD_HARD_clustering/update_corrPCs/pathSEA_corrPCs_tscoreClusterCases_featAssociation.txt"
 medications_UKBB_info_file <- "INPUT_DATA_GTEx/CAD/Covariates/UKBB/phenotypeDescription_PHESANTproc_CADrelatedpheno_annotated.txt"
 medications_UKBB_file <- "INPUT_DATA_GTEx/CAD/Covariates/UKBB/phenotypeMatrix_Medications.txt"
 covDat_file <- "INPUT_DATA_GTEx/CAD/Covariates/UKBB/CAD_HARD_clustering/covariateMatrix_CADHARD_All_phenoAssoc_withMedication.txt"
