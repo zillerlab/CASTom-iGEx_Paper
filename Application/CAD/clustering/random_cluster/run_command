@@ -3,8 +3,8 @@
 #######################
 Rscript create_random_cluster.R
 
-sbatch --job-name=CL_random --array=1-50 PriLer_random_cluster_endophenotype_tscore_corrPCs_GTEx_CAD.sh # <- running
-sbatch --job-name=CL_random --array=1-50 PriLer_random_cluster_endophenotype_nominal_tscore_corrPCs_GTEx_CAD.sh
-sbatch --job-name=CL_random --array=1-50 PriLer_random_cluster_treatmentResponse_tscore_corrPCs_GTEx_CAD.sh
-sbatch --job-name=CL_random --array=1-10 PriLer_random_cluster_tscore_corrPCs_featureRelTscore_GTEx_CAD.sh
-sbatch --job-name=CL_random --array=1-10 PriLer_random_cluster_tscore_corrPCs_featureRelPath_GTEx_CAD.sh
+sbatch --job-name=CL_random --array=1-50%10 PriLer_random_cluster_endophenotype_tscore_corrPCs_GTEx_CAD.sh 
+sbatch --job-name=CL_random --array=1-50%10 PriLer_random_cluster_endophenotype_nominal_tscore_corrPCs_GTEx_CAD.sh
+sbatch --job-name=CL_random --array=1-50%10 PriLer_random_cluster_treatmentResponse_tscore_corrPCs_GTEx_CAD.sh
+sbatch --job-name=CL_random --array=1-10%2 PriLer_random_cluster_tscore_corrPCs_featureRelTscore_GTEx_CAD.sh
+sbatch --job-name=CL_random --array=1-10%2 PriLer_random_cluster_tscore_corrPCs_featureRelPath_GTEx_CAD.sh

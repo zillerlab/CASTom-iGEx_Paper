@@ -33,7 +33,6 @@ ${git_fold}cluster_associatePath_corrPCs_run.R \
 	--inputFold ${inputFold[@]} \
 	--sampleAnnFile ${cov_fold}covariateMatrix_CADHARD_All_phenoAssoc.txt \
 	--pvalresFile ${pvalresFile[@]} \
-    --geneInfoFile ${geneInfoFile[@]} \
 	--pval_id 1 \
 	--type_cluster Cases \
 	--outFold ${fold_cl}rep${id}_ \
