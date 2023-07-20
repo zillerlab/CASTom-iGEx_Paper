@@ -23,8 +23,8 @@ sbatch --array=1-5,7-11,15 --job-name=pheno_wiki PriLer_phenoAssociation_wiki_CA
 Rscript ./create_txt_allTissues_CAD_UKBB_Indian.R
 
 # predict clustering on Liver
-sbatch --array=11 --job-name=cl PriLer_cluster_tscore_corrPCs_predict_CAD.sh
+sbatch --array=11 --job-name=cl PriLer_cluster_tscore_corrPCs_predict_CAD.sh 
 # cluster specific genes
-sbatch --array=11 --job-name=cl_genes PriLer_predict_cluster_tscore_corrPCs_featureRelTscore_CAD.sh
+sbatch --array=11 --job-name=cl_genes PriLer_predict_cluster_tscore_corrPCs_featureRelTscore_CAD.sh 
 # eval prediction
-sbatch --array=11 --job-name=cl_eval PriLer_cluster_predictEval_tscore_corrPCs_CAD.sh
+sbatch --array=11 --job-name=cl_eval PriLer_cluster_predictEval_tscore_corrPCs_CAD.sh 
