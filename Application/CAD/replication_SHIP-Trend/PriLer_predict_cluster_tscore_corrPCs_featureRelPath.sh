@@ -1,12 +1,13 @@
 #!/bin/bash
 #SBATCH -o /psycl/g/mpsziller/lucia/CAD_SHIP/err_out_fold/cluster_predict_tscore_t%a_featRelPath.out
-#SBATCH -e /psycl/g/mpsziller/lucia/CAD_SHIP/err_out_fold/cluster_predict_tscore_t%a_featRelPath.err
+#SBATCH -e 
 #SBATCH --time=1-0
 #SBATCH --nodes=1
 #SBATCH --mem-per-cpu=20G
 #SBATCH --cpus-per-task=2
 
-module load R/3.5.3
+R_LIBS_USER=/u/luciat/R/x86_64-pc-linux-gnu-library/4.0/
+module load r_anaconda/4.0.3
 
 cd /psycl/g/mpsziller/lucia/CAD_SHIP/
 
@@ -16,7 +17,6 @@ t=$(eval echo "\${tissues[${id_t}-1]}")
 cohort_name=SHIP-TREND
 
 readarray -t tissues_tot < Tissues
-
 
 inputFold=()
 pvalresFile=()

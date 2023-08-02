@@ -6,7 +6,8 @@
 #SBATCH --mem-per-cpu=20G
 #SBATCH --cpus-per-task=2
 
-module load R/3.5.3
+R_LIBS_USER=/u/luciat/R/x86_64-pc-linux-gnu-library/4.0/
+module load r_anaconda/4.0.3
 
 cd /psycl/g/mpsziller/lucia/CAD_SHIP/
 
@@ -38,7 +39,7 @@ ${git_fold}cluster_associateFeat_corrPCs_run.R \
 	--sampleAnnFile ${cov_fold}SHIP-TREND_gPC_SHIP_2022_27_withSex.txt \
 	--split_tot 0 \
 	--pvalresFile ${pvalresFile[@]} \
-        --geneInfoFile ${geneInfoFile[@]} \
+    --geneInfoFile ${geneInfoFile[@]} \
 	--pval_id 1 \
 	--min_genes_path 2 \
 	--type_data tscore \

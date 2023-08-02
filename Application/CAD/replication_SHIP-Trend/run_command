@@ -9,18 +9,24 @@
 # compute T-scores
 sbatch --job-name=SHIP --array=1-2 PriLer_tscore_pathscore.sh
 
+### REPEAT FROM HERE ###
 # predict clustering 
-sbatch --job-name=SHIP --array=1-2 PriLer_cluster_tscore_corrPCs_predict.sh
+sbatch --job-name=SHIP --array=1-2 PriLer_cluster_tscore_corrPCs_predict.sh 
 
 # get associated genes
-sbatch --job-name=SHIP --array=1-2 PriLer_predict_cluster_tscore_corrPCs_featureRelTscore.sh
+sbatch --job-name=SHIP --array=1-2 PriLer_predict_cluster_tscore_corrPCs_featureRelTscore.sh 
 # get associated pathway (copy filtered pathways)
-sbatch --job-name=SHIP --array=1-2 PriLer_predict_cluster_tscore_corrPCs_featureRelPath.sh
+sbatch --job-name=SHIP --array=1-2 PriLer_predict_cluster_tscore_corrPCs_featureRelPath.sh 
 # evaluate prediction, compared with UKBB
 sbatch --job-name=SHIP --array=1-2 PriLer_cluster_predictEval_tscore_corrPCs.sh
 
+# DONE BY ALEX
 # evaluate differences in endophenotype
 PriLer_cluster_predict_tscore_corrPCs_phenotype-GX.sh
 # evalute differences in gene expression
 PriLer_cluster_predict_tscore_corrPCs_phenotype-cont_dich.sh
+
+# DONY BY MICHAEL
+# Computation of pathway scores from actual gene expression
+# association with cluster structed and WMW estimates vs Adjusted beta plot
 
