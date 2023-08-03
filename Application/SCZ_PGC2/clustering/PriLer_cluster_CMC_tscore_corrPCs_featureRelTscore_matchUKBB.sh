@@ -43,7 +43,7 @@ done
 
 
 # tscore
-./${git_fold}cluster_associateFeat_corrPCs_multipleCohorts_run.R \
+${git_fold}cluster_associateFeat_corrPCs_multipleCohorts_run.R \
 	--type_data_cluster tscore \
 	--tissues ${tissues_tot[@]} \
 	--inputFold ${input_fold_t[@]} \

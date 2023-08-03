@@ -13,7 +13,7 @@ cd /psycl/g/mpsziller/lucia/SCZ_PGC/eQTL_PROJECT/
 fold_cl=clustering_res_matchUKBB_corrPCs/DLPC_CMC/
 git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_clustering/
 
-./${git_fold}pathSEA_path_group_run.R \
+${git_fold}pathSEA_path_group_run.R \
 	--pathCluster_file ${fold_cl}reduced_matchUKBB_pathOriginal_filtJS0.2_corrPCs_tscoreClusterCases_featAssociation.RData \
 	--outFold ${fold_cl} \
 	--atc_file /psycl/g/mpsziller/lucia/drug_targeting/WHO\ ATC-DDD\ 2021-12-03.csv \

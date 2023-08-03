@@ -41,7 +41,7 @@ do
 	cov_file+=(INPUT_DATA/Covariates/${c}.covariateMatrix_old.txt)
 done
 
-./${git_fold}compute_risk_score_corrPCs_multipleCohorts_run.R \
+${git_fold}compute_risk_score_corrPCs_multipleCohorts_run.R \
 	--scale_rs T \
 	--pheno_class_name ${name_file[@]} \
 	--corrFile ${TMPDIR}/tmp_CMC_t/correlation_estimate_tscore.RData \

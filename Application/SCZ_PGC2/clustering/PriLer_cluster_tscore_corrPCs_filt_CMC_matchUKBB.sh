@@ -31,7 +31,7 @@ do
 done
 
 thr=$1
-./${git_fold}cluster_PGmethod_corrPCs_multipleCohorts_run.R \
+${git_fold}cluster_PGmethod_corrPCs_multipleCohorts_run.R \
 	--tissues_name DLPC_CMC \
 	--inputFile ${input_file[@]} \
 	--name_cohorts ${name_cohorts[@]} \

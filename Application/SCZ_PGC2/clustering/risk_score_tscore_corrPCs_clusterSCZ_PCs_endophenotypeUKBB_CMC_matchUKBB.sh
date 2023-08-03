@@ -26,7 +26,7 @@ cp ${fold_out}matchUKBB_tscore_corr2Thr0.1_risk_score_relatedPhenotypes.txt.gz $
 
 clust_file=${TMPDIR}/tmp_PCs/matchUKBB_PCs_clusterCases_PGmethod_HKmetric.RData
 
-./${git_fold}cluster_associatePhenoGLM_run.R \
+${git_fold}cluster_associatePhenoGLM_run.R \
 	--phenoDatFile ${TMPDIR}/tmp_PCs/matchUKBB_tscore_corr2Thr0.1_risk_score_relatedPhenotypes.txt.gz \
 	--phenoDescFile ${TMPDIR}/tmp_PCs/phenotypeDescription_rsSCZ_updated.txt \
 	--sampleAnnFile INPUT_DATA/Covariates/PCs_cluster/samples_PCs_clustering.txt \

@@ -35,7 +35,7 @@ do
 	cov_file+=(INPUT_DATA/Covariates/${c}.covariateMatrix_old.txt)
 done
 
-./${git_fold}cluster_PGmethod_corrPCs_multipleCohorts_run.R \
+${git_fold}cluster_PGmethod_corrPCs_multipleCohorts_run.R \
 	--tissues_name ${t} \
 	--inputFile ${input_file[@]} \
 	--name_cohorts ${name_cohorts[@]} \

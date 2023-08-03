@@ -22,7 +22,7 @@ input_file=${TMPDIR}/tmp_CMC_t_f/predictedTscores.txt
 cov_file=INPUT_DATA/Covariates/${c}.covariateMatrix_old.txt
 
 thr=$1
-./${git_fold}cluster_PGmethod_corrPCs_predict_run.R \
+${git_fold}cluster_PGmethod_corrPCs_predict_run.R \
 	--inputFile ${input_file} \
 	--name_cohort ${c} \
 	--type_cluster Cases \

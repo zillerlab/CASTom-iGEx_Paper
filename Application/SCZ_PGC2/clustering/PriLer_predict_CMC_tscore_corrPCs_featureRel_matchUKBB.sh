@@ -35,7 +35,7 @@ do
 done
 
 
-./${git_fold}cluster_associateFeat_corrPCs_run.R \
+${git_fold}cluster_associateFeat_corrPCs_run.R \
 	--inputFile ${inputFile[@]} \
 	--sampleAnnFile INPUT_DATA/Covariates/${c}.covariateMatrix_old.txt \
 	--split_tot 0 \
