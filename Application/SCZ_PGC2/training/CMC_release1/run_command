@@ -1,0 +1,44 @@
+############################################################
+## use MAF 0.01 for only caucasian to filter CMC
+sbatch --array=1-22 Find_RefAlt_SNPs_gen.sh
+sbatch --array=1-22 Find_RefAlt_Indels_gen.sh
+
+sbatch --array=1-22 Compute_freq_caucasian.sh
+sbatch --array=1-22 filt_maf001_info06_convert_gen.sh
+sbatch --array=1-22 Genotype_preproc_maf001_info06.sh
+##############################################################
+# match all the cohorts with CMC
+sbatch --array=1-22 Match_CMC_SCZ-PGCall_updated.sh
+
+# match genotype dosage file CMC with SCZ-PGC filtered snps
+sbatch --array=1-22 FiltGeno_CMC.sh
+
+# SNP-GRE matrix
+sbatch Compute_SNP-GRE_mat_allChr.sh
+# prior matrix
+sbatch --array=1-22 Compute_priors_CMC_fin.sh
+
+# covariates created in ../../PriLer/CMC_release1, use that ones
+
+#################################
+#### pre processing general #####
+#################################
+# match with heritable genes, create snp-gene distance matrix and annotations
+sbatch preProcessing_data_CMC.sh 
+
+#####################
+##### training ######
+#####################
+sbatch --job-name=train_PGC ElNet_withPrior_training_All_SCZPGC.sh
+
+####################################
+##### predict on same dataset ######
+####################################
+sbatch --job-name=predict_CMC ElNet_withPrior_predictAll.sh
+sbatch --job-name=path PriLer_pathDiff_predictAll.sh 
+sbatch --job-name=pheno PriLer_phenoAssociation_predictAll.sh 
+
+# assess replication PGC-CMC
+sbatch --job-name=rep_Dx SCZ_DLPC_reproducibility.sh Dx
+sbatch --job-name=rep_SCZ SCZ_DLPC_reproducibility.sh SCZ
+sbatch --job-name=rep_BP SCZ_DLPC_reproducibility.sh BP
