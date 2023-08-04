@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=ann
-#SBATCH --output=${f}PriLer_PROJECT_CMC/err_out_fold/preProc_step_SCZ-PGC_%j.out
-#SBATCH --error=${f}PriLer_PROJECT_CMC/err_out_fold/preProc_step_SCZ-PGC_%j.err
+#SBATCH --output=/psycl/g/mpsziller/lucia/PriLer_PROJECT_CMC/err_out_fold/preProc_step_SCZ-PGC_%j.out
+#SBATCH --error=/psycl/g/mpsziller/lucia/PriLer_PROJECT_CMC/err_out_fold/preProc_step_SCZ-PGC_%j.err
 #SBATCH --mem-per-cpu=10G
 #SBATCH -c 1
 #SBATCH -p pe
