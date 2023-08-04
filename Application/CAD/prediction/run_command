@@ -1,5 +1,5 @@
-# match all CAD cohorts and UKBB and GTEx dataset together
-sbatch --array=1-22 --job-name=CAD_UKBB MatchGenotype_CADall-UKBB_GTEx.sh
+# match all CAD cohorts and UKBB and GTEx dataset together (done in the training folder to harmonize snps, do not repeat)
+sbatch --array=1-22 --job-name=CAD_UKBB ../training/MatchGenotype_CADall-UKBB_GTEx.sh
 
 # correct ref and alt and convert to dosage for the snps that match to GTEx dataset
 sbatch --array=1-22 --job-name=G1 convertDosage_corrREFALT_matchedGTEx_CAD.sh German1 G1

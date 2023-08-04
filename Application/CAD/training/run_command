@@ -1,6 +1,39 @@
+### genotype-only cohorts preprocessing ###
+## for UKBB check ../../UKBB/preproc_genotype/run_command
+
+## for CARDIOGRAM cohorts
+# for previous steps, ask Sylvain Moser and check /psycl/g/mpsukb/CAD/hrc_imputation/
+# bad samples have been filtered (relatives in a cohort and across cohorts)
+# correct gen file so that plink can handle them (missing chr info)
+sbatch --array=1-22 --job-name=G1 CARDIOGRAM_correct_gen_plink.sh German1 G1
+sbatch --array=1-22 --job-name=G2 CARDIOGRAM_correct_gen_plink.sh German2 G2
+sbatch --array=1-22 --job-name=G3 CARDIOGRAM_correct_gen_plink.sh German3 G3
+sbatch --array=1-22 --job-name=G4 CARDIOGRAM_correct_gen_plink.sh German4 G4
+sbatch --array=1-22 --job-name=G5 CARDIOGRAM_correct_gen_plink.sh German5 G5
+sbatch --array=1-22 --job-name=CG CARDIOGRAM_correct_gen_plink.sh CG CG
+sbatch --array=1-22 --job-name=LU CARDIOGRAM_correct_gen_plink.sh LURIC LU
+sbatch --array=1-22 --job-name=MG CARDIOGRAM_correct_gen_plink.sh MG MG
+sbatch --array=1-22 --job-name=WTC CARDIOGRAM_correct_gen_plink.sh WTCCC WTC
+
+# find correct ref and alt + alt freq (NOTE: indels not present in the hrc reference panel)
+sbatch --array=1-22 --job-name=G1 CARDIOGRAM_find_correct_REF_ALT.sh German1 G1
+sbatch --array=1-22 --job-name=G2 CARDIOGRAM_find_correct_REF_ALT.sh German2 G2
+sbatch --array=1-22 --job-name=G3 CARDIOGRAM_find_correct_REF_ALT.sh German3 G3
+sbatch --array=1-22 --job-name=G4 CARDIOGRAM_find_correct_REF_ALT.sh German4 G4
+sbatch --array=1-22 --job-name=G5 CARDIOGRAM_find_correct_REF_ALT.sh German5 G5
+sbatch --array=1-22 --job-name=CG CARDIOGRAM_find_correct_REF_ALT.sh CG CG
+sbatch --array=1-22 --job-name=LU CARDIOGRAM_find_correct_REF_ALT.sh LURIC LU
+sbatch --array=1-22 --job-name=MG CARDIOGRAM_find_correct_REF_ALT.sh MG MG
+sbatch --array=1-22 --job-name=WTC CARDIOGRAM_find_correct_REF_ALT.sh WTCCC WTC
+
+##########################
+### DATA HARMONIZATION ###
+# match all CAD cohorts and UKBB and GTEx dataset together 
+sbatch --array=1-22 --job-name=CAD_UKBB MatchGenotype_CADall-UKBB_GTEx.sh
 # create new genotpe data matched with CAD
 for i in $(seq 22); do bash FiltGeno_GTEx.sh chr${i} 2>../../err_out_fold/filtGTEx_chr${i}.err 1>../../err_out_fold/filtGTEx_chr${i}.out & done
 
+### prepare prior matrices ###
 # SNP-GRE matrix
 bash Compute_GRE-SNP_mat.sh 2>../../err_out_fold/GRE-SNP_mat_CAD.err 1>../../err_out_fold/GRE-SNP_mat_CAD.out &
 
