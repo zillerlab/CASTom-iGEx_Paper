@@ -1,0 +1,115 @@
+###### in LISA PGC cluster ######
+# this step is the same for CMC_release1 and GTEx_v6p, do not repeat twice!
+# for each of the cohort, compute A1 frequency and INFO
+# criteria: MAF>=0.01, INFO>=0.6, snps present in at least 20 samples
+# note: use qc1 version
+
+for i in $(seq 36)
+do
+	sbatch --array=1-22 --job-name=c${i} ../../prediction/filterSnps_dosage_cohort.sh ${i}
+done &
+# output moved to /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA_matchSCZ-PGC/SCZ-PGC/Genotype_data/
+
+########## RUN ON DENBI, NO CLUSTER SET-UP ###########
+#################################
+# filter GTEx dosage for maf 0.01 (only european) and info 0.6
+bash filt_maf001_info06_convert_gen_preProc.sh 2>../../err_out_fold/filt_maf001_info06_convert_gen_preProc.err 1>../../err_out_fold/filt_maf001_info06_convert_gen_preProc.out &
+for i in $(seq 22); do bash filt_maf001_info06_convert_gen.sh ${i} 2>../../err_out_fold/filt_maf001_info06_convert_gen_chr${i}.err 1>../../err_out_fold/filt_maf001_info06_convert_gen_chr${i}.out & done
+
+# create final dosage file, match with PGC and CAD GWAS
+for i in $(seq 22); do bash MatchGenotype_filtcaucasian_maf001_info06_PGC-CADgwas.sh ${i} 2>../../err_out_fold/match_PGC_CAD_filtcaucasian_maf001_info06_chr${i}.err 1>../../err_out_fold/match_PGC_CAD_filtcaucasian_maf001_info06_chr${i}.out & done
+#################################
+
+# match GTEx and SCZ-PGC, use GTEx as reference
+for i in $(seq 22); do bash Match_GTEx_SCZ-PGCall.sh ${i} 2>../../err_out_fold/match_GTEx_SCZ-PGCall_chr${i}.err 1>../../err_out_fold/match_GTEx_SCZ-PGCall_chr${i}.out & done
+
+# filter dosage
+for i in $(seq 22); do bash FiltGeno_GTEx.sh ${i} 2>../../err_out_fold/filt_GTEx_SCZ-PGCall_chr${i}.err 1>../../err_out_fold/filt_GTEx_SCZ-PGCall_chr${i}.out & done
+
+# create SNP-GRE matrix
+bash Compute_GRE-SNP_mat.sh 2>../../err_out_fold/GRE-SNP_mat_SCZ-PGC.err 1>../../err_out_fold/GRE-SNP_mat_SCZ-PGC.out &
+
+# covariates created in ../../../PriLer/GTEx_v6p/, use that ones
+
+# create prior matrix
+# binary: PGC_gwas_bin thr 10^-2, PGC_gwas_bin_v2 thr 10^-5
+# binary: CAD_gwas_bin thr 5*10^-2, CAD_gwas_bin_v2 thr 10^-3
+for id in $(seq 22); do bash Compute_PriorMat_final.sh ${id} 2>../../err_out_fold/prior_mat_chr${id}_SCZ-PGC.err 1>../../err_out_fold/prior_mat_chr${id}_SCZ-PGC.out & done
+
+######################
+### pre processing ###
+######################
+bash preProcessing_data_allTissues.sh 2>../../err_out_fold/preProc_allTissues_SCZ-PGC.err 1>../../err_out_fold/preProc_allTissues_SCZ-PGC.out &
+
+#############
+### part1 ###
+#############
+readarray -t tissues_name < /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA_matchSCZ-PGC/Tissue_PGCgwas_v2
+
+# node 95
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_part1_200kb_tissue.sh ${t}  2>../../err_out_fold/part1_200kb_${t}_matchSCZ-PGC.err 1>../../err_out_fold/part1_200kb_${t}_matchSCZ-PGC.out ; done &
+
+#####################################
+# output in ../OUTPUT_SCRIPTS_v2_SCZ-PGC
+
+# build index files
+bash Build_priorIndex_alltissues_allcombinations_fin.sh 2>../../err_out_fold/priorIndex_build_allc_SCZ-PGC.err 1>../../err_out_fold/priorIndex_build_allc_SCZ-PGC.out &
+
+#############
+### part2 ###
+#############
+
+# node 95
+tissues_name=(Cells_EBV-transformed_lymphocytes)
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_part2_200kb_tissue_PGCgwas_range1.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_PGCgwas_matchSCZ-PGC.err  1>../../err_out_fold/part2_200kb_${t}_PGCgwas_matchSCZ-PGC.out ; done &
+
+# node 93
+tissues_name=(Brain_Hippocampus Adrenal_Gland Thyroid Whole_Blood)
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_part2_200kb_tissue_PGCgwas_range2.sh ${t}  2>../../err_out_fold/part2_200kb_${t}_PGCgwas_matchSCZ-PGC.err 1>../../err_out_fold/part2_200kb_${t}_PGCgwas_matchSCZ-PGC.out ; done &
+
+# node 95
+tissues_name=(Small_Intestine_Terminal_Ileum)
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_part2_200kb_tissue_PGCgwas_range2.5.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_PGCgwas_matchSCZ-PGC.err 1>../../err_out_fold/part2_200okb_${t}_PGCgwas_matchSCZ-PGC.out ; done &
+
+# node 95 
+tissues_name=(Brain_Caudate_basal_ganglia Brain_Frontal_Cortex_BA9 Brain_Hippocampus Brain_Hypothalamus Brain_Nucleus_accumbens_basal_ganglia Colon_Sigmoid Colon_Transverse Small_Intestine_Terminal_Ileum)
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_part2_200kb_tissue_PGCgwas_range3.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_PGCgwas_matchSCZ-PGC.err 1>../../err_out_fold/part2_200okb_${t}_PGCgwas_matchSCZ-PGC.out ; done &
+
+# node 95
+tissues_name=(Brain_Cerebellar_Hemisphere Brain_Cortex)
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_part2_200kb_tissue_PGCgwas_range4.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_PGCgwas_matchSCZ-PGC.err 1>../../err_out_fold/part2_200kb_${t}_PGCgwas_matchSCZ-PGC.out ; done &
+
+# node 95
+tissues_name=(Brain_Cerebellum)
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_part2_200kb_tissue_PGCgwas_range5.sh ${t} 2>../../err_out_fold/part2_200kb_${t}_PGCgwas_matchSCZ-PGC.err 1>../../err_out_fold/part2_200kb_${t}_PGCgwas_matchSCZ-PGC.out ; done &
+
+#############
+### part3 ###
+#############
+readarray -t tissues_name < /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA_matchSCZ-PGC/Tissue_PGCgwas_v2
+
+# node 96
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_part3_200kb_tissue_PGCgwas.sh ${t} 2>../../err_out_fold/part3_200kb_${t}_PGCgwas_matchSCZ-PGC.err 1>../../err_out_fold/part3_200kb_${t}_PGCgwas_matchSCZ-PGC.out ; done &
+
+#############
+### part4 ###
+#############
+
+# node 96
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_part4_200kb_tissue_PGCgwas.sh ${t} 2>../../err_out_fold/part4_200kb_${t}_PGCgwas_matchSCZ-PGC.err 1>../../err_out_fold/part4_200kb_${t}_PGCgwas_matchSCZ-PGC.out ; done &
+
+#################
+### final out ###
+#################
+
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_finalOut_200kb_tissue_PGCgwas.sh ${t} 2>../../err_out_fold/finOut_200kb_${t}_PGCgwas_matchSCZ-PGC.err 1>../../err_out_fold/finOut_200kb_${t}_PGCgwas_matchSCZ-PGC.out ; done &
+
+#######################
+### predict on GTEx ###
+#######################
+# used to compare with prediction based on UKBB harmonization
+
+readarray -t tissues_name < /psycl/g/mpsziller/lucia/PriLer_PROJECT_GTEx/INPUT_DATA_matchSCZ-PGC/Tissue_PGCgwas_v2
+
+for t in ${tissues_name[@]}; do bash ElNet_withPrior_predict_tissue_PGCgwas.sh ${t} 2>../../err_out_fold/predict_${t}_PGCgwas_matchSCZ.err 1>../../err_out_fold/predict_${t}_PGCgwas_matchSCZ.out & done
+for t in ${tissues_name[@]}; do bash PriLer_pathDiff_predict_tissue_PGCgwas.sh ${t} 2>../../err_out_fold/path_predict_${t}_PGCgwas_matchSCZ.err 1>../../err_out_fold/path_predict_${t}_PGCgwas_matchSCZ.out & done
