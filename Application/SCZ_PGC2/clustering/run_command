@@ -2,7 +2,7 @@
 # use only genes that have same expression in UKBB and SCZ (to be used for comparison)
 # version with filtered genes based on expression
 # remove boco cohort (German), 
-# all scripts are run in PGC LISA cluster unless mentioned
+# all scripts are run in PGC SNELLIUS cluster unless mentioned, R
 
 ## filter genes and pathways ##
 #### garching cluster ####
@@ -13,35 +13,43 @@ sbatch --job-name=pred --array=1-10 compare_prediction_UKBB_SCZ-PGC.sh
 readarray -t name_cohorts < /home/luciat/eQTL_PROJECT/INPUT_DATA/SCZ_cohort_names_CLUST
 readarray -t tissues < /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/Tissue_PGCgwas_red
 
-# CMC #
-
+### CMC ###
+# copy data to scratch-shared
+mkdir -p /scratch-shared/luciat/OUTPUT_CMC/
+dmfind /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/*.dmftar | dmget -a # get to online disk
+cp -r /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/*.dmftar /scratch-shared/luciat/OUTPUT_CMC/ # copy to scratch, it will not copy if already there!
+cd /scratch-shared/luciat/
 for c in ${name_cohorts[@]}
 do
-echo $c
-cp /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/predictedTscores.txt /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/
+echo ${c}
+dmftar -x -f OUTPUT_CMC/${c}.dmftar/  OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/predictedTscores.txt
 done
-cp /archive/luciat/eQTL_PROJECT/OUTPUT_CMC/train_CMC/200kb/resPrior_regEval_allchr.txt /home/luciat/eQTL_PROJECT/OUTPUT_CMC/train_CMC/200kb/
 
+cd $HOME/castom_cad_scz/Application/SCZ_PGC2/clustering/
 sbatch --job-name=outDect outliersDet_tscore_corrPCs_Cases_CMC_matchUKBB.sh
 sbatch --job-name=outDect_filt outliersDet_tscore_corrPCs_Cases_filt_CMC_matchUKBB.sh
 
-# GTEx #
-for id_t in $(seq 1 1 9)
+### GTEx ###
+# copy data to scratch-shared
+for id_t in $(seq 1 1 2)
 do
 t=$(eval echo "\${tissues[${id_t}-1]}")
-
 echo $t
+mkdir -p /scratch-shared/luciat/OUTPUT_GTEx/predict_PGC/${t}/
+dmfind /archive/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/scz_*.dmftar | dmget -a # get to online disk
+cp -r /archive/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/scz_*.dmftar /scratch-shared/luciat/OUTPUT_GTEx/predict_PGC/${t}/ # copy to scratch, it will not copy if already there!
+cd /scratch-shared/luciat/
 for c in ${name_cohorts[@]}
 do
-common_part=luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/
-cp /archive/${common_part}/predictedTscores.txt /home/${common_part}/
+echo ${c}
+dmftar -x -f OUTPUT_GTEx/predict_PGC/${t}/${c}.dmftar/ OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/predictedTscores.txt
 done
-cp /archive/luciat/eQTL_PROJECT/OUTPUT_GTEx/train_GTEx/${t}/200kb/PGC_GWAS_bin1e-2/resPrior_regEval_allchr.txt /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/train_GTEx/${t}/200kb/PGC_GWAS_bin1e-2/
 done
+cd $HOME/castom_cad_scz/Application/SCZ_PGC2/clustering/
+sbatch --job-name=outDect --array=1-2 outliersDet_tscore_corrPCs_Cases_GTEx_matchUKBB.sh
+sbatch --job-name=outDect_filt --array=1-2 outliersDet_tscore_corrPCs_Cases_filt_GTEx_matchUKBB.sh
 
-sbatch --job-name=outDect --array=1-9 outliersDet_tscore_corrPCs_Cases_GTEx_matchUKBB.sh
-sbatch --job-name=outDect_noMHC --array=1-9 outliersDet_tscore_corrPCs_Cases_filt_GTEx_matchUKBB.sh
-
+####### UP TO HERE #######
 
 #####
 # create a new file with total samples to exclude
