@@ -27,11 +27,11 @@ done
 
 cd $HOME/castom_cad_scz/Application/SCZ_PGC2/clustering/
 sbatch --job-name=outDect outliersDet_tscore_corrPCs_Cases_CMC_matchUKBB.sh
-sbatch --job-name=outDect_filt outliersDet_tscore_corrPCs_Cases_filt_CMC_matchUKBB.sh
+# sbatch --job-name=outDect_filt outliersDet_tscore_corrPCs_Cases_filt_CMC_matchUKBB.sh ### NOT NECESSARY, run only 0.9 corr
 
 ### GTEx ###
 # copy data to scratch-shared
-for id_t in $(seq 1 1 8)
+for id_t in $(seq 1 1 9)
 do
 t=$(eval echo "\${tissues[${id_t}-1]}")
 echo $t
@@ -47,10 +47,8 @@ done
 done
 
 cd $HOME/castom_cad_scz/Application/SCZ_PGC2/clustering/
-sbatch --job-name=outDect --array=8 outliersDet_tscore_corrPCs_Cases_GTEx_matchUKBB.sh
-sbatch --job-name=outDect_filt --array=8 outliersDet_tscore_corrPCs_Cases_filt_GTEx_matchUKBB.sh
-
-####### RUN UP TO HERE #######
+sbatch --job-name=outDect --array=1-9 outliersDet_tscore_corrPCs_Cases_GTEx_matchUKBB.sh
+# sbatch --job-name=outDect_filt --array=1-9 outliersDet_tscore_corrPCs_Cases_filt_GTEx_matchUKBB.sh ### NOT NECESSARY, run only 0.9 corr
 
 #####
 # create a new file with total samples to exclude
@@ -62,13 +60,11 @@ sbatch --job-name=comb combine_outliers_tscore_corrPCs_cluster_matchUKBB.sh
 ### CMC ###
 
 sbatch --job-name=CL_Cases PriLer_cluster_tscore_corrPCs_CMC_matchUKBB.sh
-sbatch --job-name=CL_Cases_filt0.1 PriLer_cluster_tscore_corrPCs_filt_CMC_matchUKBB.sh
 
 ### GTEx ###
-sbatch --job-name=CL_Cases --array=1-9 PriLer_cluster_tscore_corrPCs_GTEx_matchUKBB.sh
-sbatch --job-name=CL_Cases_filt0.1 --array=1-9 PriLer_cluster_tscore_corrPCs_filt_GTEx_matchUKBB.sh
+sbatch --job-name=CL_Cases --array=1-9 PriLer_cluster_tscore_corrPCs_GTEx_matchUKBB.sh # RUN only 1
 
-####### MOD UP TO HERE #######
+####### RUN UP TO HERE #######
 
 ## move big result on the archive
 for id_t in $(seq 1 1 9)
@@ -214,8 +210,8 @@ sbatch --job-name=GTEx_filt --array=1-9 risk_score_tscore_corrPCs_clusterSCZ_end
 ### cluster based on PCs:1-20 ###
 #################################
 
-Rscript preProcess_PCs_clustering.R
-sbatch --job-name=CL_Cases PriLer_cluster_PCs_matchUKBB.sh
+Rscript preProcess_PCs_clustering.R # DONE
+sbatch --job-name=CL_Cases PriLer_cluster_PCs_matchUKBB.sh # DONE
 
 # find geneRS differences built on CMC
 sbatch --job-name=CMC risk_score_tscore_corrPCs_clusterSCZ_PCs_endophenotypeUKBB_CMC_matchUKBB.sh

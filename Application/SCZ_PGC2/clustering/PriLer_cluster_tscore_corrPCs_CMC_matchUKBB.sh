@@ -2,12 +2,9 @@
 #SBATCH -o /home/luciat/eQTL_PROJECT/err_out_fold/cluster_tscore_corrPCs_zscaled_CMC_%x_matchUKBB.out
 #SBATCH -e /home/luciat/eQTL_PROJECT/err_out_fold/cluster_tscore_corrPCs_zscaled_CMC_%x_matchUKBB.err
 #SBATCH -N 1
-#SBATCH --mem=90G
-#SBATCH -p fat
-#SBATCH -t 120:00:00
-#SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=2
-
+#SBATCH --mem=84G
+#SBATCH -t 30:00:00
+#SBATCH -p thin
 
 module load 2022
 module load R/4.2.1-foss-2022a
@@ -17,7 +14,7 @@ cd ${HOME}/eQTL_PROJECT
 readarray -t name_cohorts < INPUT_DATA/SCZ_cohort_names_CLUST
 # copy TWAS res and outliers
 cp OUTPUT_all/Meta_Analysis_SCZ/DLPC_CMC/pval_Dx_pheno_covCorr.RData ${TMPDIR}/
-cp OUTPUT_all/clustering_res_matchUKBB_corrPCs/matchUKBB_samples_to_remove_outliersUMAP_tscore_corrPCs_zscaled_clusterCases.txt ${TMPDIR}/
+cp OUTPUT_all/clustering_res_matchUKBB_corrPCs/matchUKBB_corr0.9_samples_to_remove_outliersUMAP_tscore_corrPCs_zscaled_clusterCases.txt ${TMPDIR}/
 
 # point to tscores and sample annotation files
 s_sh=/scratch-shared/luciat/
@@ -43,10 +40,10 @@ ${git_fold}cluster_PGmethod_corrPCs_multipleCohorts_run.R \
 	--type_input zscaled \
 	--outFold ${TMPDIR}/matchUKBB_ \
 	--functR ${git_fold}clustering_functions.R \
-	--sampleOutFile ${TMPDIR}/matchUKBB_samples_to_remove_outliersUMAP_tscore_corrPCs_zscaled_clusterCases.txt \
+	--sampleOutFile ${TMPDIR}/matchUKBB_corr0.9_samples_to_remove_outliersUMAP_tscore_corrPCs_zscaled_clusterCases.txt \
 	--genes_to_filter compare_prediction_UKBB_SCZ-PGC/DLPC_CMC_filter_genes_matched_datasets.txt
 
-cp ${TMPDIR}/matchUKBB*corrPCs*cluster* OUTPUT_CMC/predict_PGC/200kb/Meta_Analysis_SCZ/devgeno0.01_testdevgeno0/update_corrPCs/
+cp ${TMPDIR}/matchUKBB_tscore_*corrPCs*cluster* OUTPUT_CMC/predict_PGC/200kb/Meta_Analysis_SCZ/devgeno0.01_testdevgeno0/update_corrPCs/
 
 
 
