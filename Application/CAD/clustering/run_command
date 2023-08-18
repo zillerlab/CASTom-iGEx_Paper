@@ -36,6 +36,8 @@ sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_tsco
 
 ### cluster Cases without zscaling, corr for PCs (benchmark) ###
 sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_tscore_corrPCs_original_GTEx_CAD.sh 
+sbatch --job-name=CL_Cases --array=11 PriLer_cluster_tscore_corrPCs_original_featureRelTscore_GTEx_CAD.sh 
+sbatch --job-name=CL_Cases --array=11 PriLer_cluster_tscore_corrPCs_original_featureRelPath_GTEx_CAD.sh
 sbatch --job-name=CL_Cases --array=1-5,7-11,15 PriLer_cluster_endophenotype_tscore_corrPCs_original_GTEx_CAD.sh
 
 #########################################
