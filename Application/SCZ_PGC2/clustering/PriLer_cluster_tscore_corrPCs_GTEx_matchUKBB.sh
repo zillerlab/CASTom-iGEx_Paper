@@ -3,7 +3,7 @@
 #SBATCH -e /home/luciat/eQTL_PROJECT/err_out_fold/cluster_tscore_corrPCs_zscaled_GTEx_t%a_%x_matchUKBB.err
 #SBATCH -N 1
 #SBATCH --mem=56G
-#SBATCH -t 30:00:00
+#SBATCH -t 24:00:00
 #SBATCH -p thin
 
 module load 2022
