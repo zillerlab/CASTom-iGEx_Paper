@@ -62,24 +62,7 @@ sbatch --job-name=comb combine_outliers_tscore_corrPCs_cluster_matchUKBB.sh
 sbatch --job-name=CL_Cases PriLer_cluster_tscore_corrPCs_CMC_matchUKBB.sh
 
 ### GTEx ###
-sbatch --job-name=CL_Cases --array=1-9 PriLer_cluster_tscore_corrPCs_GTEx_matchUKBB.sh # RUN only 1
-
-####### RUN UP TO HERE #######
-
-## move big result on the archive
-for id_t in $(seq 1 1 9)
-do
-t=$(eval echo "\${tissues[${id_t}-1]}")
-
-echo $t
-common_part=luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/Meta_Analysis_SCZ/devgeno0.01_testdevgeno0/update_corrPCs/
-
-mkdir -p /archive/${common_part}/
-
-mv /home/${common_part}/matchUKBB_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric.RData /archive/${common_part}/
-mv /home/${common_part}/matchUKBB_filt0.1_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric.RData /archive/${common_part}/
-
-done
+sbatch --job-name=CL_Cases --array=1-9 PriLer_cluster_tscore_corrPCs_GTEx_matchUKBB.sh 
 
 #######################################
 ### find relevant features (Tscore) ###
@@ -87,23 +70,17 @@ done
 
 ### CMC ###
 sbatch --job-name=CL_Cases PriLer_cluster_CMC_tscore_corrPCs_featureRelTscore_matchUKBB.sh
-sbatch --job-name=CL_Cases_filt0.1 PriLer_cluster_CMC_tscore_corrPCs_featureRelTscore_filt_matchUKBB.sh
 
 ########################################
 ### find relevant features (Pathway) ###
 ########################################
 # get pathway scores
-
+cd /scratch-shared/luciat/
 for c in ${name_cohorts[@]}
 do
-echo $c
-common_part=luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/
-cp /archive/${common_part}/Pathway_Reactome_scores.txt /home/${common_part}/
-cp /archive/${common_part}/Pathway_GO_scores.txt /home/${common_part}/
-cp /archive/${common_part}/Pathway_WikiPath2019Human_scores.txt /home/${common_part}/
-cp /archive/${common_part}/Pathway_CMC_GeneSets_scores.txt /home/${common_part}/
+echo ${c}
+dmftar -x -f OUTPUT_CMC/${c}.dmftar/  OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/Pathway_*_scores.txt
 done
-
 
 for id_t in $(seq 1 1 9)
 do
@@ -111,31 +88,25 @@ t=$(eval echo "\${tissues[${id_t}-1]}")
 echo $t
 for c in ${name_cohorts[@]}
 do
-echo $c
-common_part=luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/
-cp /archive/${common_part}/Pathway_Reactome_scores.txt /home/${common_part}/
-cp /archive/${common_part}/Pathway_GO_scores.txt /home/${common_part}/
-cp /archive/${common_part}/Pathway_WikiPath2019Human_scores.txt /home/${common_part}/
+echo ${c}
+dmftar -x -f OUTPUT_GTEx/predict_PGC/${t}/${c}.dmftar/ OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/Pathway_*_scores.txt
 done
 done
 
 ### CMC ###
 # all pathways in WikiPath2019Human across all tissues
 sbatch --job-name=CL_Cases PriLer_cluster_CMC_tscore_corrPCs_featureRelPath_wiki_matchUKBB.sh
-sbatch --job-name=CL_Cases_filt0.1 PriLer_cluster_CMC_tscore_corrPCs_featureRelPath_wiki_filt_matchUKBB.sh
 
 # all pathways in CMC_GeneSets in DLPC_CMC
 sbatch --job-name=CL_Cases PriLer_cluster_CMC_tscore_corrPCs_featureRelPath_CMCset_matchUKBB.sh
-sbatch --job-name=CL_Cases_filt0.1 PriLer_cluster_CMC_tscore_corrPCs_featureRelPath_CMCset_filt_matchUKBB.sh
 
 # Combined pathways in Reactome and GO (non-redundant, get jaccard similarity values)
 sbatch --job-name=js --array=1-9 filter_pathway_JS_GTEx.sh
 sbatch --job-name=js filter_pathway_JS_CMC.sh
 
 sbatch --job-name=CL_Cases PriLer_cluster_CMC_tscore_corrPCs_featureRelPath_matchUKBB.sh
-sbatch --job-name=CL_Cases_filt0.1 PriLer_cluster_CMC_tscore_corrPCs_featureRelPath_filt_matchUKBB.sh
 
-
+#### RUN UP TO HERE ###
 ###################################
 ### predict on external dataset ###
 ###################################
