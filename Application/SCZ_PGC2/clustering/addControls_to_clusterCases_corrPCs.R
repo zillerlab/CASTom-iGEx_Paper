@@ -1,4 +1,5 @@
 # create cluster annotation with controls and group of cases:
+setwd("/home/luciat/eQTL_PROJECT/")
 name_cohorts <- read.table('INPUT_DATA/SCZ_cohort_names_CLUST')$V1
 sampleAnnFile <- paste0('INPUT_DATA/Covariates/',name_cohorts,'.covariateMatrix_old.txt')
 clusterFile <- 'OUTPUT_CMC/predict_PGC/200kb/Meta_Analysis_SCZ/devgeno0.01_testdevgeno0/update_corrPCs/matchUKBB_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_minimal.RData'
@@ -6,8 +7,8 @@ clusterFile <- 'OUTPUT_CMC/predict_PGC/200kb/Meta_Analysis_SCZ/devgeno0.01_testd
 cl_cases <- get(load(clusterFile))
 
 sampleAnn <- list()
-print(i)
 for(i in 1:length(name_cohorts)){
+  print(i)
   tmp <- read.table(sampleAnnFile[i], h=T, stringsAsFactors = F, sep = '\t')
   tmp$cohort <- name_cohorts[i]
   tmp$cohort_id <- i

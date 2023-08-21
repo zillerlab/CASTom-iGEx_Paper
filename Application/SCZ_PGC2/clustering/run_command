@@ -106,54 +106,32 @@ sbatch --job-name=js filter_pathway_JS_CMC.sh
 
 sbatch --job-name=CL_Cases PriLer_cluster_CMC_tscore_corrPCs_featureRelPath_matchUKBB.sh
 
-#### RUN UP TO HERE ###
 ###################################
 ### predict on external dataset ###
 ###################################
 ### CMC ###
 c=scz_boco_eur
 
-common_part=luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/
-cp /archive/${common_part}predictedTscores.txt /home/${common_part}
+# extract data in scratch-shared
+cd /scratch-shared/luciat/
+echo ${c}
+dmftar -x -f OUTPUT_CMC/${c}.dmftar/  OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/predictedTscores.txt
 
 for id_t in $(seq 1 1 9)
 do
 t=$(eval echo "\${tissues[${id_t}-1]}")
 echo $t
-common_part=luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/
-cp /archive/${common_part}predictedTscores.txt /home/${common_part}
+echo ${c}
+dmftar -x -f OUTPUT_GTEx/predict_PGC/${t}/${c}.dmftar/ OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/predictedTscores.txt
 done
 
-sbatch --job-name=boco_Cases PriLer_cluster_tscore_corrPCs_predict_CMC_matchUKBB.sh
-sbatch --job-name=boco_Cases_filt0.1 PriLer_cluster_tscore_corrPCs_predict_filt_CMC_matchUKBB.sh
+sbatch --job-name=boco_Cases PriLer_cluster_tscore_corrPCs_predict_CMC_matchUKBB.sh # RUNNING
 
 # find relevant genes
-sbatch --job-name=boco_Cases PriLer_predict_CMC_tscore_corrPCs_featureRel_matchUKBB.sh
-sbatch --job-name=boco_Cases_filt0.1 PriLer_predict_CMC_tscore_corrPCs_featureRel_filt_matchUKBB.sh
+sbatch --job-name=boco_Cases PriLer_predict_CMC_tscore_corrPCs_featureRel_matchUKBB.sh # TO RUN
 
 # evaluate clustering
-sbatch --job-name=boco_Cases PriLer_cluster_predictEval_tscore_corrPCs_CMC_matchUKBB.sh
-sbatch --job-name=boco_Cases_filt0.1 PriLer_cluster_predictEval_tscore_corrPCs_CMC_filt_matchUKBB.sh
-
-##########
-# remove pathway scores from home (already in archive)
-for t in ${tissues[@]}
-do
-for c in ${name_cohorts[@]}
-do
-rm /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/Pathway_Reactome_scores.txt
-rm /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/Pathway_GO_scores.txt
-rm /home/luciat/eQTL_PROJECT/OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/Pathway_WikiPath2019Human_scores.txt
-done
-done
-
-for c in ${name_cohorts[@]}
-do
-rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/Pathway_Reactome_scores.txt
-rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/Pathway_GO_scores.txt
-rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/Pathway_WikiPath2019Human_scores.txt    
-rm /home/luciat/eQTL_PROJECT/OUTPUT_CMC/predict_PGC/200kb/${c}/devgeno0.01_testdevgeno0/Pathway_CMC_GeneSets_scores.txt
-done
+sbatch --job-name=boco_Cases PriLer_cluster_predictEval_tscore_corrPCs_CMC_matchUKBB.sh # TO RUN
 
 ###############################################################################################
 ### find differences in clustering structures for risk scores computed from UKBB phenotypes ###
@@ -163,26 +141,24 @@ done
 sbatch --job-name=CMC risk_score_tscore_corrPCs_multipleCohorts_CMC_matchUKBB.sh
 sbatch --job-name=GTEx --array=1-9 risk_score_tscore_corrPCs_multipleCohorts_GTEx_matchUKBB.sh
 # all samples (CMC only)
-sbatch --job-name=CMC risk_score_tscore_corrPCs_allCohorts_allSamples_CMC_matchUKBB.sh
+sbatch --job-name=CMC risk_score_tscore_corrPCs_allCohorts_allSamples_CMC_matchUKBB.sh # RUNNING
 
 #### evaluate geneRS group differences (all together) ####
 ## CMC
 sbatch --job-name=CMC risk_score_tscore_corrPCs_clusterSCZ_endophenotypeUKBB_CMC_matchUKBB.sh
-sbatch --job-name=CMC_filt risk_score_tscore_corrPCs_clusterSCZ_endophenotypeUKBB_CMC_filt_matchUKBB.sh
 # all samples (CMC only)
 Rscript addControls_to_clusterCases_corrPCs.R
-sbatch --job-name=CMC risk_score_tscore_corrPCs_clusterSCZaddControls_endophenotypeUKBB_CMC_matchUKBB.sh
+sbatch --job-name=CMC risk_score_tscore_corrPCs_clusterSCZaddControls_endophenotypeUKBB_CMC_matchUKBB.sh # TO RUN
 
 ## GTEx
 sbatch --job-name=GTEx --array=1-9 risk_score_tscore_corrPCs_clusterSCZ_endophenotypeUKBB_GTEx_matchUKBB.sh
-sbatch --job-name=GTEx_filt --array=1-9 risk_score_tscore_corrPCs_clusterSCZ_endophenotypeUKBB_GTEx_filt_matchUKBB.sh
 
 #################################
 ### cluster based on PCs:1-20 ###
 #################################
 
-Rscript preProcess_PCs_clustering.R # DONE
-sbatch --job-name=CL_Cases PriLer_cluster_PCs_matchUKBB.sh # DONE
+Rscript preProcess_PCs_clustering.R
+sbatch --job-name=CL_Cases PriLer_cluster_PCs_matchUKBB.sh
 
 # find geneRS differences built on CMC
 sbatch --job-name=CMC risk_score_tscore_corrPCs_clusterSCZ_PCs_endophenotypeUKBB_CMC_matchUKBB.sh
@@ -190,10 +166,12 @@ sbatch --job-name=CMC risk_score_tscore_corrPCs_clusterSCZ_PCs_endophenotypeUKBB
 ## plot DLPC clustering and PCs and cohort actual distribution
 Rscript plot_PCs_cohort_cluster.R
 
+## RUN UP TO HERE ##
+
 ## plot MHC clustering genes diff (heatmap) and spider plots
-## can only be run on LISA cluster as data cannot be moved!
+## can only be run on SNELLIUS cluster as data cannot be moved, first move the output to OUTPUT_all/
 Rscript plot_SCZclustering_DLPC_LISA.R
-Rscript plot_spider_pathway_extralist.R
+Rscript plot_spider_pathway_extralist.R # GET LIST FROM MICHAEL
 
 ################################################################################
 ##################### moved to garching cluster ################################
@@ -204,4 +182,3 @@ Rscript create_geneRS_clusterReliableMeasure.R
 
 ### find drug response based on pathways
 sbatch --job-name=CL_Cases PriLer_cluster_tscore_corrPCs_pathSEA_CMC.sh
-sbatch --job-name=CL_Cases PriLer_cluster_tscore_corrPCs_filt_pathSEA_CMC.sh

@@ -110,7 +110,7 @@ geneInfo_keep <- geneInfo_keep[order(as.numeric(
   geneInfo_keep$start_position), ]
 
 ### plot ###
-print(paste('plot Fig. 3A n.genes =', nrow(geneInfo_keep)))
+print(paste('plot n.genes =', nrow(geneInfo_keep)))
 # "plot Fig. 3A n.genes = 58"
 pheat_pl_tscore(mat_tscore = tscore_input, cl = cl, info_feat_tscore = geneInfo_keep, 
                 pval_thr_est = pval_feat, 
