@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -o /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/err_out_fold/cluster_tscore_CAD_original_corrPCs_t%a_featRelTscore.out
 #SBATCH -e /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/err_out_fold/cluster_tscore_CAD_original_corrPCs_t%a_featRelTscore.err
-#SBATCH --time=2-0
+#SBATCH --time=11-0
 #SBATCH --nodes=1
 #SBATCH --mem-per-cpu=10G
 #SBATCH --cpus-per-task=11
