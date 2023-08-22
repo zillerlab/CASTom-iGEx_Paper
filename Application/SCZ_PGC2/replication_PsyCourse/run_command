@@ -7,3 +7,7 @@ sbatch --job-name=CL_Cases PriLer_predict_PsyCourse_CMC_tscore_corrPCs_featureRe
 
 # evaluate prediction, compare to PGC
 sbatch --job-name=CL_Cases PriLer_cluster_predictEval_PsyCourse_tscore_corrPCs_CMC_matchUKBB.sh
+
+# move output to garching
+cd ${HOME}/SCZ_PsyCourse/OUTPUT/
+tar -cvzf update_corrPCs.tar.gz update_corrPCs/
