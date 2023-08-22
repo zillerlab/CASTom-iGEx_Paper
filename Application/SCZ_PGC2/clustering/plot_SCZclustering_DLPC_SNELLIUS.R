@@ -1,6 +1,6 @@
 # plot SCZ clustering
 # plot on LISA cluster: cannot move data
-# script working with R/4.0.2
+# script working with R >= 4.0
 
 options(stringsAsFactors=F)
 options(max.print=1000)
@@ -11,7 +11,6 @@ suppressPackageStartupMessages(library(ggsci))
 suppressPackageStartupMessages(library(RColorBrewer))
 suppressPackageStartupMessages(library(ComplexHeatmap))
 suppressPackageStartupMessages(library(circlize))
-suppressPackageStartupMessages(library(PGSEA))
 suppressPackageStartupMessages(library(data.table))
 suppressPackageStartupMessages(library(cowplot))
 suppressPackageStartupMessages(library(corrplot))
@@ -111,12 +110,21 @@ geneInfo_keep <- geneInfo_keep[order(as.numeric(
 
 ### plot ###
 print(paste('plot n.genes =', nrow(geneInfo_keep)))
-# "plot Fig. 3A n.genes = 58"
-pheat_pl_tscore(mat_tscore = tscore_input, cl = cl, info_feat_tscore = geneInfo_keep, 
-                pval_thr_est = pval_feat, 
-                test_feat_tscore = test_feat_tscore, width_pl = 8 + round(length(unique(cl$gr))*0.25), 
-                height_pl = round(3 + nrow(geneInfo_keep)*0.1), outFile = sprintf('%sMHC_tscoreOriginal_%sCluster%s', fold_out,type_cluster_data,type_cluster), 
-                cap = 3, res_pl = 250)
+# "plot n.genes = 58"
+pheat_pl_tscore(
+  mat_tscore = tscore_input, 
+  cl = cl, 
+  info_feat_tscore = geneInfo_keep, 
+  pval_thr_est = pval_feat, 
+  test_feat_tscore = test_feat_tscore, 
+  width_pl = 8 + round(length(unique(cl$gr))*0.25), 
+  height_pl = round(3 + nrow(geneInfo_keep)*0.1), 
+  outFile = sprintf('%sMHC_tscoreOriginal_%sCluster%s', fold_out,type_cluster_data,type_cluster), 
+  cap = 3, 
+  res_pl = 250
+)
+
+###############################
 
 #### plot correlation
 cor_mat <- cor(tscore_input[, match(geneInfo_keep$external_gene_name, colnames(tscore_input)), drop = F])
@@ -126,15 +134,14 @@ rownames(cor_mat) <- new_name
 # save
 save(cor_mat, file = sprintf('%sMHC_tscoreOriginal_%sCluster%s_corrGenes.RData',fold_out,type_cluster_data,type_cluster))
 
-
 col <- rev(colorRampPalette(brewer.pal(9, 'PuOr'))(101))
 # col[51] <- 'black'
 val <- round(max(abs(cor_mat), na.rm = T), digits = 2) + 0.01
 # ord <- corrMatOrder(cor_mat, order="hclust", hclust.method = 'ward.D')
 
 pdf(file = sprintf('%sMHC_tscoreOriginal_%sCluster%s_corrGenes.pdf',fold_out,type_cluster_data,type_cluster), width = 8, height = 8, compress = F)
-corrplot(cor_mat, type="upper", order = 'original', 
-         cl.lim = c(-val,val),  
+corrplot(cor_mat, type="upper", order = 'original',   
+         col.lim = c(-val,val),  
          col=col,
          method = 'color', tl.srt=90, cl.align.text='c', tl.col = "black", tl.cex = 0.8, 
          na.label = '->', na.label.col = 'black', is.corr = F, number.cex=0.8, mar = c(0,0,5,0))

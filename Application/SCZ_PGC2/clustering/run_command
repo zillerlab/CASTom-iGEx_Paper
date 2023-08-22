@@ -163,15 +163,20 @@ sbatch --job-name=CL_Cases PriLer_cluster_PCs_matchUKBB.sh
 # find geneRS differences built on CMC
 sbatch --job-name=CMC risk_score_tscore_corrPCs_clusterSCZ_PCs_endophenotypeUKBB_CMC_matchUKBB.sh
 
-## plot DLPC clustering and PCs and cohort actual distribution
+#############
+### plots ###
+#############
+
+# plot DLPC clustering and PCs and cohort actual distribution
 Rscript plot_PCs_cohort_cluster.R
 
-## RUN UP TO HERE ##
-
 ## plot MHC clustering genes diff (heatmap) and spider plots
-## can only be run on SNELLIUS cluster as data cannot be moved, first move the output to OUTPUT_all/
-Rscript plot_SCZclustering_DLPC_LISA.R
-Rscript plot_spider_pathway_extralist.R # GET LIST FROM MICHAEL
+## can only be run on SNELLIUS cluster as data cannot be moved, 
+## first move the output to OUTPUT_all/ via ${HOME}/OUTPUT_all/move_output.sh
+Rscript plot_SCZclustering_DLPC_SNELLIUS.R
+Rscript plot_spider_pathway_extralist.R # TO RUN, GET LIST FROM MICHAEL
+cd ${HOME}/eQTL_PROJECT/OUTPUT_all/
+tar -cvzf clustering_res_matchUKBB_corrPCs.tar.gz clustering_res_matchUKBB_corrPCs/
 
 ################################################################################
 ##################### moved to garching cluster ################################

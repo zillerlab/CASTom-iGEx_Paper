@@ -18,7 +18,7 @@ ${git_fold}cluster_PGmethod_PCs_run.R \
 	--sampleAnnFile INPUT_DATA/Covariates/PCs_cluster/samples_PCs_clustering.txt \
 	--outFold ${TMPDIR}/matchUKBB_ \
 	--functR ${git_fold}clustering_functions.R \
-	--sampleOutFile OUTPUT_all/clustering_res_matchUKBB_corrPCs/matchUKBB_samples_to_remove_outliersUMAP_tscore_corrPCs_zscaled_clusterCases.txt
+	--sampleOutFile OUTPUT_all/clustering_res_matchUKBB_corrPCs/matchUKBB_corr0.9_samples_to_remove_outliersUMAP_tscore_corrPCs_zscaled_clusterCases.txt
 
 cp ${TMPDIR}/matchUKBB_*cluster* INPUT_DATA/Covariates/PCs_cluster/
 
