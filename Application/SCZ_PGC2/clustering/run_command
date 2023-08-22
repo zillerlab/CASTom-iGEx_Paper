@@ -180,8 +180,8 @@ tar -cvzf clustering_res_matchUKBB_corrPCs.tar.gz clustering_res_matchUKBB_corrP
 
 ################################################################################
 ##################### moved to garching cluster ################################
-### from cluster clustering_res_matchUKBB_corrPCs/ ###
-
+cd /psycl/g/mpsziller/lucia/SCZ_PGC/eQTL_PROJECT/
+tar -xvzf clustering_res_matchUKBB_corrPCs.tar.gz clustering_res_matchUKBB_corrPCs/
 ### combine CRM:
 Rscript create_geneRS_clusterReliableMeasure.R
 

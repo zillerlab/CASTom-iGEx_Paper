@@ -3,7 +3,6 @@
 options(stringsAsFactors=F)
 options(max.print=1000)
 suppressPackageStartupMessages(library(argparse))
-suppressPackageStartupMessages(library(e1071))
 suppressPackageStartupMessages(library(data.table))
 suppressPackageStartupMessages(library(doParallel))
 suppressPackageStartupMessages(library(qvalue))
@@ -78,11 +77,11 @@ R2_file <- '/psycl/g/mpsziller/lucia/UKBB/eQTL_PROJECT/OUTPUT_CMC/predict_UKBB/2
 out_file <- paste0('clustering_res_matchUKBB_corrPCs/DLPC_CMC/matchUKBB_riskScores_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM_annotated.txt')
 create_complete_table(riskScore_res_file = riskScore_res_file, R2_file = R2_file, phenoInfo = phenoInfo, save_file = out_file) 
 
-# 0.1
-riskScore_res_file <-  'clustering_res_matchUKBB_corrPCs/DLPC_CMC/matchUKBB_filt0.1_riskScores_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM.txt'
-R2_file <- '/psycl/g/mpsziller/lucia/UKBB/eQTL_PROJECT/OUTPUT_CMC/predict_UKBB/200kb/devgeno0.01_testdevgeno0/update_corrPCs/matchPGC_tscore_corr2Thr0.1_relatedPhenotypes_R2_risk_score_phenotype.txt'
-out_file <- paste0('clustering_res_matchUKBB_corrPCs/DLPC_CMC/matchUKBB_filt0.1_riskScores_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM_annotated.txt')
-create_complete_table(riskScore_res_file = riskScore_res_file, R2_file = R2_file, phenoInfo = phenoInfo, save_file = out_file) 
+# # 0.1
+# riskScore_res_file <-  'clustering_res_matchUKBB_corrPCs/DLPC_CMC/matchUKBB_filt0.1_riskScores_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM.txt'
+# R2_file <- '/psycl/g/mpsziller/lucia/UKBB/eQTL_PROJECT/OUTPUT_CMC/predict_UKBB/200kb/devgeno0.01_testdevgeno0/update_corrPCs/matchPGC_tscore_corr2Thr0.1_relatedPhenotypes_R2_risk_score_phenotype.txt'
+# out_file <- paste0('clustering_res_matchUKBB_corrPCs/DLPC_CMC/matchUKBB_filt0.1_riskScores_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM_annotated.txt')
+# create_complete_table(riskScore_res_file = riskScore_res_file, R2_file = R2_file, phenoInfo = phenoInfo, save_file = out_file) 
 
 # 0.9 between groups with controls
 riskScore_res_file <-  'clustering_res_matchUKBB_corrPCs/DLPC_CMC/matchUKBB_allSamples_riskScores_tscore_corrPCs_zscaled_clusterAll_PGmethod_HKmetric_phenoAssociation_GLMpairwise.txt'
@@ -98,15 +97,14 @@ for(id_t in 1:length(tissues)){
   t <- tissues[id_t]
   # 0.9
   riskScore_res_file <-  paste0('clustering_res_matchUKBB_corrPCs/',t,'/matchUKBB_riskScores_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM.txt')
-matchUKBB_riskScores_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM_annotated.txt')
+  R2_file <- paste0(common_path, t,'/200kb/noGWAS/devgeno0.01_testdevgeno0/update_corrPCs/matchPGC_tscore_corr2Thr0.1_relatedPhenotypes_R2_risk_score_phenotype.txt')
+  out_file <- 'clustering_res_matchUKBB_corrPCs/DLPC_CMC/matchUKBB_riskScores_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM_annotated.txt'
   create_complete_table(riskScore_res_file = riskScore_res_file, R2_file = R2_file, phenoInfo = phenoInfo, save_file = out_file) 
   
-  # 0.1  R2_file <- paste0(common_path, t,'/200kb/noGWAS/devgeno0.01_testdevgeno0/update_corrPCs/matchPGC_tscore_corr2Thr0.1_relatedPhenotypes_R2_risk_score_phenotype.txt')
-  out_file <- paste0('clustering_res_matchUKBB_corrPCs/',t,'/
-  riskScore_res_file <-  paste0('clustering_res_matchUKBB_corrPCs/',t,'/matchUKBB_filt0.1_riskScores_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM.txt')
-  R2_file <- paste0(common_path, t,'/200kb/noGWAS/devgeno0.01_testdevgeno0/update_corrPCs/matchPGC_tscore_corr2Thr0.1_relatedPhenotypes_R2_risk_score_phenotype.txt')
-  out_file <- paste0('clustering_res_matchUKBB_corrPCs/',t,'/matchUKBB_filt0.1_riskScores_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM_annotated.txt')
-  create_complete_table(riskScore_res_file = riskScore_res_file, R2_file = R2_file, phenoInfo = phenoInfo, save_file = out_file) 
+  # # 0.1  
+  # riskScore_res_file <-  paste0('clustering_res_matchUKBB_corrPCs/',t,'/matchUKBB_filt0.1_riskScores_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM.txt')
+  # out_file <- paste0('clustering_res_matchUKBB_corrPCs/',t,'/matchUKBB_filt0.1_riskScores_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM_annotated.txt')
+  # create_complete_table(riskScore_res_file = riskScore_res_file, R2_file = R2_file, phenoInfo = phenoInfo, save_file = out_file) 
   
 }
 
