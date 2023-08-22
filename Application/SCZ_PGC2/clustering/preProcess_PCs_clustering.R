@@ -26,7 +26,7 @@ for(c_id in 1:length(name_cohorts)){
 sampleAnn <- do.call(rbind, sampleAnn)
 
 # save
-write.table(file = '/home/luciat/eQTL_PROJECT/INPUT_DATA/Covariates/samples_PCs_clustering.txt', x = sampleAnn, 
+write.table(file = '/home/luciat/eQTL_PROJECT/INPUT_DATA/Covariates/PCs_cluster/samples_PCs_clustering.txt', x = sampleAnn, 
             quote = F, sep = '\t', col.names = T, row.names = F)
-save(mds_res, file = '/home/luciat/eQTL_PROJECT/INPUT_DATA/Covariates/C1-20_PGC_clustering.RData')
+save(mds_res, file = '/home/luciat/eQTL_PROJECT/INPUT_DATA/Covariates/PCs_cluster/C1-20_PGC_clustering.RData')
 
