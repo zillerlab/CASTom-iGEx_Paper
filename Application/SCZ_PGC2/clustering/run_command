@@ -125,13 +125,13 @@ echo ${c}
 dmftar -x -f OUTPUT_GTEx/predict_PGC/${t}/${c}.dmftar/ OUTPUT_GTEx/predict_PGC/${t}/200kb/PGC_GWAS_bin1e-2/${c}/devgeno0.01_testdevgeno0/predictedTscores.txt
 done
 
-sbatch --job-name=boco_Cases PriLer_cluster_tscore_corrPCs_predict_CMC_matchUKBB.sh # RUNNING
+sbatch --job-name=boco_Cases PriLer_cluster_tscore_corrPCs_predict_CMC_matchUKBB.sh 
 
 # find relevant genes
-sbatch --job-name=boco_Cases PriLer_predict_CMC_tscore_corrPCs_featureRel_matchUKBB.sh # TO RUN
+sbatch --job-name=boco_Cases PriLer_predict_CMC_tscore_corrPCs_featureRel_matchUKBB.sh
 
 # evaluate clustering
-sbatch --job-name=boco_Cases PriLer_cluster_predictEval_tscore_corrPCs_CMC_matchUKBB.sh # TO RUN
+sbatch --job-name=boco_Cases PriLer_cluster_predictEval_tscore_corrPCs_CMC_matchUKBB.sh 
 
 ###############################################################################################
 ### find differences in clustering structures for risk scores computed from UKBB phenotypes ###
@@ -141,14 +141,14 @@ sbatch --job-name=boco_Cases PriLer_cluster_predictEval_tscore_corrPCs_CMC_match
 sbatch --job-name=CMC risk_score_tscore_corrPCs_multipleCohorts_CMC_matchUKBB.sh
 sbatch --job-name=GTEx --array=1-9 risk_score_tscore_corrPCs_multipleCohorts_GTEx_matchUKBB.sh
 # all samples (CMC only)
-sbatch --job-name=CMC risk_score_tscore_corrPCs_allCohorts_allSamples_CMC_matchUKBB.sh # RUNNING
+sbatch --job-name=CMC risk_score_tscore_corrPCs_allCohorts_allSamples_CMC_matchUKBB.sh
 
 #### evaluate geneRS group differences (all together) ####
 ## CMC
 sbatch --job-name=CMC risk_score_tscore_corrPCs_clusterSCZ_endophenotypeUKBB_CMC_matchUKBB.sh
 # all samples (CMC only)
 Rscript addControls_to_clusterCases_corrPCs.R
-sbatch --job-name=CMC risk_score_tscore_corrPCs_clusterSCZaddControls_endophenotypeUKBB_CMC_matchUKBB.sh # TO RUN
+sbatch --job-name=CMC risk_score_tscore_corrPCs_clusterSCZaddControls_endophenotypeUKBB_CMC_matchUKBB.sh
 
 ## GTEx
 sbatch --job-name=GTEx --array=1-9 risk_score_tscore_corrPCs_clusterSCZ_endophenotypeUKBB_GTEx_matchUKBB.sh

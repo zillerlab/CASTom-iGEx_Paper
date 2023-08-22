@@ -1,6 +1,6 @@
 #### previous steps from Michael ####
 ## predict clustering on external cohort PsyCourse 
-sbatch --job-name=CL_Cases_pred PriLer_cluster_tscore_corrPCs_predict_PsyCourse_CMC_matchUKBB.sh # RUNNING
+sbatch --job-name=CL_Cases_pred PriLer_cluster_tscore_corrPCs_predict_PsyCourse_CMC_matchUKBB.sh
 
 # find relevant genes for the cluster
 sbatch --job-name=CL_Cases PriLer_predict_PsyCourse_CMC_tscore_corrPCs_featureRel_matchUKBB.sh

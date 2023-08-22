@@ -31,18 +31,17 @@ done
 cp ${fold_mod}matchUKBB_tscoreOriginal_corrPCs_tscoreClusterCases_featAssociation.RData ${TMPDIR}
 cp ${fold_mod}matchUKBB_tscore_corrPCs_zscaled_clusterCases_summary_geneLoci_allTissues.txt ${TMPDIR}
 cp ${fold_mod}matchUKBB_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric.RData ${TMPDIR}
-feat_rel_model=${TMPDIR}matchUKBB_tscoreOriginal_corrPCs_tscoreClusterCases_featAssociation.RData
-gene_loci=${TMPDIR}matchUKBB_tscore_corrPCs_zscaled_clusterCases_summary_geneLoci_allTissues.txt
+feat_rel_model=${TMPDIR}/matchUKBB_tscoreOriginal_corrPCs_tscoreClusterCases_featAssociation.RData
+gene_loci=${TMPDIR}/matchUKBB_tscore_corrPCs_zscaled_clusterCases_summary_geneLoci_allTissues.txt
 
 ${git_fold}cluster_predict_evaluate_run.R \
 	--cohort_name ${name_cohort[@]} \
 	--functR ${git_fold}clustering_functions.R \
-	--clustFile ${TMPDIR}matchUKBB_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric.RData \
+	--clustFile ${TMPDIR}/matchUKBB_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric.RData \
 	--clustFile_new ${clus_pred[@]} \
 	--type_data tscore_corrPCs \
 	--type_cluster Cases \
 	--type_input zscaled \
-	--tissues_name ${t} \
 	--phenoNew_file ${pheno_pred[@]} \
 	--outFold OUTPUT_CMC/predict_PGC/200kb/${name_cohort}/devgeno0.01_testdevgeno0/update_corrPCs/matchUKBB_ \
 	--model_name PGC2 \

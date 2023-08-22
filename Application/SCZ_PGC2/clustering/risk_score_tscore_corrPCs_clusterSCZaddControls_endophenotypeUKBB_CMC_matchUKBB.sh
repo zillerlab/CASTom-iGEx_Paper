@@ -2,9 +2,9 @@
 #SBATCH -o /home/luciat/eQTL_PROJECT/err_out_fold/riskScore_UKBB_clusterCasesaddControls_tscore_corrPCs_zscaled_GLManalysis_%x_matchUKBB.out
 #SBATCH -e /home/luciat/eQTL_PROJECT/err_out_fold/riskScore_UKBB_clusterCasesaddControls_tscore_corrPCs_zscaled_GLManalysis_%x_matchUKBB.err
 #SBATCH -N 1
-#SBATCH --mem=30G
+#SBATCH --mem=28G
 #SBATCH -t 24:00:00
-#SBATCH -p fat
+#SBATCH -p thin
 
 
 module load 2022

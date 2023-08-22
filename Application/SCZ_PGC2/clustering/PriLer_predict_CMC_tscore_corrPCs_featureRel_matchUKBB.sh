@@ -2,7 +2,7 @@
 #SBATCH -o /home/luciat/eQTL_PROJECT/err_out_fold/cluster_tscore_corrPCs_zscaled_CMC_predict_featRel_%x_matchUKBB.out
 #SBATCH -e /home/luciat/eQTL_PROJECT/err_out_fold/cluster_tscore_corrPCs_zscaled_CMC_predict_featRel_%x_matchUKBB.err
 #SBATCH -N 1
-#SBATCH --mem=40G
+#SBATCH --mem=28G
 #SBATCH --tasks-per-node 16
 #SBATCH -t 24:00:00
 #SBATCH -p thin
