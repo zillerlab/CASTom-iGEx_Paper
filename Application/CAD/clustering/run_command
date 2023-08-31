@@ -103,4 +103,8 @@ sbatch --job-name=rs_predict --array=1-5,7-11,15 risk_score_clusterCAD_tscore_co
 sbatch --job-name=rs_predict --array=1-5,7-11,15 compare_endophenotypeAnalysis_clusterRiskScore_externalCohorts_CAD.sh
 sbatch --job-name=plot_rs_predict plot_precision_risk_score_clusterCases_externalCohorts.sh 
 
+#######
+# correct endophenotype results based on those associated with CAD related pathways from PALAS
+Rscript Endo_CAD_v2_updated.R
+
 
