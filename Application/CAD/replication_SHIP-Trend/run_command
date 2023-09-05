@@ -26,7 +26,13 @@ PriLer_cluster_predict_tscore_corrPCs_phenotype-GX.sh
 # evalute differences in gene expression
 PriLer_cluster_predict_tscore_corrPCs_phenotype-cont_dich.sh
 
+# convert actual gene expression to pathway scores:
+sbatch --job-name=SHIP originalRNA_tscore_pathscore.sh
+# associate actual path Reactome/GO to cluster
+sbatch --job-name=SHIP preproc_original_pathwayScores.sh
+sbatch --job-name=SHIP --array=1-2 PriLer_cluster_predict_tscore_corrPCs_phenoReactome.sh
+sbatch --job-name=SHIP --array=1-2 PriLer_cluster_predict_tscore_corrPCs_phenoGO.sh
+
 # DONY BY MICHAEL
-# Computation of pathway scores from actual gene expression
 # association with cluster structed and WMW estimates vs Adjusted beta plot
 
