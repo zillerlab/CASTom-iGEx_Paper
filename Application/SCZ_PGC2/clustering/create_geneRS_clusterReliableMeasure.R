@@ -25,7 +25,6 @@ options(bitmapType = 'cairo', device = 'png')
 setwd('/psycl/g/mpsziller/lucia/SCZ_PGC/eQTL_PROJECT')
 #################################################################################################################
 
-
 create_complete_table <- function(riskScore_res_file, R2_file, phenoInfo, save_file){
   
   rs_res <- read.delim(riskScore_res_file, h=T, stringsAsFactors = F, sep = '\t')
@@ -98,7 +97,7 @@ for(id_t in 1:length(tissues)){
   # 0.9
   riskScore_res_file <-  paste0('clustering_res_matchUKBB_corrPCs/',t,'/matchUKBB_riskScores_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM.txt')
   R2_file <- paste0(common_path, t,'/200kb/noGWAS/devgeno0.01_testdevgeno0/update_corrPCs/matchPGC_tscore_corr2Thr0.1_relatedPhenotypes_R2_risk_score_phenotype.txt')
-  out_file <- 'clustering_res_matchUKBB_corrPCs/DLPC_CMC/matchUKBB_riskScores_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM_annotated.txt'
+  out_file <- paste0('clustering_res_matchUKBB_corrPCs/',t,'/matchUKBB_riskScores_tscore_corrPCs_zscaled_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM_annotated.txt')
   create_complete_table(riskScore_res_file = riskScore_res_file, R2_file = R2_file, phenoInfo = phenoInfo, save_file = out_file) 
   
   # # 0.1  
