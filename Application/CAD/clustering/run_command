@@ -108,20 +108,23 @@ sbatch --job-name=plot_rs_predict plot_precision_risk_score_clusterCases_externa
 # what if the pipeline is applied on non-affected individuals? #
 # cluster Controls without zscaling, corr for PCs (benchmark)
 sbatch --job-name=CL_Controls --array=11 PriLer_clusterControls_tscore_corrPCs_original_GTEx_CAD.sh 
-sbatch --job-name=CL_Controls --array=11 PriLer_clusterControls_endophenotype_tscore_corrPCs_original_GTEx_CAD.sh # RUNNING
+sbatch --job-name=CL_Controls --array=11 PriLer_clusterControls_endophenotype_tscore_corrPCs_original_GTEx_CAD.sh
 sbatch --job-name=CL_Controls --array=11 PriLer_clusterControls_endophenotype_nominal_tscore_corrPCs_original_GTEx_CAD.sh 
-sbatch --job-name=CL_Controls --array=11 PriLer_clusterControls_tscore_corrPCs_original_featureRelTscore_GTEx_CAD.sh # RUNNING
-sbatch --job-name=CL_Controls --array=11 PriLer_clusterControls_tscore_corrPCs_original_featureRelPath_GTEx_CAD.sh # RUNNING
+sbatch --job-name=CL_Controls --array=11 PriLer_clusterControls_tscore_corrPCs_original_featureRelTscore_GTEx_CAD.sh
+sbatch --job-name=CL_Controls --array=11 PriLer_clusterControls_tscore_corrPCs_original_featureRelPath_GTEx_CAD.sh
 # cluster Controls with zscaling, corr for PCs (benchmark)
 sbatch --job-name=CL_Controls --array=11 PriLer_clusterControls_tscore_corrPCs_GTEx_CAD.sh 
-sbatch --job-name=CL_Controls --array=11 PriLer_clusterControls_endophenotype_tscore_corrPCs_GTEx_CAD.sh # RUNNING
+sbatch --job-name=CL_Controls --array=11 PriLer_clusterControls_endophenotype_tscore_corrPCs_GTEx_CAD.sh
 sbatch --job-name=CL_Controls --array=11 PriLer_clusterControls_endophenotype_nominal_tscore_corrPCs_GTEx_CAD.sh 
-sbatch --job-name=CL_Controls --array=11 PriLer_clusterControls_tscore_corrPCs_featureRelTscore_GTEx_CAD.sh # RUNNING
-sbatch --job-name=CL_Controls --array=11 PriLer_clusterControls_tscore_corrPCs_featureRelPath_GTEx_CAD.sh # RUNNING
+sbatch --job-name=CL_Controls --array=11 PriLer_clusterControls_tscore_corrPCs_featureRelTscore_GTEx_CAD.sh
+sbatch --job-name=CL_Controls --array=11 PriLer_clusterControls_tscore_corrPCs_featureRelPath_GTEx_CAD.sh
 
+###################
+#### bechmark #####
+# comparison of clustering strategy based on PRS. Can we explain more variance in the endophenotype from out groupings?
 
 #######
 # correct endophenotype results based on those associated with CAD related pathways from PALAS
-Rscript Endo_CAD_v2_updated.R
+sbatch --job-name=filt Endo_CAD_v2.sh
 
 

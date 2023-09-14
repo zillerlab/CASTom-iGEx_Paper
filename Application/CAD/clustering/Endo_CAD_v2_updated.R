@@ -199,6 +199,46 @@ setwd("/psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/Li
 write.table(endoSig,paste(prefix,"Filtered_groupwise_endophenotypes_v2.txt",sep="_"),sep="\t",quote=F,row.names=F)
 write.table(cl_endophenotype,paste(prefix,"all_groupwise_endophenotypes_v2.txt",sep="_"),sep="\t",quote=F,row.names=F)
 
+##### # controls
+cl_endophenotype_controls <- read.delim(sprintf('%stscore_corrPCs_zscaled_clusterControls_PGmethod_HKmetric_phenoAssociation_GLM_combined.txt', fold_cl), h=T, stringsAsFactors = F)
+cl_endophenotype_controls=cl_endophenotype_controls[cl_endophenotype_controls[,"pheno_id"] %in%allEndos1,]
+uGroups=unique(cl_endophenotype_controls[,"comp"])
+
+for (i in 1:length(uGroups)){
+  ind=cl_endophenotype_controls[,"comp"]==uGroups[i]
+  cl_endophenotype_controls[ind,"pval_corr"]=p.adjust(cl_endophenotype_controls[ind,"pvalue"],method="BH")
+}
+#extract results for spider plots
+#filter table for these endopheno and filter pathway indicator table for identified endopheno
+ind=cl_endophenotype_controls[,"pval_corr"]<=0.05
+ind[is.na(ind)]=F
+cl_endophenotype_controls[ind,2]
+endoSig_controls=cl_endophenotype_controls[ind,]
+setwd("/psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/Liver/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/CAD_HARD_clustering/update_corrPCs/filter_endopheno/")
+write.table(endoSig_controls,paste(prefix,"Filtered_groupwise_endophenotypes_controls_v2.txt",sep="_"),sep="\t",quote=F,row.names=F)
+write.table(cl_endophenotype_controls,paste(prefix,"all_groupwise_endophenotypes_controls_v2.txt",sep="_"),sep="\t",quote=F,row.names=F)
+#####
+
+##### controls original
+cl_endophenotype_controls_original <- read.delim(sprintf('%stscore_corrPCs_original_clusterControls_PGmethod_HKmetric_phenoAssociation_GLM_combined.txt', fold_cl), h=T, stringsAsFactors = F)
+cl_endophenotype_controls_original=cl_endophenotype_controls_original[cl_endophenotype_controls_original[,"pheno_id"] %in%allEndos1,]
+uGroups=unique(cl_endophenotype_controls_original[,"comp"])
+
+for (i in 1:length(uGroups)){
+  ind=cl_endophenotype_controls_original[,"comp"]==uGroups[i]
+  cl_endophenotype_controls_original[ind,"pval_corr"]=p.adjust(cl_endophenotype_controls_original[ind,"pvalue"],method="BH")
+}
+#extract results for spider plots
+#filter table for these endopheno and filter pathway indicator table for identified endopheno
+ind=cl_endophenotype_controls_original[,"pval_corr"]<=0.05
+ind[is.na(ind)]=F
+cl_endophenotype_controls_original[ind,2]
+endoSig_controls_original=cl_endophenotype_controls_original[ind,]
+setwd("/psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_CAD/Liver/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/CAD_HARD_clustering/update_corrPCs/filter_endopheno/")
+write.table(endoSig_controls_original,paste(prefix,"Filtered_groupwise_endophenotypes_controls_original_v2.txt",sep="_"),sep="\t",quote=F,row.names=F)
+write.table(cl_endophenotype_controls_original,paste(prefix,"all_groupwise_endophenotypes_controls_original_v2.txt",sep="_"),sep="\t",quote=F,row.names=F)
+#####
+
 uCmps=unique(endoSig[,"comp"])
 uEndo=endoSig[,"pheno_id"]
 fGo=iMat1GO[,uEndo]
