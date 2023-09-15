@@ -200,6 +200,8 @@ write.table(endoSig,paste(prefix,"Filtered_groupwise_endophenotypes_v2.txt",sep=
 write.table(cl_endophenotype,paste(prefix,"all_groupwise_endophenotypes_v2.txt",sep="_"),sep="\t",quote=F,row.names=F)
 
 ##### # controls
+setwd('/psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT')
+fold_cl <- "OUTPUT_GTEx/predict_CAD/Liver/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/CAD_HARD_clustering/update_corrPCs/"
 cl_endophenotype_controls <- read.delim(sprintf('%stscore_corrPCs_zscaled_clusterControls_PGmethod_HKmetric_phenoAssociation_GLM_combined.txt', fold_cl), h=T, stringsAsFactors = F)
 cl_endophenotype_controls=cl_endophenotype_controls[cl_endophenotype_controls[,"pheno_id"] %in%allEndos1,]
 uGroups=unique(cl_endophenotype_controls[,"comp"])
@@ -220,6 +222,8 @@ write.table(cl_endophenotype_controls,paste(prefix,"all_groupwise_endophenotypes
 #####
 
 ##### controls original
+setwd('/psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT')
+fold_cl <- "OUTPUT_GTEx/predict_CAD/Liver/200kb/CAD_GWAS_bin5e-2/UKBB/devgeno0.01_testdevgeno0/CAD_HARD_clustering/update_corrPCs/"
 cl_endophenotype_controls_original <- read.delim(sprintf('%stscore_corrPCs_original_clusterControls_PGmethod_HKmetric_phenoAssociation_GLM_combined.txt', fold_cl), h=T, stringsAsFactors = F)
 cl_endophenotype_controls_original=cl_endophenotype_controls_original[cl_endophenotype_controls_original[,"pheno_id"] %in%allEndos1,]
 uGroups=unique(cl_endophenotype_controls_original[,"comp"])
