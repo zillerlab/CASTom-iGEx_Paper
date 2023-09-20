@@ -122,9 +122,22 @@ sbatch --job-name=CL_Controls --array=11 PriLer_clusterControls_tscore_corrPCs_f
 ###################
 #### bechmark #####
 # comparison of clustering strategy based on PRS. Can we explain more variance in the endophenotype from out groupings?
+sbatch --job-name=prepare prepare_PRS_cl.sh
+# associate with endophenotypes
+sbatch --job-name=deciles PriLer_clusterCases_endophenotype_PRS_GTEx_CAD.sh deciles
+sbatch --job-name=quantiles PriLer_clusterCases_endophenotype_PRS_GTEx_CAD.sh quantiles
+# get genes and pathways
+sbatch --job-name=deciles PriLer_clusterCases_PRS_featureRelTscore_GTEx_CAD.sh deciles
+sbatch --job-name=quantiles PriLer_clusterCases_PRS_featureRelTscore_GTEx_CAD.sh quantiles
+sbatch --job-name=deciles PriLer_clusterCases_PRS_featureRelPath_GTEx_CAD.sh deciles
+sbatch --job-name=quantiles PriLer_clusterCases_PRS_featureRelPath_GTEx_CAD.sh quantiles
 
-#######
 # correct endophenotype results based on those associated with CAD related pathways from PALAS
+# correct all the analysis: cases, controls and PRS
 sbatch --job-name=filt Endo_CAD_v2.sh
 
+# compute F-statistics and R2
+sbatch --job-name=R2_deciles PriLer_clusterCases_R2_endopheno_from_PRS.sh deciles
+sbatch --job-name=R2_quantiles PriLer_clusterCases_R2_endopheno_from_PRS.sh quantiles
+sbatch --job-name=R2_tissue --array=11 PriLer_clusterCases_R2_endopheno_from_group.sh
 

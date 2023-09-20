@@ -243,6 +243,50 @@ write.table(endoSig_controls_original,paste(prefix,"Filtered_groupwise_endopheno
 write.table(cl_endophenotype_controls_original,paste(prefix,"all_groupwise_endophenotypes_controls_original_v2.txt",sep="_"),sep="\t",quote=F,row.names=F)
 #####
 
+##### # PRS deciles endopheno
+setwd('/psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT')
+fold_cl <- "OUTPUT_GWAS/PRS/"
+PRSdec_endophenotype <- read.delim(sprintf('%sPRS_deciles_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM_combined.txt', fold_cl), h=T, stringsAsFactors = F)
+PRSdec_endophenotype=PRSdec_endophenotype[PRSdec_endophenotype[,"pheno_id"] %in%allEndos1,]
+uGroups=unique(PRSdec_endophenotype[,"comp"])
+
+for (i in 1:length(uGroups)){
+  ind=PRSdec_endophenotype[,"comp"]==uGroups[i]
+  PRSdec_endophenotype[ind,"pval_corr"]=p.adjust(PRSdec_endophenotype[ind,"pvalue"],method="BH")
+}
+#extract results for spider plots
+#filter table for these endopheno and filter pathway indicator table for identified endopheno
+ind=PRSdec_endophenotype[,"pval_corr"]<=0.05
+ind[is.na(ind)]=F
+PRSdec_endophenotype[ind,2]
+endoSig_PRSdec=PRSdec_endophenotype[ind,]
+setwd("/psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GWAS/PRS/filter_endopheno/")
+write.table(endoSig_PRSdec,paste(prefix,"Filtered_groupwise_endophenotypes_PRS_deciles_cases_v2.txt",sep="_"),sep="\t",quote=F,row.names=F)
+write.table(PRSdec_endophenotype, paste(prefix,"all_groupwise_endophenotypes_PRS_deciles_cases_v2.txt",sep="_"),sep="\t",quote=F,row.names=F)
+#####
+
+##### # PRS quantiles endopheno
+setwd('/psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT')
+fold_cl <- "OUTPUT_GWAS/PRS/"
+PRSquan_endophenotype <- read.delim(sprintf('%sPRS_quantiles_clusterCases_PGmethod_HKmetric_phenoAssociation_GLM_combined.txt', fold_cl), h=T, stringsAsFactors = F)
+PRSquan_endophenotype=PRSquan_endophenotype[PRSquan_endophenotype[,"pheno_id"] %in%allEndos1,]
+uGroups=unique(PRSquan_endophenotype[,"comp"])
+
+for (i in 1:length(uGroups)){
+  ind=PRSquan_endophenotype[,"comp"]==uGroups[i]
+  PRSquan_endophenotype[ind,"pval_corr"]=p.adjust(PRSquan_endophenotype[ind,"pvalue"],method="BH")
+}
+#extract results for spider plots
+#filter table for these endopheno and filter pathway indicator table for identified endopheno
+ind=PRSquan_endophenotype[,"pval_corr"]<=0.05
+ind[is.na(ind)]=F
+PRSquan_endophenotype[ind,2]
+endoSig_PRSquan=PRSquan_endophenotype[ind,]
+setwd("/psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/OUTPUT_GWAS/PRS/filter_endopheno/")
+write.table(endoSig_PRSquan,paste(prefix,"Filtered_groupwise_endophenotypes_PRS_quantiles_cases_v2.txt",sep="_"),sep="\t",quote=F,row.names=F)
+write.table(PRSquan_endophenotype, paste(prefix,"all_groupwise_endophenotypes_PRS_quantiles_cases_v2.txt",sep="_"),sep="\t",quote=F,row.names=F)
+#####
+
 uCmps=unique(endoSig[,"comp"])
 uEndo=endoSig[,"pheno_id"]
 fGo=iMat1GO[,uEndo]
