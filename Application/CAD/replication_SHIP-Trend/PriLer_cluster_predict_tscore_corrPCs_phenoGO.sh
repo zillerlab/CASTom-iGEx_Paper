@@ -21,7 +21,7 @@ fold_sample=Results/PriLer/
 
 git_fold=/psycl/g/mpsziller/lucia/castom-igex/Software/model_clustering/
 
-Rscript ${git_fold}cluster_predict_associatePhenoGLM_run.R \
+${git_fold}cluster_predict_associatePhenoGLM_run.R \
 	--cohort_name ${cohort_name} \
 	--functR ${git_fold}clustering_functions.R \
 	--clustFile_new ${fold_cl}tscore_corrPCs_zscaled_predictClusterCases_PGmethod_HKmetric.RData \
@@ -30,5 +30,5 @@ Rscript ${git_fold}cluster_predict_associatePhenoGLM_run.R \
 	--type_input zscaled \
 	--outFold ${fold_cl}GO_ \
 	--model_name UKBB \
-	--phenoNew_file ${fold_input}Pathway_GO_scores_phenotypeFormat.txt \
+	--phenoNew_file ${fold_input}filtered_WB_Liver_Pathway_GO_scores_phenotypeFormat.txt \
 	--covNew_file ${fold_sample}SHIP-TREND_gPC_SHIP_2022_27_withSex.txt

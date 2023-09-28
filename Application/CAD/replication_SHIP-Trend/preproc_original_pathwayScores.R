@@ -7,9 +7,9 @@ library(PGSEA)
 
 
 setwd("/psycl/g/mpsziller/lucia/CAD_SHIP")
-gene_exp_file <- "GENE_EXPR/Filtered_SHIP-TREND_GX_plate01-14_QuantileNormalized.log2Transformd-zz_transposed-resid-SHIP_2022_27.txt"
-pathGO_file <- "GENE_EXPR/Pathway_GO_scores.txt"
-pathR_file <- "GENE_EXPR/Pathway_Reactome_scores.txt"
+gene_exp_file <- "GENE_EXPR/Filtered_SHIP-TREND_GX_plate01-14_QuantileNormalized.log2Transformd-zz_transposed-resid-SHIP_2022_27_filtered_WB_Liver.txt"
+pathGO_file <- "GENE_EXPR/filtered_WB_Liver_Pathway_GO_scores.txt"
+pathR_file <- "GENE_EXPR/filtered_WB_Liver_Pathway_Reactome_scores.txt"
 reactome_file <- "/psycl/g/mpsziller/lucia/castom-igex/refData/ReactomePathways.gmt"
 GO_file <- "/psycl/g/mpsziller/lucia/castom-igex/refData/GOterm_geneAnnotation_allOntologies.RData"
 
@@ -105,13 +105,13 @@ pheno_pathR <- cbind(data.frame(Individual_ID = rownames(pheno_pathR), stringsAs
 colnames(pheno_pathR)[-1] <- df_pathR_info$pheno_id
 
 # save
-write.table(pheno_pathR, file = "GENE_EXPR/Pathway_Reactome_scores_phenotypeFormat.txt",
+write.table(pheno_pathR, file = "GENE_EXPR/filtered_WB_Liver_Pathway_Reactome_scores_phenotypeFormat.txt",
             col.names = T, 
             row.names = F, 
             sep = '\t', 
             quote = F)
 
-write.table(df_pathR_info, file = "GENE_EXPR/Pathway_Reactome_scores_phenotypeFormat_info.txt",
+write.table(df_pathR_info, file = "GENE_EXPR/filtered_WB_Liver_Pathway_Reactome_scores_phenotypeFormat_info.txt",
             col.names = T, 
             row.names = F, 
             sep = '\t', 
@@ -209,13 +209,13 @@ pheno_pathGO <- cbind(data.frame(Individual_ID = rownames(pheno_pathGO), strings
 colnames(pheno_pathGO)[-1] <- df_pathGO_info$pheno_id
 
 # save
-write.table(pheno_pathGO, file = "GENE_EXPR/Pathway_GO_scores_phenotypeFormat.txt",
+write.table(pheno_pathGO, file = "GENE_EXPR/filtered_WB_Liver_Pathway_GO_scores_phenotypeFormat.txt",
             col.names = T, 
             row.names = F, 
             sep = '\t', 
             quote = F)
 
-write.table(df_pathGO_info, file = "GENE_EXPR/Pathway_GO_scores_phenotypeFormat_info.txt",
+write.table(df_pathGO_info, file = "GENE_EXPR/filtered_WB_Liver_Pathway_GO_scores_phenotypeFormat_info.txt",
             col.names = T, 
             row.names = F, 
             sep = '\t', 

@@ -56,5 +56,12 @@ write.table(x = gene_exp_new, file = "Filtered_SHIP-TREND_GX_plate01-14_Quantile
               quote = F, row.names = F, col.names = T, sep = "\t")
 
 
-
+#### modification ###
+options(stringsAsFactors=F)
+options(max.print=1000)
+tab <- read.table("/psycl/g/mpsziller/lucia/CAD_SHIP/Results/PriLer/Whole_Blood/predictedTscores.txt",sep="\t",header=T)
+tab2 <- read.table("/psycl/g/mpsziller/lucia/CAD_SHIP/Results/PriLer/Liver/predictedTscores.txt",sep="\t",header=T)
+expDat <- read.table("/psycl/g/mpsziller/lucia/CAD_SHIP/GENE_EXPR/Filtered_SHIP-TREND_GX_plate01-14_QuantileNormalized.log2Transformd-zz_transposed-resid-SHIP_2022_27.txt",sep="\t",header=T)
+rDat <- expDat[is.element(expDat[,1],tab[,1])|is.element(expDat[,1],tab2[,1]),]
+write.table(rDat,"Filtered_SHIP-TREND_GX_plate01-14_QuantileNormalized.log2Transformd-zz_transposed-resid-SHIP_2022_27_filtered_WB_Liver.txt",sep="\t",quote=F,row.names=F)
 
