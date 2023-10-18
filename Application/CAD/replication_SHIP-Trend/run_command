@@ -21,9 +21,9 @@ sbatch --job-name=SHIP --array=1-2 PriLer_cluster_predictEval_tscore_corrPCs.sh
 
 # DONE BY ALEX
 # evaluate differences in endophenotype
-PriLer_cluster_predict_tscore_corrPCs_phenotype-GX.sh # TO BE REPEATED
+PriLer_cluster_predict_tscore_corrPCs_phenotype-GX.sh
 # evalute differences in gene expression
-PriLer_cluster_predict_tscore_corrPCs_phenotype-cont_dich.sh # TO BE REPEATED
+PriLer_cluster_predict_tscore_corrPCs_phenotype-cont_dich.sh
 
 # convert actual gene expression to pathway scores:
 sbatch --job-name=SHIP originalRNA_tscore_pathscore.sh 
