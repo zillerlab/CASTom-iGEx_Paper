@@ -141,3 +141,25 @@ sbatch --job-name=R2_deciles PriLer_clusterCases_R2_endopheno_from_PRS.sh decile
 sbatch --job-name=R2_quantiles PriLer_clusterCases_R2_endopheno_from_PRS.sh quantiles
 sbatch --job-name=R2_tissue --array=11 PriLer_clusterCases_R2_endopheno_from_group.sh
 
+################################
+#### cluster-specific PALAS ####
+# create cluster-specific phenotypes (set NA to other groups)
+sbatch --job-name=preproc --array=11 prepare_cluster_specific_pheno.sh
+
+# run associations
+index_tissues=(1 2 3 4 5 7 8 9 10 11 15)
+for i in ${index_tissues[@]}
+do
+# fix cluster in Liver
+sbatch --job-name=t${i}_clt11 --array=1-100 PriLer_phenoAssociation_tscore_clusterCasesVSControls.sh ${i} 11
+sbatch --job-name=t${i}_clt11 --array=1-100 PriLer_phenoAssociation_pathR_clusterCasesVSControls.sh ${i} 11
+sbatch --job-name=t${i}_clt11 --array=1-100 PriLer_phenoAssociation_pathGO_clusterCasesVSControls.sh ${i} 11
+sbatch --job-name=t${i}_clt11_wiki PriLer_phenoAssociation_wikiPath_clusterCasesVSControls.sh ${i} 11
+done
+
+# combine
+for i in ${index_tissues[@]}
+do
+sbatch --job-name=comb_clt11 --array=${i} PriLer_phenoAssociation_combine_clusterCasesVSControls.sh 11
+sbatch --job-name=comb_clt11_wiki --array=${i} PriLer_phenoAssociation_combine_wikiPath_clusterCasesVSControls.sh 11
+done
