@@ -133,7 +133,7 @@ done
 ##################
 ### CARDIOGRAM ###
 ##################
-
+cohort_name=(German1 German2 German3 German4 German5 CG LURIC MG WTCCC)
 for c in ${cohort_name[@]}
 do
 sbatch --job-name=${c} --array=1-5,7-11,15 --exclude psycl[10,13,14,15] ElNet_withPrior_predExpr_200kb.sh ${c}
