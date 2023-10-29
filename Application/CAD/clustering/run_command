@@ -163,3 +163,5 @@ do
 sbatch --job-name=comb_clt11 --array=${i} PriLer_phenoAssociation_combine_clusterCasesVSControls.sh 11
 sbatch --job-name=comb_clt11_wiki --array=${i} PriLer_phenoAssociation_combine_wikiPath_clusterCasesVSControls.sh 11
 done
+### combine all results
+Rscript ./create_txt_allTissues_cl11_CAD_UKBB.R
