@@ -133,8 +133,10 @@ sbatch --job-name=deciles PriLer_clusterCases_PRS_featureRelPath_GTEx_CAD.sh dec
 sbatch --job-name=quantiles PriLer_clusterCases_PRS_featureRelPath_GTEx_CAD.sh quantiles
 
 # correct endophenotype results based on those associated with CAD related pathways from PALAS
-# correct all the analysis: cases, controls and PRS
-sbatch --job-name=filt Endo_CAD_v2.sh
+# keep only certain phenotype classes:
+Rscript ./filter_endophenotypes_CAD.R
+### correct all the analysis: cases, controls and PRS
+### sbatch --job-name=filt Endo_CAD_v2.sh # skip, not necessary
 
 # compute F-statistics and R2
 sbatch --job-name=R2_deciles PriLer_clusterCases_R2_endopheno_from_PRS.sh deciles
