@@ -3,7 +3,7 @@
 #SBATCH -e /psycl/g/mpsziller/lucia/CAD_UKBB/eQTL_PROJECT/err_out_fold/pheno_BCratio_pathGO_%x_split%a.err
 #SBATCH --time=7-0
 #SBATCH --nodes=1
-#SBATCH --mem-per-cpu=2G
+#SBATCH --mem-per-cpu=5G
 #SBATCH --cpus-per-task=10
 
 module load R/3.5.3
