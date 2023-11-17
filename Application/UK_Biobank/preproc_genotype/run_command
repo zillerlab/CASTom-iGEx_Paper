@@ -1,0 +1,8 @@
+# find correct refa and alt and add ALT freq
+sbatch --array=1-22 --job-name=annotate find_correct_REF_ALT.sh 
+
+# split gen file based on samples and correct to obtain plink format
+sbatch --job-name=split split_total_script.sh
+
+# find largest set of unrelated samples
+sbatch --job-name=unrel find_unrelated_samples.sh
