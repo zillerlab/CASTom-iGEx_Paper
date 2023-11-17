@@ -1,0 +1,36 @@
+### in psycl cluster ###
+sbatch --array=1-22 --job-name=CMC MatchGeno_CMC_UKBB.sh 
+
+### in denbi cluster ###
+# match genotype dosage file CMC with UKBB filtered snps
+sbatch --array=1-22 FiltGeno_CMC.sh
+
+# SNP-GRE matrix
+sbatch Compute_SNP-GRE_mat_allChr.sh
+# prior matrix
+sbatch --array=1-22 Compute_priors_CMC_fin.sh
+
+# covariates created in SCRIPTS_v2, use that ones
+
+#################################
+#### pre processing general #####
+#################################
+
+# match with heritable genes, create snp-gene distance matrix and annotations
+sbatch preProcessing_data_CMC.sh 
+
+#####################
+##### training ######
+#####################
+
+sbatch --job-name=train_UKBB ElNet_withPrior_training_All_UKBB.sh
+
+####################################
+##### predict on same dataset ######
+####################################
+
+sbatch --job-name=predict_CMC ElNet_withPrior_predictAll_UKBB.sh
+sbatch --job-name=path PriLer_pathDiff_predictAll_UKBB.sh
+sbatch --job-name=pheno PriLer_phenoAssociation_predictAll_UKBB.sh
+
+
