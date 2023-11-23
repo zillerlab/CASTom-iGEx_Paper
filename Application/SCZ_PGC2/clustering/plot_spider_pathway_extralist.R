@@ -34,23 +34,40 @@ pathway_feat_CMCset <- get(load(sprintf('%smatchUKBB_customPath_CMC_GeneSetsOrig
 pathway_feat_tot <- get(load(sprintf('%smatchUKBB_pathOriginal_filtJS0.2_corrPCs_tscoreClusterCases_featAssociation.RData', fold_cl)))
 
 
-extra_pathway_list <- data.frame(path = c("positive regulation of T cell differentiation",
-                                          "Cytokines and Inflammatory Response WP530",
-                                          "Complement Activation WP545",
-                                          "Insulin Signaling WP481",
-                                          "MO:PresynapticCompartmentProteins_Morciano",
-                                          "Neuronal proteome:PSD",
-                                          "MouseMeta:green_M5_Mitochondria",
-                                          "CTX:green_M10_GlutamatergicSynapticFunction",
-                                          "MO:Endoplasmic_Reticulum_Foster",
-                                          "MO:Plasma_membrane_Foster",
-                                          "Oxidative Damage WP3941",
-                                          "Type II interferon signaling (IFNG) WP619"), 
-                                 tissue = c("DLPC_CMC","Brain_Cerebellum", "Brain_Cerebellar_Hemisphere", 
-                                            "DLPC_CMC", "DLPC_CMC", "DLPC_CMC", "DLPC_CMC", "DLPC_CMC",
-                                            "DLPC_CMC", "DLPC_CMC", "Cells_EBV-transformed_lymphocytes", 
-                                            "Cells_EBV-transformed_lymphocytes"))
-
+extra_pathway_list <- data.frame(
+  path = c("positive regulation of T cell differentiation", 
+          "CTX:green_M10_GlutamatergicSynapticFunction",
+          "MO:Endoplasmic_Reticulum_Foster"         ,   
+          "MO:Plasma_membrane_Foster"    ,              
+          "MO:PresynapticCompartmentProteins_Morciano" ,
+          "MouseMeta:green_M5_Mitochondria"    ,        
+          "Neuronal proteome:PSD", 
+          "Mitochondrial complex I assembly model OXPHOS system WP4324",
+          "Nonalcoholic fatty liver disease WP4396",
+          "Pyrimidine metabolism WP4022",
+          "Vitamin D Receptor Pathway WP2877",
+          "Proteasome Degradation WP183",
+          "PI3K-Akt Signaling Pathway WP4172",
+          "Histone Modifications WP2369",
+          "Cytokines and Inflammatory Response WP530",
+          "Complement Activation WP545",
+          "Insulin Signaling WP481", 
+          "Oxidative Damage WP3941",
+          "Type II interferon signaling (IFNG) WP619"), 
+  tissue = c("DLPC_CMC", 
+  rep("DLPC_CMC", 6), 
+  "Brain_Hippocampus",
+  "Brain_Cerebellar_Hemisphere",
+  "Brain_Hippocampus",
+  "Brain_Cortex",
+  "DLPC_CMC", 
+  "Brain_Nucleus_accumbens_basal_ganglia",
+  "DLPC_CMC", 
+  "Brain_Hypothalamus", 
+  "Brain_Caudate_basal_ganglia", 
+  "DLPC_CMC", 
+  "Cells_EBV-transformed_lymphocytes", 
+  "Cells_EBV-transformed_lymphocytes")) 
 
 # spider plot for a selection of pathways
 get_short_name <- function(tissue_name){
@@ -72,7 +89,6 @@ get_short_name <- function(tissue_name){
   
   return(out)
 }
-
 
 get_pathway_scores <- function(pathway_feat, keep_pathways, res_cl) {
   
@@ -130,8 +146,9 @@ input_spider
 df_mean <- input_spider
 gr_color <- pal_d3(palette = 'category20')(length(unique(res_cl$gr)))
 df_mean <- df_mean[, order(df_mean[1,], decreasing = T)]
-df_mean <- df_mean[, order(df_mean[2,], decreasing = T)]      
-df_mean <- df_mean[, order(df_mean[3,], decreasing = T)]                              
+df_mean <- df_mean[, order(df_mean[3,], decreasing = T)]
+df_mean <- df_mean[, order(df_mean[4,], decreasing = T)]       
+df_mean <- df_mean[, order(df_mean[2,], decreasing = T)]   
 
 pl <- ggradar(df_mean,  grid.min = 0, grid.max = 1, grid.mid = 0.5, 
               values.radar = c('0%', '50%', '100%'),
