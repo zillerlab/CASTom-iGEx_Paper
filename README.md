@@ -1,6 +1,6 @@
 # CASTom-iGEx application
 
-Application of [CASTom-iGEx](https://gitlab.mpcdf.mpg.de/luciat/castom-igex.git) pipeline to coronary artery disease and schizophrenia. Analysis performed for [Distinct genetic liability profiles define clinically relevant patient strata across common diseases.  Trastulla L., et al. MedRxiv, 2023](https://www.medrxiv.org/content/10.1101/2023.05.10.23289788v1).
+Application of [CASTom-iGEx](https://github.com/zillerlab/CASTom-iGEx.git) pipeline to coronary artery disease and schizophrenia. Analysis performed for [Distinct genetic liability profiles define clinically relevant patient strata across common diseases.  Trastulla L., et al. MedRxiv, 2023](https://www.medrxiv.org/content/10.1101/2023.05.10.23289788v1).
 
 ### Application:
 In each folder, **run_command** text file explains the sequence of script used.  The subfolder order follow castom-igex workflow: training --> prediction --> clustering. 
