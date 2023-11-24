@@ -1,3 +1,157 @@
+# convert to dosages file, exclude relatives from final dosage matrix
+sbatch --job-name=matchGTEx convertDosage_corrREFALT_matchedGTEx_allchr.sh 
+sbatch --job-name=matchCMC convertDosage_corrREFALT_matchedCMC_allchr.sh
+
+## create temporary covariates file containing only Insividual_ID and genoSample_ID for each split
+sbatch createCov_tmp.
+# preprocess covariates, use age sex array and PC1-PC2, further filter sample (see UKBB)
+sbatch preProcess_Cov.sh
+
+# preprocess phenotype with phesant
+sbatch --job-name=phes phenotypePreproc.sh
+# preprocess new phenotype (ICD10, ICD9 and OPSC4) without PHEASANT
+sbatch --job-name=phes phenotypePreproc_ukb39002.sh
+sbatch --job-name=phes phenotypePreproc_ratioBloodCount.sh # manually created ratios from blood counts
+sbatch --job-name=phes phenotypePreproc_height.sh # manually created height from BMI and weight
+
+# create folder for each tissue
+tissues=$(awk '{print $1}' /psycl/g/mpsziller/lucia/UKBB/eQTL_PROJECT/OUTPUT_GTEx/Tissue_noGWAS)
+for t in ${tissues[@]}
+do
+        # for train
+        mkdir -p /psycl/g/mpsziller/lucia/UKBB/eQTL_PROJECT/OUTPUT_GTEx/train_GTEx/${t}/200kb/noGWAS/
+        # for pred
+        mkdir -p /psycl/g/mpsziller/lucia/UKBB/eQTL_PROJECT/OUTPUT_GTEx/predict_UKBB/${t}/200kb/noGWAS/devgeno0.01_testdevgeno0/
+done
+
+####################
+### predict GTEx ###
+####################
+
+# divide in 3 parts
+sbatch --job-name=GTEx_p1 ElNet_withPrior_predExpr_200kb_trainGTEx_allTissues_p1.sh
+sbatch --job-name=GTEx_p2 ElNet_withPrior_predExpr_200kb_trainGTEx_allTissues_p2.sh
+sbatch --job-name=GTEx_p3 ElNet_withPrior_predExpr_200kb_trainGTEx_allTissues_p3.sh
+# combine splitted predicted expression in a unique file
+for i in {1..33}
+do
+        sbatch --job-name=t{i} Combine_filteredGeneExpr_GTEx.sh ${i}
+done
+
+###################
+### predict CMC ###
+###################
+
+sbatch --job-name=pred_CMC --exclude psycl[10-15] --array=1-100%50 ElNet_withPrior_predExpr_200kb_trainCMC.sh
+# combine splitted predicted expression in a unique file
+sbatch --job-name=comb Combine_filteredGeneExpr_CMC.sh
+
+############################
+### compute TScores GTEx ###
+############################
+
+id_t=(7 8 9 10 11 12 13 14 15 16 17 29 33)
+for i in ${id_t[@]}
+do
+        sbatch --job-name=t${i} --array=1-100%5 Tscore_GTEx_splitGenes.sh ${i}
+done
+
+###########################
+### compute TScores CMC ###
+###########################
+sbatch --job-name=CMC --array=1-100%15  Tscore_CMC_splitGenes.sh 
+
+###############################
+### compute PathScores GTEx ###
+###############################
+id_t=(8 9 10 11 13 14 15 16 17 33)
+for i in ${id_t[@]}
+do
+    sbatch --job-name=t${i} PathScore_GTEx.sh ${i}
+done
+sbatch --job-name=t7 PathScore_GTEx.sh 7 99
+sbatch --job-name=t12 PathScore_GTEx.sh 12 98
+sbatch --job-name=t29 PathScore_GTEx.sh 29 98
+
+###############################
+### compute PathScores CMC ###
+############################### 
+
+sbatch --job-name=CMC PathScore_CMC.sh
+sbatch --job-name=CMC PathScore_customGeneList_CMC.sh
+
+##################################
+### association with phenotype ###
+##################################
+id_t=(8 9 10 11 13 14 15 16 17 33)
+for i in ${id_t[@]}
+do
+    sbatch --job-name=t${i} --array=${i} ElNet_withPrior_phenoAssociation_200kb_trainGTEx_prepare.sh
+done
+sbatch --job-name=t7 --array=7 ElNet_withPrior_phenoAssociation_200kb_trainGTEx_prepare.sh 99
+sbatch --job-name=t12 --array=12 ElNet_withPrior_phenoAssociation_200kb_trainGTEx_prepare.sh 98
+sbatch --job-name=t29 --array=29 ElNet_withPrior_phenoAssociation_200kb_trainGTEx_prepare.sh 98
+
+# prepare datasets (split)
+sbatch --job-name=CMC ElNet_withPrior_phenoAssociation_200kb_trainCMC_prepare.sh
+sbatch --job-name=CMC ElNet_withPrior_phenoAssociation_200kb_trainCMC_prepare_customGeneList.sh
+
+### CMC ###
+# split association
+sbatch --job-name=CMC --array=1-100 -w psycl[11] ElNet_withPrior_phenoAssociation_200kb_trainCMC_tscore.sh
+sbatch --job-name=CMC --array=1-100 -w psycl[11] ElNet_withPrior_phenoAssociation_200kb_trainCMC_tscore_psych.sh
+sbatch --job-name=CMC --array=1-100 ElNet_withPrior_phenoAssociation_200kb_trainCMC_tscore_SD.sh
+sbatch --job-name=CMC --array=1-100 ElNet_withPrior_phenoAssociation_200kb_trainCMC_tscore_BB.sh
+sbatch --job-name=CMC --array=1-100 ElNet_withPrior_phenoAssociation_200kb_trainCMC_tscore_BP_BM.sh
+sbatch --job-name=CMC --array=1-100 -w psycl[11] ElNet_withPrior_phenoAssociation_200kb_trainCMC_pathR.sh
+sbatch --job-name=CMC --array=1-100 ElNet_withPrior_phenoAssociation_200kb_trainCMC_pathR_psych.sh
+sbatch --job-name=CMC --array=1-100 ElNet_withPrior_phenoAssociation_200kb_trainCMC_pathR_SD.sh
+sbatch --job-name=CMC --array=1-100 ElNet_withPrior_phenoAssociation_200kb_trainCMC_pathR_BB.sh
+sbatch --job-name=CMC --array=1-100 ElNet_withPrior_phenoAssociation_200kb_trainCMC_pathR_BP_BM.sh
+sbatch --job-name=CMC --array=1-100%2 -w psycl[02] ElNet_withPrior_phenoAssociation_200kb_trainCMC_pathGO.sh
+sbatch --job-name=CMC --array=1-100 -w psycl[10] ElNet_withPrior_phenoAssociation_200kb_trainCMC_pathGO_psych.sh
+sbatch --job-name=CMC --array=1-100 ElNet_withPrior_phenoAssociation_200kb_trainCMC_pathGO_SD.sh
+sbatch --job-name=CMC --array=1-100 ElNet_withPrior_phenoAssociation_200kb_trainCMC_pathGO_BB.sh
+sbatch --job-name=CMC --array=1-100 ElNet_withPrior_phenoAssociation_200kb_trainCMC_pathGO_BP_BM.sh
+sbatch --job-name=CMC --array=1-91%10 ElNet_withPrior_phenoAssociation_200kb_trainCMC_customPath.sh
+sbatch --job-name=CMC --array=1-91%10 ElNet_withPrior_phenoAssociation_200kb_trainCMC_customPath_psych.sh
+sbatch --job-name=CMC_bcr --array=1-100%20 PriLer_phenoAssociation_CMC_tscore_BCratio.sh
+sbatch --job-name=CMC_bcr --array=1-100%20 PriLer_phenoAssociation_CMC_pathR_BCratio.sh
+sbatch --job-name=CMC_bcr --array=1-100%20 PriLer_phenoAssociation_CMC_pathGO_BCratio.sh
+# combine splitted results
+sbatch --job-name=comb ElNet_withPrior_phenoAssociation_200kb_trainCMC_combine.sh
+sbatch --job-name=comb ElNet_withPrior_phenoAssociation_200kb_trainCMC_combine_SD.sh
+sbatch --job-name=comb ElNet_withPrior_phenoAssociation_200kb_trainCMC_combine_BB.sh
+sbatch --job-name=comb ElNet_withPrior_phenoAssociation_200kb_trainCMC_combine_BP_BM.sh
+sbatch --job-name=comb ElNet_withPrior_phenoAssociation_200kb_trainCMC_combine_customGeneList.sh
+sbatch --job-name=CMC_comb PriLer_phenoAssociation_CMC_combine_BCratio.sh
+
+### GTEx ### 
+i=7-15,33
+sbatch --job-name=t${i} --array=1-100 -w psycl[11] ElNet_withPrior_phenoAssociation_200kb_trainGTEx_tscore.sh ${i}
+sbatch --job-name=t${i} --array=1-100 -w psycl[11] ElNet_withPrior_phenoAssociation_200kb_trainGTEx_tscore_psych.sh ${i}
+sbatch --job-name=t${i} --array=1-100 -w psycl[11] ElNet_withPrior_phenoAssociation_200kb_trainGTEx_tscore_BB.sh ${i}
+sbatch --job-name=t${i} --array=1-100 -w psycl[11] ElNet_withPrior_phenoAssociation_200kb_trainGTEx_tscore_SD.sh ${i}
+sbatch --job-name=t${i} --array=1-100%2 ElNet_withPrior_phenoAssociation_200kb_trainGTEx_pathR.sh ${i}
+sbatch --job-name=t${i} --array=1-100%2 ElNet_withPrior_phenoAssociation_200kb_trainGTEx_pathR_psych.sh ${i}
+sbatch --job-name=t${i} --array=1-100%2 ElNet_withPrior_phenoAssociation_200kb_trainGTEx_pathR_BB.sh ${i}
+sbatch --job-name=t${i} --array=1-100%2 ElNet_withPrior_phenoAssociation_200kb_trainGTEx_pathR_SD.sh ${i}
+sbatch --job-name=t${i} --array=1-100 -w psycl[08] ElNet_withPrior_phenoAssociation_200kb_trainGTEx_pathGO.sh ${i}
+sbatch --job-name=t${i} --array=1-100 -w psycl[10] ElNet_withPrior_phenoAssociation_200kb_trainGTEx_pathGO_psych.sh ${i}
+sbatch --job-name=t${i} --array=1-100 -w psycl[10] ElNet_withPrior_phenoAssociation_200kb_trainGTEx_pathGO_BB.sh ${i}
+sbatch --job-name=t${i} --array=1-100 -w psycl[10] ElNet_withPrior_phenoAssociation_200kb_trainGTEx_pathGO_SD.sh ${i}
+# combine splitted results
+sbatch --job-name=comb --array=${i} ElNet_withPrior_phenoAssociation_200kb_trainGTEx_combine.sh
+sbatch --job-name=comb --array=${i} ElNet_withPrior_phenoAssociation_200kb_trainGTEx_combine_SD.sh
+sbatch --job-name=comb --array=${i} ElNet_withPrior_phenoAssociation_200kb_trainGTEx_combine_BB.sh
+
+# test Blood count ratio differences
+i=7-15,33
+sbatch --job-name=t${i}_bcr --array=1-100%20 PriLer_phenoAssociation_GTEx_tscore_BCratio.sh ${i}
+sbatch --job-name=t${i}_bcr --array=1-100%20 PriLer_phenoAssociation_GTEx_pathR_BCratio.sh ${i}
+sbatch --job-name=t${i}_bcr --array=1-100%20 PriLer_phenoAssociation_GTEx_pathGO_BCratio.sh ${i}
+# combine
+sbatch --job-name=comb --array=${i} PriLer_phenoAssociation_GTEx_combine_BCratio.sh
 
 ### predict risk score on UKBB ###
 sbatch --job-name=CMC_rs risk_score_SCZrelPheno_tscore_corrPCs_CMC.sh
